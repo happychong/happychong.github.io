@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>webpack 4.0+ 笔记(基础配置) | 快乐虫の地带</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="webpack">
+<meta name="keywords" content="webpack">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webpack 4.0+ 笔记(基础配置)">
+<meta property="og:url" content="http://happychong.github.io/2019/12/16/webpack基础配置/index.html">
+<meta property="og:site_name" content="快乐虫の地带">
+<meta property="og:description" content="webpack">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-03-17T06:55:14.478Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="webpack 4.0+ 笔记(基础配置)">
+<meta name="twitter:description" content="webpack">
+  
+    <link rel="alternate" href="/atom.xml" title="快乐虫の地带" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">快乐虫の地带</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://happychong.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="default-webpack基础配置" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/16/webpack基础配置/" class="article-date">
+  <time datetime="2019-12-15T16:00:00.000Z" itemprop="datePublished">2019-12-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/周边/">周边</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      webpack 4.0+ 笔记(基础配置)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="代码地址"><a href="#代码地址" class="headerlink" title="代码地址"></a>代码地址</h2><p><a href="https://github.com/happychong/2019-zhufeng/tree/master/9.webpack" target="_blank" rel="noopener">https://github.com/happychong/2019-zhufeng/tree/master/9.webpack</a></p>
+<h2 id="安装模块"><a href="#安装模块" class="headerlink" title="安装模块"></a>安装模块</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i webpack webpack-cli</span><br></pre></td></tr></table></figure>
+
+<h2 id="webpack-的作用（目的）"><a href="#webpack-的作用（目的）" class="headerlink" title="webpack 的作用（目的）"></a>webpack 的作用（目的）</h2><ol>
+<li>文件体积变小</li>
+<li>打包速度提升</li>
+<li>模块拆分</li>
+</ol>
+<h2 id="基础-webpack-配置文件（webpack-config-js）"><a href="#基础-webpack-配置文件（webpack-config-js）" class="headerlink" title="基础 webpack 配置文件（webpack.config.js）"></a>基础 webpack 配置文件（webpack.config.js）</h2><p>webpack 基于node， 语法遵守commonjs规范，配置文件（默认webpack.config.js）有2种导出格式，如下</p>
+<h3 id="1：导出配置对象"><a href="#1：导出配置对象" class="headerlink" title="1：导出配置对象"></a>1：导出配置对象</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    <span class="comment">// 模式： development-开发模式</span></span><br><span class="line">    mode: <span class="string">'development'</span>,</span><br><span class="line">    <span class="comment">// entry: 入口,路径采用绝对路径</span></span><br><span class="line">    entry: path.resolve(__dirname, <span class="string">'./src/index.js'</span>),</span><br><span class="line">    <span class="comment">// output: 出口, </span></span><br><span class="line">    output: &#123;</span><br><span class="line">        filename: <span class="string">'bundle.js'</span>,</span><br><span class="line">        <span class="comment">// 出口位置</span></span><br><span class="line">        path: path.resolve(__dirname, <span class="string">'dist'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-导出函数"><a href="#2-导出函数" class="headerlink" title="2.导出函数"></a>2.导出函数</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function">(<span class="params">env</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// env 是环境变量</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回配置文件，没返回的话，采用默认配置</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="webpack-scripts命令行参数"><a href="#webpack-scripts命令行参数" class="headerlink" title="webpack scripts命令行参数"></a>webpack scripts命令行参数</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package.json</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"scripts"</span>: &#123;</span><br><span class="line">        <span class="string">"mode"</span>: <span class="string">"webpack --mode development"</span>,</span><br><span class="line">        <span class="string">"env"</span>: <span class="string">"webpack --env.development"</span>,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>–mode ：模式<ul>
+<li>development : 开发环境</li>
+<li>production : 生产环境</li>
+</ul>
+</li>
+<li>–env ：环境变量<ul>
+<li>–env=aa : env就是aa</li>
+<li>–env.aa : env是个对象，会在对象上加个aa属性</li>
+</ul>
+</li>
+<li>–config ：指定执行的文件是哪个 （默认执行webpack.config.js 或 webpack.file.js)</li>
+</ul>
+<h2 id="项目中，webpack-配置规范"><a href="#项目中，webpack-配置规范" class="headerlink" title="项目中，webpack 配置规范"></a>项目中，webpack 配置规范</h2><p>一般情况下，一个项目至少分两个模式，一个开发模式，一个生产模式，两个模式中共同的部分，设置为基本配置，目录如下（build目录）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">myproject</span><br><span class="line">    │─package.json</span><br><span class="line">    │─src</span><br><span class="line">    │   └─index.js</span><br><span class="line">    └─build</span><br><span class="line">        │─webpack.base.js</span><br><span class="line">        │─webpack.dev.js</span><br><span class="line">        └─webpack.prod.js</span><br></pre></td></tr></table></figure>
+
+<h2 id="webpack-dev-server-开发环境静态服务"><a href="#webpack-dev-server-开发环境静态服务" class="headerlink" title="webpack-dev-server 开发环境静态服务"></a>webpack-dev-server 开发环境静态服务</h2><p>webpack-dev-server 在内存中打包，不会产生实体文件</p>
+<h3 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h3><p>直接把 webpack 改为 webpack-dev-server</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package.json</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"scripts"</span>: &#123;</span><br><span class="line">        <span class="string">"dev"</span>: <span class="string">"webpack-dev-server --env.development"</span>,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="html-webpack-plugin"><a href="#html-webpack-plugin" class="headerlink" title="html-webpack-plugin"></a>html-webpack-plugin</h2><p>打包的html中自动引入js，且可配置压缩等功能</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i html-plugin --save-dev</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line"><span class="comment">// 1：导入</span></span><br><span class="line"><span class="keyword">const</span> HtmlWebpackPlugin = <span class="built_in">require</span>(<span class="string">'html-webpack-plugin'</span>);</span><br><span class="line"><span class="comment">// 2：new</span></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function">(<span class="params">env</span>) =&gt;</span> &#123;</span><br><span class="line">    plugins: [</span><br><span class="line">        <span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">            template: path.resolve(__dirname, <span class="string">'../public/index.html'</span>),</span><br><span class="line">            filename: <span class="string">'index.html'</span>,</span><br><span class="line">            <span class="comment">// 压缩 一般开发模式不压缩，生产模式压缩</span></span><br><span class="line">            minify: &#123;</span><br><span class="line">                <span class="comment">// 双引号 去掉</span></span><br><span class="line">                removeAttributeQuotes: <span class="literal">true</span>,</span><br><span class="line">                <span class="comment">// html整体压缩为一行</span></span><br><span class="line">                collapseWhitespace: <span class="literal">true</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="clean-webpack-plugin-清空打包路径"><a href="#clean-webpack-plugin-清空打包路径" class="headerlink" title="clean-webpack-plugin  清空打包路径"></a>clean-webpack-plugin  清空打包路径</h2><h3 id="安装-clean-webpack-plugin"><a href="#安装-clean-webpack-plugin" class="headerlink" title="安装 clean-webpack-plugin"></a>安装 clean-webpack-plugin</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i npm i clean-webpack-plugin --save-dev</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用-clean-webpack-plugin"><a href="#使用-clean-webpack-plugin" class="headerlink" title="使用 clean-webpack-plugin"></a>使用 clean-webpack-plugin</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line"><span class="comment">// 1：导入</span></span><br><span class="line"><span class="keyword">const</span> &#123; CleanWebpackPlugin &#125; = <span class="built_in">require</span>(<span class="string">'clean-webpack-plugin'</span>);</span><br><span class="line"><span class="comment">// 2：new</span></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function">(<span class="params">env</span>) =&gt;</span> &#123;</span><br><span class="line">    plugins: [</span><br><span class="line">        <span class="keyword">new</span> CleanWebpackPlugin(&#123;</span><br><span class="line">            <span class="comment">// 在打包目录清空 默认就是全部清空，所以可以不设置此参数</span></span><br><span class="line">            cleanOnceBeforeBuildPatterns: [<span class="string">'**/*'</span>]</span><br><span class="line">        &#125;)</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="loaders"><a href="#loaders" class="headerlink" title="loaders"></a>loaders</h2><p>loader的执行顺序，默认是从下往上执行  从右往左执行</p>
+<p>详细设置可以查看这里</p>
+<h3 id="1-css"><a href="#1-css" class="headerlink" title="1.css"></a>1.css</h3><p>需要 css-loader &amp; style-loader</p>
+<ul>
+<li>css-loader: 解析css语法，并把解析后的语法传递给style-loader</li>
+<li>style-loader: 将css变成style标签插入到页面中</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装</span></span><br><span class="line">npm install css-loader style-loader --save-dev</span><br></pre></td></tr></table></figure>
+
+<h4 id="预处理器"><a href="#预处理器" class="headerlink" title="预处理器"></a>预处理器</h4><ul>
+<li>(.scss)    — node-sass    sass-loader</li>
+<li>(.less)    — less         less-loader</li>
+<li>(.stylus)  — stylus       stylus-loader</li>
+</ul>
+<h4 id="postcss-loader-给css属性加前缀（-webkit"><a href="#postcss-loader-给css属性加前缀（-webkit" class="headerlink" title="postcss-loader  给css属性加前缀（__webkit)"></a>postcss-loader  给css属性加前缀（__webkit)</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装</span></span><br><span class="line">npm i postcss-loader autoprefixer --save-dev</span><br><span class="line"><span class="comment"># postcss-loader 需要 autoprefixer 插件</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// postcss.config.js - postcss-loader 需要配置文件</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    plugins: [</span><br><span class="line">        <span class="built_in">require</span>(<span class="string">'autoprefixer'</span>)</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .browserslistrc - 设置添加前缀已什么浏览器为标准</span></span><br><span class="line"><span class="comment">// autoprefixer需要的配置，很多其他的包可以公用这个配置文件</span></span><br><span class="line"><span class="comment">// https://github.com/browserslist/browserslist#best-practices</span></span><br><span class="line">cover <span class="number">99.5</span>%</span><br></pre></td></tr></table></figure>
+
+<h4 id="mini-css-extract-plugin-又是插件，又是loader"><a href="#mini-css-extract-plugin-又是插件，又是loader" class="headerlink" title="mini-css-extract-plugin 又是插件，又是loader"></a>mini-css-extract-plugin 又是插件，又是loader</h4><p>单独抽离css文件，线上并行链接css</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装</span></span><br><span class="line">npm i mini-css-extract-plugin --save-dev</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// loader 设置</span></span><br><span class="line">&#123;</span><br><span class="line">    rules: [</span><br><span class="line">        &#123;</span><br><span class="line">            test: <span class="regexp">/\.css/</span>,</span><br><span class="line">            use: [</span><br><span class="line">                <span class="comment">// 开发模式不抽离单独css，生产模式抽离</span></span><br><span class="line">                isDev ? <span class="string">'style-loader'</span> : MiniCssExtractPlugin.loader,</span><br><span class="line">                <span class="comment">// ……后续省略</span></span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// plugins 设置</span></span><br><span class="line">plugins: [</span><br><span class="line">    <span class="comment">// 生产模式下，设置抽离样式文件名称</span></span><br><span class="line">    <span class="comment">// 但是抽离出的样式文件未压缩，在webpack.prod.js &gt; optimization &gt; minimizer &gt; OptimizeCSSAssetsPlugin 配置压缩css文件</span></span><br><span class="line">    !isDev &amp;&amp; <span class="keyword">new</span> MiniCssExtractPlugin(&#123;</span><br><span class="line">        filename: <span class="string">'css/base.css'</span></span><br><span class="line">    &#125;).filter(<span class="built_in">Boolean</span>)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>但是抽离的样式文件不会压缩，如果需要压缩，需要单独配置优化项配置：optimization</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> OptimizeCSSAssetsPlugin = <span class="built_in">require</span>(<span class="string">'optimize-css-assets-webpack-plugin'</span>);</span><br><span class="line"><span class="keyword">const</span> TerserWbpackPlugin = <span class="built_in">require</span>(<span class="string">'terser-webpack-plugin'</span>);</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    optimization: &#123;</span><br><span class="line">        minimizer: [ <span class="comment">// 压缩方案</span></span><br><span class="line">            <span class="comment">// 压缩css文件，用了这个以后，js也得手动压缩了</span></span><br><span class="line">            <span class="keyword">new</span> OptimizeCSSAssetsPlugin(),</span><br><span class="line">            <span class="comment">// 压缩js文件</span></span><br><span class="line">            <span class="keyword">new</span> TerserWbpackPlugin()</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-图片-icon"><a href="#2-图片-icon" class="headerlink" title="2.图片 + icon"></a>2.图片 + icon</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    rules: [</span><br><span class="line">        &#123;</span><br><span class="line">            test: <span class="regexp">/\.(jpe?g|png|gif)$/</span>,</span><br><span class="line">            <span class="comment">// use: 'file-loader' // file-loader 默认功能是拷贝</span></span><br><span class="line">            use: &#123;</span><br><span class="line">                loader: <span class="string">'url-loader'</span>, </span><br><span class="line">                <span class="comment">// 希望当前比较小的图片转化为 base64 ，转化后尺寸比以前大，但是不用发http请求了</span></span><br><span class="line">                options: &#123;</span><br><span class="line">                <span class="comment">// 大于 100k 的图片，会用 file-loader</span></span><br><span class="line">                    limit: <span class="number">8</span> * <span class="number">1024</span>, <span class="comment">// 一般为 8*1024</span></span><br><span class="line">                    <span class="comment">// 打包到目录下</span></span><br><span class="line">                    name: <span class="string">'image/[contentHash].[ext]'</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 图标字体，一般不转base64，有时会失效</span></span><br><span class="line">            test: <span class="regexp">/\.(woff|ttf|eot|svg)$/</span>,</span><br><span class="line">            use: <span class="string">'file-loader'</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-js"><a href="#3-js" class="headerlink" title="3.js"></a>3.js</h3><h4 id="es6-gt-es5"><a href="#es6-gt-es5" class="headerlink" title="es6 -&gt; es5"></a>es6 -&gt; es5</h4><p>babel提供转化功能， vue-cli 基于babel6实现的，当前babel7</p>
+<p>babel需要的包：</p>
+<ul>
+<li>@babel/core ： babel核心模块</li>
+<li>@babel/preset-env ： 预设</li>
+<li>babel-loader ： babel 与 webpack 的桥梁</li>
+</ul>
+<blockquote>
+<p>babel-loader 默认调用 @babel/core 转化代码， @babel/core 调用 @babel/preset-env 方式来解析 es6 转化为 es5</p>
+</blockquote>
+<blockquote>
+<p>@babel: 作用域 把所有关于babel的模块都放在babel下，防止重名，有利于分包</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装</span></span><br><span class="line">npm install @babel/core  @babel/preset-env  babel-loader --save-dev</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// loader 设置</span></span><br><span class="line">&#123;</span><br><span class="line">    rules: [</span><br><span class="line">        &#123;</span><br><span class="line">            test: <span class="regexp">/\.js$/</span>,</span><br><span class="line">            use: <span class="string">'babel-loader'</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .babelrc</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"presets"</span>: [</span><br><span class="line">        <span class="comment">// presets 执行顺序从下往上执行</span></span><br><span class="line">        [<span class="string">"@babel/preset-env"</span>, &#123;</span><br><span class="line">            <span class="comment">// 构建时候，如果用到了实例上的某API，按需加载转化</span></span><br><span class="line">            <span class="string">"useBuiltIns"</span>: <span class="string">"usage"</span>,</span><br><span class="line">            <span class="comment">// useBuiltIns 转化的时候，不知道includes是字符串的，还是数组的，需要corejs，就是bable-core</span></span><br><span class="line">            <span class="comment">// corejs == 以前的 babel-polyfill</span></span><br><span class="line">            <span class="string">"corejs"</span>: <span class="number">3</span></span><br><span class="line">        &#125;]</span><br><span class="line">    ],</span><br><span class="line">    <span class="string">"plugins"</span>: [</span><br><span class="line">        <span class="comment">// 执行顺序：从上到下执行</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// ** 解析装饰器 **</span></span><br><span class="line">        <span class="comment">// @babel/plugin-proposal-decorators 要用在 @babel/plugin-proposal-class-properties 之前</span></span><br><span class="line">        <span class="comment">// legacy: true --- 保留装饰器，，legacy 为 true 的条件，下面的 loose 也得是 true</span></span><br><span class="line">        [<span class="string">"@babel/plugin-proposal-decorators"</span>, &#123;<span class="string">"legacy"</span>: <span class="literal">true</span>&#125;],</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ** 解析类 **</span></span><br><span class="line">        <span class="comment">// 类的插件 之类一个数组是一项，写成数组是为了传参</span></span><br><span class="line">        <span class="comment">// loose:宽松,loose为true的话，可以用装饰器，为false的话，会打包转化成definePropty</span></span><br><span class="line">        [<span class="string">"@babel/plugin-proposal-class-properties"</span>, &#123;<span class="string">"loose"</span>: <span class="literal">true</span>&#125;],</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ** 减少打包代码冗余 **</span></span><br><span class="line">        <span class="comment">// 多个模块转化时候，会产生打包的冗余代码</span></span><br><span class="line">        <span class="comment">// 比如多个文件都class A的方式创建类，那么打包后多个包中都有_classCallCheck方法</span></span><br><span class="line">        <span class="string">"@babel/plugin-transform-runtime"</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="react"><a href="#react" class="headerlink" title="react"></a>react</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 @babel/preset-react   preset类就是个插件的集合</span></span><br><span class="line">npm install @babel/preset-react --save-dev</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .babelrc</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"presets"</span>: [</span><br><span class="line">        <span class="comment">// 这里省略关于 js 的设置</span></span><br><span class="line">        <span class="string">"@babel/preset-react"</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="vue"><a href="#vue" class="headerlink" title="vue"></a>vue</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装</span></span><br><span class="line">npm install vue-loader vue-template-compiler --save-dev</span><br><span class="line"><span class="comment"># webpack 用 vue-loader 来调用 vue-template-compiler解析语法</span></span><br><span class="line"><span class="comment"># vue-template-compiler: 解析当前项目 App.vue 中的&lt;template&gt;的包</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack 配置文件设置</span></span><br><span class="line"><span class="comment">// vue-loader 要求，还需要使用插件</span></span><br><span class="line"><span class="keyword">const</span> VueLoaderPlugin = <span class="built_in">require</span>(<span class="string">'vue-loader/lib/plugin'</span>);</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">module</span>: &#123;</span><br><span class="line">        <span class="comment">// loader 设置</span></span><br><span class="line">        rules: [</span><br><span class="line">            &#123;</span><br><span class="line">                test: <span class="regexp">/\.vue?$/</span>,</span><br><span class="line">                use: <span class="string">'vue-loader'</span></span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// plugins 设置</span></span><br><span class="line">    plugins: [</span><br><span class="line">        <span class="keyword">new</span> VueLoaderPlugin()</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="vue-property-decorator-vue-属性的装饰器"><a href="#vue-property-decorator-vue-属性的装饰器" class="headerlink" title="vue-property-decorator - vue 属性的装饰器"></a>vue-property-decorator - vue 属性的装饰器</h5><p>在App.vue中，还会有script标签，还要用ts语法,所以用到 vue-property-decorator 包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装</span></span><br><span class="line">npm install vue-property-decorator --save</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// App.vue - script 标签中的应用</span></span><br><span class="line">&lt;template&gt;</span><br><span class="line">&lt;div&gt;</span><br><span class="line">    hello Vue</span><br><span class="line">    &lt;p v-<span class="keyword">for</span>=<span class="string">"(todo, index) in todos"</span> :key=<span class="string">"index"</span>&gt;&#123;&#123; todo &#125;&#125;&lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>div&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;script lang="ts"&gt;</span></span><br><span class="line"><span class="regexp">import &#123; Component, Vue &#125; from 'vue-property-decorator';</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">@Component(&#123;</span></span><br><span class="line"><span class="regexp">    components: &#123;</span></span><br><span class="line"><span class="regexp">        /</span><span class="regexp">/ todo...</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">&#125;)</span></span><br><span class="line"><span class="regexp">export default class Todo extends Vue &#123;</span></span><br><span class="line"><span class="regexp">    public todos:string[] = ['banana', 'apple', 'orange'];</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp">&lt;/</span>script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>但是 @babel/preset-typescript 打包的时候，还是会认为上面代码中script部分是vue的模块内容，没认为是ts语法，所以.babelrc中，@babel/preset-typescript 设置还需要加 “allExtensions”: true</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .babelrc</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"presets"</span>: [</span><br><span class="line">        [<span class="string">"@babel/preset-typescript"</span>, &#123;</span><br><span class="line">            <span class="comment">// 表示检测所有扩展名</span></span><br><span class="line">            <span class="string">"allExtensions"</span>: <span class="literal">true</span></span><br><span class="line">        &#125;]</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>vue中没有jsx，所以使用ts的文件后缀为ts</p>
+</blockquote>
+<h5 id="XXX-d-ts"><a href="#XXX-d-ts" class="headerlink" title="XXX.d.ts"></a>XXX.d.ts</h5><p>index-vue.ts 中引入 App.vue(import App from ‘./App.vue’;) 会报错，需要在XXX.d.ts（本项目中名称为vue-shims.d.ts）配置解决报错</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vue-shims.d.ts</span></span><br><span class="line"><span class="comment">// 说明：ts文件中，import vue类型文件的时候，认为是个vue类型的模块</span></span><br><span class="line">declare <span class="built_in">module</span> <span class="string">"*.vue"</span> &#123;</span><br><span class="line">    <span class="comment">// ts里，类可以当做类型</span></span><br><span class="line">    <span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span>;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">default</span> Vue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="TS-TypeScript"><a href="#TS-TypeScript" class="headerlink" title="TS - TypeScript"></a>TS - TypeScript</h4><p>使用TS有2种方案</p>
+<h5 id="ts-loader"><a href="#ts-loader" class="headerlink" title="ts-loader"></a>ts-loader</h5><p>专门处理ts文件的，需要配合 typescript 库</p>
+<h5 id="babel7版本-babel-preset-typescript"><a href="#babel7版本-babel-preset-typescript" class="headerlink" title="babel7版本 @babel/preset-typescript"></a>babel7版本 @babel/preset-typescript</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装</span></span><br><span class="line">npm i @babel/preset-typescript --save-dev</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// loader 设置</span></span><br><span class="line">&#123;</span><br><span class="line">    rules: [</span><br><span class="line">        &#123;</span><br><span class="line">            test: <span class="regexp">/\.tsx?$/</span>,</span><br><span class="line">            use: <span class="string">'babel-loader'</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .babelrc</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"presets"</span>: [</span><br><span class="line">        <span class="comment">// 这里省略关于 js 的设置</span></span><br><span class="line">        <span class="comment">// 这里省略关于 react 的设置</span></span><br><span class="line">        <span class="string">"@babel/preset-typescript"</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="typescript-相关"><a href="#typescript-相关" class="headerlink" title="typescript 相关"></a>typescript 相关</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># typescript 包 - 校验tc代码</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line">npm i typescript</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行（npx）并初始化（--init）typescript 配置文件 tsconfig.json</span></span><br><span class="line">npx typescript --init</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 typescript 的 react 和 react-dom 的提示 的包</span></span><br><span class="line">npm install @types/react @types/react-dom --save</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// tsconfig.json 中 jsx 的配置</span></span><br><span class="line"><span class="comment">// 使代码中 jsx 的部分不报错</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"compilerOptions"</span>: &#123;</span><br><span class="line">    <span class="string">"jsx"</span>: <span class="string">"react"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2019/12/16/webpack基础配置/" data-id="ck7vkd8c3000phwploxk62ak6" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/12/20/webpack优化/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          webpack 4.0 + 笔记(优化)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/11/19/HTTP基础/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">HTTP基础扫盲</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/03/17/2018-1-11-hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/20/webpack优化/">webpack 4.0 + 笔记(优化)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/16/webpack基础配置/">webpack 4.0+ 笔记(基础配置)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/19/HTTP基础/">HTTP基础扫盲</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/07/node深度删除目录及目录里的内容-fs删除扩展/">Node - 深度（完全）删除目录及目录里的内容 - 扩展</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/01/Node中文件的读写模块---FS/">Node -文件读写模块--- fs</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/30/Node---buffer/">Node --- buffer</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/24/npm命令与配置解析/">npm 命令与配置解析</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/16/Node中的事件循环（event loop）/">Node中的事件轮询（event loop）</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/14/node模块加载原理/">Node模块加载原理</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/14/多线程与单线程服务/">单线程与多线程的基本概念</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/14/node核心模块-简述/">Node核心模块 - 简述</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/05/vue nextTick原理/">vue nextTick原理</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/05/es6+---类的修饰/">es6+---类的修饰</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/03/es+---class用法笔记 /">es6、7-类的定义</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/08/vue 强制更新试图的方法/">vue 强制更新试图 的方法</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/19/宋晓丹的个人简历/">宋晓丹的个人简历</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/11/windows下，ATOM常用编辑器快捷键/">ATOM常用快捷键</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/05/基本shell命令/">基本SHELL命令使用</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/05/Git命令/">Git常用命令</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Node/">Node</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/es6/">es6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/个人/">个人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/周边/">周边</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node/">Node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/buffer/">buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/core/">core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/event-loop/">event loop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fs/">fs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/happyChong/">happyChong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/module/">module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextTick/">nextTick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/path/">path</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/util/">util</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vm/">vm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单线程/">单线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/EventLoop/" style="font-size: 15px;">EventLoop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/buffer/" style="font-size: 10px;">buffer</a> <a href="/tags/class/" style="font-size: 15px;">class</a> <a href="/tags/core/" style="font-size: 10px;">core</a> <a href="/tags/event-loop/" style="font-size: 15px;">event loop</a> <a href="/tags/events/" style="font-size: 10px;">events</a> <a href="/tags/fs/" style="font-size: 20px;">fs</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/happyChong/" style="font-size: 10px;">happyChong</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/module/" style="font-size: 10px;">module</a> <a href="/tags/nextTick/" style="font-size: 10px;">nextTick</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/path/" style="font-size: 10px;">path</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/util/" style="font-size: 10px;">util</a> <a href="/tags/vm/" style="font-size: 10px;">vm</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 15px;">webpack</a> <a href="/tags/单线程/" style="font-size: 10px;">单线程</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 happyChong<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

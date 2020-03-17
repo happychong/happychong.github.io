@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Node基本概念扫盲 | 快乐虫の地带</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Node是什么？用Node做什么？Node的module概念与原理">
+<meta name="keywords" content="Node">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Node基本概念扫盲">
+<meta property="og:url" content="http://happychong.github.io/2019/10/12/node基本概念扫盲/index.html">
+<meta property="og:site_name" content="快乐虫の地带">
+<meta property="og:description" content="Node是什么？用Node做什么？Node的module概念与原理">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://happychong.github.io/images/node%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84.jpg">
+<meta property="og:updated_time" content="2020-03-17T06:55:14.427Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Node基本概念扫盲">
+<meta name="twitter:description" content="Node是什么？用Node做什么？Node的module概念与原理">
+<meta name="twitter:image" content="http://happychong.github.io/images/node%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="快乐虫の地带" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">快乐虫の地带</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://happychong.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="default-node基本概念扫盲" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/12/node基本概念扫盲/" class="article-date">
+  <time datetime="2019-10-11T16:00:00.000Z" itemprop="datePublished">2019-10-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Node/">Node</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Node基本概念扫盲
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="1-Node是什么？"><a href="#1-Node是什么？" class="headerlink" title="1.Node是什么？"></a>1.Node是什么？</h2><p>Node是一个js的运行时（runtime）<br>js由BOM DOM ECMASCRIPT组成，但是Node由ECMASCRIPT和内部模块（http， fs等）组成</p>
+<h2 id="2-能用Node做什么？"><a href="#2-能用Node做什么？" class="headerlink" title="2.能用Node做什么？"></a>2.能用Node做什么？</h2><ul>
+<li>1.写脚本，比如webpack</li>
+<li>2.做中间层，服务端渲染（vue react），实现前后端分离，解决跨域问题，实现数据格式化，实现高性能的web服务</li>
+<li>3.用Node做纯后端服务</li>
+</ul>
+<h2 id="3-Node的基本架构"><a href="#3-Node的基本架构" class="headerlink" title="3.Node的基本架构"></a>3.Node的基本架构</h2><p>提到Node.js的时候，我们耳熟能详的是: Node.js是一个基于ChromeV8引擎的JavaScript运行时。Node.js 使用高效、轻量级的事件驱动、非阻塞 I/O 模型。那么这句话真正想要表达的是什么呢？请看下图：</p>
+<p><img src="/images/node%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84.jpg" alt="node基本架构"></p>
+<ul>
+<li>Node standard library: Node的标准库，也就是我们平时所用的fs, path, http, net, stream等模块。</li>
+<li>Node bindlings: 是C++与JavaScript沟通的桥梁, 封装了V8和Libuv的细节，向上层提供API。</li>
+<li>最后一层是支撑Node的关键。<ul>
+<li>Libuv是一个高性能的，事件驱动的I/O库，并且提供了 跨平台（如windows, *nix）的API。简单的来说，Node.js的异步、非阻塞I/O，底层实际上是Libuv实现的。</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-Node的全局对象"><a href="#4-Node的全局对象" class="headerlink" title="4.Node的全局对象"></a>4.Node的全局对象</h2><p>我们认为直接能访问的对象，就是全局的</p>
+<h3 id="1-global"><a href="#1-global" class="headerlink" title="1) global"></a>1) global</h3><p>Node中每次执行只有一个global</p>
+<p>global中的属性</p>
+<ul>
+<li><p>process 进程 当前我们应用的进程</p>
+<ul>
+<li>process中有platform属性，’darwin’: 代表mac  ‘win32’: 代表windows</li>
+</ul>
+</li>
+<li><p>Buffer 缓存区</p>
+</li>
+<li><p>clearInterval setInterval</p>
+</li>
+<li><p>clearTimeout setTimeout</p>
+</li>
+<li><p>clearImmediate setImmediate 宏任务</p>
+</li>
+<li><p>argv 代表用户传入的参数: []，第三个参数后面的参数，只能通过命令 + 文件名 + –参数的方式传参</p>
+<ul>
+<li>0 : node执行文件</li>
+<li>1 : 当前执行的文件</li>
+<li>＞= 2 之后的内容为用户传入的参数</li>
+</ul>
+</li>
+<li><p>chdir() - 手动改变目录</p>
+</li>
+<li><p>cwd() - 当前工作目录（在哪里执行这个文件，目录就是哪里）</p>
+</li>
+<li><p>kill 杀死</p>
+</li>
+<li><p>evn 环境变量 - 我们可以根据环境变量的不同 执行不同的结果</p>
+<ul>
+<li>实际多数都用临时变量，mac环境，执行命令行时候，用export设置， windows用set设置</li>
+</ul>
+</li>
+<li><p>nextTick 下一队列，node中的微任务，node中的nextTick，比promise.then快，</p>
+<ul>
+<li>了解node事件环，请看 <a href="http://happychong.github.io/2019/10/16/Node%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%EF%BC%88event%20loop%EF%BC%89/">这里</a></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 收集 argv 的方法</span></span><br><span class="line"><span class="comment">// 方法 1</span></span><br><span class="line"><span class="keyword">let</span> config = process.argv.slice(<span class="number">2</span>).reduce(<span class="function">(<span class="params">memo, cur, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (cur.includes(<span class="string">'--'</span>)) &#123;</span><br><span class="line">        memo[cur.slice(<span class="number">2</span>)] = arr[index + <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> memo;</span><br><span class="line">&#125;, &#123;&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(config); <span class="comment">// &#123;port: '3000', config: 'xxx'&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法 2 应用 commander</span></span><br><span class="line"><span class="comment">// commander - 命令行管家 帮你提供 --help,第三方模块，需要先安装</span></span><br><span class="line"><span class="keyword">const</span> program = <span class="built_in">require</span>(<span class="string">'commander'</span>);</span><br><span class="line"><span class="comment">// 也可以同时应用 chalk 包，增加输出行的颜色</span></span><br><span class="line"><span class="keyword">const</span> chalk = <span class="built_in">require</span>(<span class="string">'chalk'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 解析用户的参数 默认提供--help</span></span><br><span class="line">program <span class="comment">// 配置命令 我输入命令后 要执行一些内容</span></span><br><span class="line">    .command(<span class="string">'create'</span>)</span><br><span class="line">    .alias(<span class="string">'c'</span>)</span><br><span class="line">    .description(<span class="string">'create project'</span>)</span><br><span class="line">    .action(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'create project'</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">program <span class="comment">// 配置属性 给代码传递参数</span></span><br><span class="line">    .option(<span class="string">'-p'</span>, <span class="string">'--port &lt;val&gt;'</span>, <span class="string">'set port'</span>)</span><br><span class="line">    .version(<span class="string">'1.0.0.0'</span>)</span><br><span class="line">    .parse(process.argv)</span><br><span class="line">program.on(<span class="string">'--help'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'\r\nExamples'</span>);</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'想额外输出的内容'</span> + chalk.green(<span class="string">'我是chalk输出绿色'</span>))</span><br><span class="line">&#125;).parse(process.argv)</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-module-exports-require-dirname-filename"><a href="#2-module-exports-require-dirname-filename" class="headerlink" title="2) module, exports, require, __dirname, __filename"></a>2) module, exports, require, __dirname, __filename</h3><p>node中，每个文件都是一个模块，模块外面包了一层匿名函数,module, exports, require, __dirname, __filename这几个就是这个函数的参数，所以我们也认为是全局变量</p>
+<ul>
+<li>module ： 模块</li>
+<li>exports ： module.exports</li>
+<li>require ： 加载模块的方法</li>
+<li>__filename ： 当前执行文件的绝对路径</li>
+<li>__dirname ： 当前执行文件的所在文件夹</li>
+</ul>
+<p>默认声明的属性是不放在global上的</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 每个模块中的this指向module.exports,所以如下</span></span><br><span class="line"><span class="keyword">this</span> === global <span class="comment">// false</span></span><br><span class="line"><span class="keyword">this</span> === <span class="built_in">module</span>.exports <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 模块中 匿名函数执行中的this指向global</span></span><br><span class="line">    <span class="comment">// 因为匿名函数执行之前，没有XXX.，所以this指向全局</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// global</span></span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+
+<p><em>浏览器中无法直接访问global对象，所以用window来代理</em></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2019/10/12/node基本概念扫盲/" data-id="ck1stxyna000h4gpl0wdk09zq" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Node/">Node</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/10/14/node核心模块-简述/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Node核心模块 - 简述
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/10/12/浏览器中js的事件循环（event loop）/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">浏览器中javascript的事件循环（event loop）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/03/17/2018-1-11-hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/20/webpack优化/">webpack 4.0 + 笔记(优化)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/16/webpack基础配置/">webpack 4.0+ 笔记(基础配置)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/19/HTTP基础/">HTTP基础扫盲</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/07/node深度删除目录及目录里的内容-fs删除扩展/">Node - 深度（完全）删除目录及目录里的内容 - 扩展</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/01/Node中文件的读写模块---FS/">Node -文件读写模块--- fs</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/30/Node---buffer/">Node --- buffer</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/24/npm命令与配置解析/">npm 命令与配置解析</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/16/Node中的事件循环（event loop）/">Node中的事件轮询（event loop）</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/14/node模块加载原理/">Node模块加载原理</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/14/多线程与单线程服务/">单线程与多线程的基本概念</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/14/node核心模块-简述/">Node核心模块 - 简述</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/05/vue nextTick原理/">vue nextTick原理</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/05/es6+---类的修饰/">es6+---类的修饰</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/03/es+---class用法笔记 /">es6、7-类的定义</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/08/vue 强制更新试图的方法/">vue 强制更新试图 的方法</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/19/宋晓丹的个人简历/">宋晓丹的个人简历</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/11/windows下，ATOM常用编辑器快捷键/">ATOM常用快捷键</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/05/基本shell命令/">基本SHELL命令使用</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/05/Git命令/">Git常用命令</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Node/">Node</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/es6/">es6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/个人/">个人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/周边/">周边</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node/">Node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/buffer/">buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/core/">core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/event-loop/">event loop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fs/">fs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/happyChong/">happyChong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/module/">module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextTick/">nextTick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/path/">path</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/util/">util</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vm/">vm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单线程/">单线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/EventLoop/" style="font-size: 15px;">EventLoop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/buffer/" style="font-size: 10px;">buffer</a> <a href="/tags/class/" style="font-size: 15px;">class</a> <a href="/tags/core/" style="font-size: 10px;">core</a> <a href="/tags/event-loop/" style="font-size: 15px;">event loop</a> <a href="/tags/events/" style="font-size: 10px;">events</a> <a href="/tags/fs/" style="font-size: 20px;">fs</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/happyChong/" style="font-size: 10px;">happyChong</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/module/" style="font-size: 10px;">module</a> <a href="/tags/nextTick/" style="font-size: 10px;">nextTick</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/path/" style="font-size: 10px;">path</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/util/" style="font-size: 10px;">util</a> <a href="/tags/vm/" style="font-size: 10px;">vm</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 15px;">webpack</a> <a href="/tags/单线程/" style="font-size: 10px;">单线程</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 happyChong<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>npm 命令与配置解析 | 快乐虫の地带</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="npm">
+<meta name="keywords" content="npm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="npm 命令与配置解析">
+<meta property="og:url" content="http://happychong.github.io/2019/10/24/npm命令与配置解析/index.html">
+<meta property="og:site_name" content="快乐虫の地带">
+<meta property="og:description" content="npm">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://www.ruanyifeng.com/blogimg/asset/201105/free_software_licenses.png">
+<meta property="og:updated_time" content="2020-03-17T06:55:14.440Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="npm 命令与配置解析">
+<meta name="twitter:description" content="npm">
+<meta name="twitter:image" content="http://www.ruanyifeng.com/blogimg/asset/201105/free_software_licenses.png">
+  
+    <link rel="alternate" href="/atom.xml" title="快乐虫の地带" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">快乐虫の地带</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://happychong.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="default-npm命令与配置解析" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/24/npm命令与配置解析/" class="article-date">
+  <time datetime="2019-10-23T16:00:00.000Z" itemprop="datePublished">2019-10-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/周边/">周边</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      npm 命令与配置解析
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="一：初始化包"><a href="#一：初始化包" class="headerlink" title="一：初始化包"></a>一：初始化包</h2><p>初始化package.json</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 自动生成</span></span><br><span class="line">npm install -y</span><br><span class="line"></span><br><span class="line"><span class="comment"># 询问模式</span></span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+
+<h2 id="二：下载包"><a href="#二：下载包" class="headerlink" title="二：下载包"></a>二：下载包</h2><h3 id="1-全局下载安装包"><a href="#1-全局下载安装包" class="headerlink" title="1.全局下载安装包"></a>1.全局下载安装包</h3><p>安装命令如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 全局安装 i=install -g 表示全局安装</span></span><br><span class="line">npm i http-server -g</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-假如我们自己写个全局包"><a href="#1-1-假如我们自己写个全局包" class="headerlink" title="1.1 假如我们自己写个全局包"></a>1.1 假如我们自己写个全局包</h4><ol>
+<li>创建一个bin文件夹</li>
+<li>bin里面创建一个叫www的文件</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// www文件内容</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 指定当前文件的执行环境为node</span></span><br><span class="line"><span class="meta">#! /usr/bin/env node</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'我自己的包的代码'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 当我们在命令行工具执行某个命令(lesson-my201910)的时候，我们希望找到这个www文件运行</span></span><br><span class="line"><span class="comment">// 那么需要在package.json文件中设置属性如下</span></span><br><span class="line"><span class="comment">// "bin":&#123;</span></span><br><span class="line"><span class="comment">//     "lesson-my201910":"./bin/www"</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 开发过程中，可以使用 npm link 命令创建快捷方式链接，指向当前目录的文件</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-本地安装包-在当前项目下，要使用的包"><a href="#2-本地安装包-在当前项目下，要使用的包" class="headerlink" title="2.本地安装包(在当前项目下，要使用的包)"></a>2.本地安装包(在当前项目下，要使用的包)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">npm install jquery --save</span><br><span class="line"><span class="comment"># --save 默认就指定为--save 可以简写为 -S</span></span><br><span class="line"><span class="comment"># 表示安装到当前的dependencies，是上线和开发的时候都需要</span></span><br><span class="line"></span><br><span class="line">npm install webpack --save-dev</span><br><span class="line"><span class="comment"># --save-dev 可简写为 -D 安装到当前的devDependencies 开发依赖 上线的时候不需要</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 有一天把包发布了，别人会安装你发布的包，如果你的模块被别人安装，你的模块中的dependencies会默认一起被下载，devDependencies不会被下载</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果安装包过程中出现错误，可以执行 npm cache clean --force 来清空缓存后，重新安装</span></span><br><span class="line"></span><br><span class="line">npm install</span><br><span class="line"><span class="comment"># 安装dependencies和devDependencies设置的全部依赖包</span></span><br><span class="line"></span><br><span class="line">npm install --production </span><br><span class="line"><span class="comment"># 这个命令可以只安装dependencies（生产）环境的包</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="三：常见的依赖项"><a href="#三：常见的依赖项" class="headerlink" title="三：常见的依赖项"></a>三：常见的依赖项</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package.json</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"dependencies"</span>: &#123;&#125;,</span><br><span class="line">    <span class="comment">// 上线和开发的时候都需要dependencies的依赖</span></span><br><span class="line">    <span class="string">"devDependencies"</span>: &#123;&#125;,</span><br><span class="line">    <span class="comment">// 开发的时候需要的依赖</span></span><br><span class="line">    <span class="string">"peerDependencies"</span>: &#123;&#125;,</span><br><span class="line">    <span class="comment">// 在 npm install 的时候并不会自动安装，但是会打印出需要安装相关包的警告信息</span></span><br><span class="line">    <span class="string">"bundleDependencies"</span>: [<span class="string">"包名"</span>],</span><br><span class="line">    <span class="comment">// 当执行 npm pack 命令打包的时候，会把bundleDependencies依赖的包打在当前包里</span></span><br><span class="line">    <span class="comment">// 其中依赖包的版本信息在dependencies依赖里设置</span></span><br><span class="line">    <span class="string">"optionalDependencies"</span>: &#123;&#125;</span><br><span class="line">    <span class="comment">// 可选依赖包 就算其中设置的包没安装上也没关系（不会报错），可以判断一下，有这个包就用，没有这个包用别的包</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四：版本相关"><a href="#四：版本相关" class="headerlink" title="四：版本相关"></a>四：版本相关</h2><h3 id="1-版本解析"><a href="#1-版本解析" class="headerlink" title="1 版本解析"></a>1 版本解析</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"version"</span>: <span class="string">"1.2.3"</span>,</span><br><span class="line">    <span class="comment">// 1变了，表示不兼容老代码，大规模的更新</span></span><br><span class="line">    <span class="comment">// npm version major    第一位+1，第二位变0，第三位变0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2变了，表示增加了一些功能</span></span><br><span class="line">    <span class="comment">// npm version minor    第二位+1，第三位变0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3变了，表示小的补丁</span></span><br><span class="line">    <span class="comment">// npm version patch    第三位+1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 以上 npm version 的命令，可以增加版本，并且同步 git tag</span></span><br><span class="line">    <span class="string">"dependencies"</span>: &#123;</span><br><span class="line">        <span class="string">"xxx"</span>: <span class="string">""</span>,</span><br><span class="line">        <span class="string">"yyy"</span>: <span class="string">""</span>,</span><br><span class="line">        <span class="string">"zzz"</span>: <span class="string">""</span>,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-版本依赖设置"><a href="#2-版本依赖设置" class="headerlink" title="2 版本依赖设置"></a>2 版本依赖设置</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"dependencies"</span>: &#123;</span><br><span class="line">        <span class="string">"xxx"</span>: <span class="string">"^2.0.0"</span>,</span><br><span class="line">        <span class="comment">// ^ 不超过第一位</span></span><br><span class="line">        <span class="comment">//   只要不到3都可以，不能小于2  2.0.0 &lt; version &lt; 3.0.0</span></span><br><span class="line">        <span class="string">"yyy"</span>: <span class="string">"~2.1.0"</span>,</span><br><span class="line">        <span class="comment">// ~ 不超过第二位</span></span><br><span class="line">        <span class="comment">//   第二位不超过1就可以   2.1.X  X等于多少都行</span></span><br><span class="line">        <span class="string">"zzz"</span>: <span class="string">""</span>,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-项目发版规范"><a href="#3-项目发版规范" class="headerlink" title="3 项目发版规范"></a>3 项目发版规范</h3><p>一般我们会先发测试版本，测试通过后，再发正式版本，以下为测试版本的3个阶段</p>
+<ol>
+<li>α（Alpha） - 一般只供内部测试使用</li>
+<li>β（Beta） - 已经消除了大部分不完善之处，可能还存在缺陷和漏洞，一般提供给特定的用户群来测试使用</li>
+<li>γ（RC） - 产品已经相当成熟，只需在个别地方再做进一步优化即可上市发布</li>
+</ol>
+<p>用户正常安装包的时候，只会安装包的正式版本，不会安装到以上的测试包版本</p>
+<h2 id="五：协议-license"><a href="#五：协议-license" class="headerlink" title="五：协议 - license"></a>五：协议 - license</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"license"</span>: <span class="string">"MIT"</span></span><br><span class="line">    <span class="comment">// license - 设置代码开源许可证</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>借用阮一峰老师的图来查看开源许可证的解析吧</p>
+<p><img src="http://www.ruanyifeng.com/blogimg/asset/201105/free_software_licenses.png" alt="license"></p>
+<h2 id="六：脚本-scripts"><a href="#六：脚本-scripts" class="headerlink" title="六：脚本 - scripts"></a>六：脚本 - scripts</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"scripts"</span>: &#123;</span><br><span class="line">        <span class="string">"dev"</span>: <span class="string">"node build/dev-server.js"</span>,</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// scripts - 配置执行的脚本</span></span><br><span class="line">    <span class="comment">// npm run dev  - 可以把scripts中dev设置的代码放到bash命令中执行</span></span><br><span class="line">    <span class="comment">//     当执行npm run 的时候，会把当前目录node_modules.bin也拷贝到当前的系统的path找那个，所以 npm run 可以执行.bin下的文件</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="七：npx-执行"><a href="#七：npx-执行" class="headerlink" title="七：npx - 执行"></a>七：npx - 执行</h2><p>npx 可以直接执行node_modules/.bin文件 不需要再配置scripts，如果模块不存在自动安装，安装完使用后还会自动销毁，这样就避免全局安装模块</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx mime 1.jpg</span><br></pre></td></tr></table></figure>
+
+<h2 id="八：发布"><a href="#八：发布" class="headerlink" title="八：发布"></a>八：发布</h2><h3 id="1-准备："><a href="#1-准备：" class="headerlink" title="1.准备："></a>1.准备：</h3><ul>
+<li>首先要保证包名不重名，其次包的版本是最新的，才可以发布成功</li>
+<li>其次当前计算机的npm源要是官方源，不能是taobao之类<ul>
+<li>nrm（node源管理工具）可以切换源，用 nrm use npm 命令切换</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在当前包的项目目录下执行命令</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 发布测试版本命令</span></span><br><span class="line">npm publish --tag=beta</span><br><span class="line"></span><br><span class="line"><span class="comment"># 发布正式版本命令</span></span><br><span class="line">npm publish</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-三源工具："><a href="#2-三源工具：" class="headerlink" title="2.三源工具："></a>2.三源工具：</h3><ul>
+<li>nrm node源管理工具</li>
+<li>nvm node版本管理工具</li>
+<li>npm node包管理工具</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2019/10/24/npm命令与配置解析/" data-id="ck7vkd8b10007hwplnshtluki" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/npm/">npm</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/10/30/Node---buffer/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Node --- buffer
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/10/16/Node中的事件循环（event loop）/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Node中的事件轮询（event loop）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/03/17/2018-1-11-hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/20/webpack优化/">webpack 4.0 + 笔记(优化)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/16/webpack基础配置/">webpack 4.0+ 笔记(基础配置)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/19/HTTP基础/">HTTP基础扫盲</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/07/node深度删除目录及目录里的内容-fs删除扩展/">Node - 深度（完全）删除目录及目录里的内容 - 扩展</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/01/Node中文件的读写模块---FS/">Node -文件读写模块--- fs</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/30/Node---buffer/">Node --- buffer</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/24/npm命令与配置解析/">npm 命令与配置解析</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/16/Node中的事件循环（event loop）/">Node中的事件轮询（event loop）</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/14/node模块加载原理/">Node模块加载原理</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/14/多线程与单线程服务/">单线程与多线程的基本概念</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/14/node核心模块-简述/">Node核心模块 - 简述</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/05/vue nextTick原理/">vue nextTick原理</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/05/es6+---类的修饰/">es6+---类的修饰</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/03/es+---class用法笔记 /">es6、7-类的定义</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/08/vue 强制更新试图的方法/">vue 强制更新试图 的方法</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/19/宋晓丹的个人简历/">宋晓丹的个人简历</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/11/windows下，ATOM常用编辑器快捷键/">ATOM常用快捷键</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/05/基本shell命令/">基本SHELL命令使用</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/05/Git命令/">Git常用命令</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Node/">Node</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/es6/">es6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/个人/">个人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/周边/">周边</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node/">Node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/buffer/">buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/core/">core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/event-loop/">event loop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fs/">fs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/happyChong/">happyChong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/module/">module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextTick/">nextTick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/path/">path</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/util/">util</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vm/">vm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单线程/">单线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/EventLoop/" style="font-size: 15px;">EventLoop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/buffer/" style="font-size: 10px;">buffer</a> <a href="/tags/class/" style="font-size: 15px;">class</a> <a href="/tags/core/" style="font-size: 10px;">core</a> <a href="/tags/event-loop/" style="font-size: 15px;">event loop</a> <a href="/tags/events/" style="font-size: 10px;">events</a> <a href="/tags/fs/" style="font-size: 20px;">fs</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/happyChong/" style="font-size: 10px;">happyChong</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/module/" style="font-size: 10px;">module</a> <a href="/tags/nextTick/" style="font-size: 10px;">nextTick</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/path/" style="font-size: 10px;">path</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/util/" style="font-size: 10px;">util</a> <a href="/tags/vm/" style="font-size: 10px;">vm</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 15px;">webpack</a> <a href="/tags/单线程/" style="font-size: 10px;">单线程</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 happyChong<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

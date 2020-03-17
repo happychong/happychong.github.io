@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>快乐虫の地带</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="我的笔记">
+<meta property="og:type" content="website">
+<meta property="og:title" content="快乐虫の地带">
+<meta property="og:url" content="http://happychong.github.io/page/2/index.html">
+<meta property="og:site_name" content="快乐虫の地带">
+<meta property="og:description" content="我的笔记">
+<meta property="og:locale" content="zh-CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="快乐虫の地带">
+<meta name="twitter:description" content="我的笔记">
+  
+    <link rel="alternate" href="/atom.xml" title="快乐虫の地带" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">快乐虫の地带</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://happychong.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="default-node模块加载原理" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/14/node模块加载原理/" class="article-date">
+  <time datetime="2019-10-13T16:00:00.000Z" itemprop="datePublished">2019-10-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Node/">Node</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/14/node模块加载原理/">Node模块加载原理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="1-js模块概述"><a href="#1-js模块概述" class="headerlink" title="1 js模块概述"></a>1 js模块概述</h2><p>历史上，JavaScript 一直没有模块（module）体系，无法将一个大程序拆分成互相依赖的小文件，再用简单的方法拼装起来。这对开发大型的、复杂的项目形成了巨大障碍。</p>
+<p>在 ES6 之前，社区制定了一些模块加载方案，最主要的有 CommonJS 和 AMD 两种。前者用于服务器，后者用于浏览器。ES6 在语言标准的层面上，实现了模块功能，而且实现得相当简单，完全可以取代 CommonJS 和 AMD 规范，成为浏览器和服务器通用的模块解决方案。</p>
+<p>ES6 模块的设计思想是尽量的静态化，使得编译时就能确定模块的依赖关系，以及输入和输出的变量。ES6 模块不是对象，而是通过export命令显式指定输出的代码，再通过import命令输入。</p>
+<h2 id="2-Node模块语法"><a href="#2-Node模块语法" class="headerlink" title="2 Node模块语法"></a>2 Node模块语法</h2><p>我们来写1个a模块—a.js，代码如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// a.js - Node中一个文件就是一个模块</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 导出 'hello'</span></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="string">'hello'</span></span><br></pre></td></tr></table></figure>
+
+<p>再写个useA模块，useA中应用a模块的内容</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// useA.js - 应用a模块的内容</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> a = <span class="built_in">require</span>(<span class="string">'./a.js'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(a);</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-Node模块加载的原理"><a href="#3-Node模块加载的原理" class="headerlink" title="3 Node模块加载的原理"></a>3 Node模块加载的原理</h2><p>我们定义a模块的时候，Node内部把我们的a模块包装了一层函数，代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// a.js - Node处理后的</span></span><br><span class="line"><span class="comment">// module.exports = 'hello'</span></span><br><span class="line">(fucntion () &#123;</span><br><span class="line">    <span class="built_in">module</span>.exports = <span class="string">'hello'</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">module</span>.exports</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>在useA模块应用a模块的时候，Node会把包装为函数的内容读到（Node可以在服务端读写文件），然后执行一下，代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// useA.js - 读取a模块的内容并执行</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> a = (fucntion () &#123;</span><br><span class="line">    <span class="built_in">module</span>.exports = <span class="string">'hello'</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">module</span>.exports</span><br><span class="line">&#125;)();</span><br><span class="line"><span class="built_in">console</span>.log(a);</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-module-exports-vs-exports"><a href="#4-module-exports-vs-exports" class="headerlink" title="4 module.exports vs exports"></a>4 module.exports vs exports</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 模块内 module.exports 和 exports 是相等的</span></span><br><span class="line"><span class="built_in">module</span>.exports === exports <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 那么我们是否可以 exports = 'hello' 这样来导出呢？答案是否定的</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 文件内我们拿到的module，exports，require等都是node把我们的代码包装成函数，在函数的参数里传给我们的</span></span><br><span class="line"><span class="comment">// 可以理解为以下代码</span></span><br><span class="line"><span class="keyword">let</span> exports = <span class="built_in">module</span>.exports = &#123;&#125;;</span><br><span class="line"><span class="comment">// 那么此时，exports = 'hello' 的话，module.exports的引用地址不会被改变，node包装的函数最终 return 的是 module.exports</span></span><br><span class="line"><span class="comment">// 所以 exports = 'hello' 这种方式导出得不到我们想要的</span></span><br><span class="line"><span class="comment">// 但是 exports.a = 'hello' ，这种情况我们并没有修改exports的引用空间，这样导出是ok的</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="5-mode模块加载原理代码查看下面链接"><a href="#5-mode模块加载原理代码查看下面链接" class="headerlink" title="5 mode模块加载原理代码查看下面链接"></a>5 mode模块加载原理代码查看下面链接</h2><p><a href="https://github.com/happychong/2019-zhufeng/tree/master/2.nodeModule" target="_blank" rel="noopener">https://github.com/happychong/2019-zhufeng/tree/master/2.nodeModule</a></p>
+<h2 id="5-node模块的分类"><a href="#5-node模块的分类" class="headerlink" title="5 node模块的分类"></a>5 node模块的分类</h2><h3 id="5-1-node中的模块分为3种类别"><a href="#5-1-node中的模块分为3种类别" class="headerlink" title="5.1 node中的模块分为3种类别"></a>5.1 node中的模块分为3种类别</h3><ul>
+<li>文件模块，比如我们的js</li>
+<li>第三方模块，需要安装</li>
+<li>内置模块，ex：fs</li>
+</ul>
+<h3 id="5-2-require-的时候，文件查找机制"><a href="#5-2-require-的时候，文件查找机制" class="headerlink" title="5.2 require 的时候，文件查找机制"></a>5.2 require 的时候，文件查找机制</h3><p>当我们require一个文件的时候，如果路径不包括扩展名，node的查找机制如下(node不同版本会稍有差别，所以项目中应尽量避免文件和文件夹名称相同)</p>
+<h4 id="a-文件模块的查找机制"><a href="#a-文件模块的查找机制" class="headerlink" title="a) 文件模块的查找机制"></a>a) 文件模块的查找机制</h4><ol>
+<li>先找文件，.js .json</li>
+<li>再找文件夹下的index</li>
+<li>再找不到报错</li>
+</ol>
+<h4 id="b-第三方模块查找机制"><a href="#b-第三方模块查找机制" class="headerlink" title="b) 第三方模块查找机制"></a>b) 第三方模块查找机制</h4><ol>
+<li>查找执行文件所在目录（__dirname）下的 node_modules 下的同名文件夹下的内容<ol>
+<li>首先查找package.json文件的main的属性值对应的文件</li>
+<li>没有main属性的话，查找 index.js 、index.json</li>
+</ol>
+</li>
+<li>如果1查找不到，会像上一级目录去查找 node_modules 下的同名文件夹 下的 index.js 文件，直到根目录为止</li>
+<li>根目录下也找不到，就报错</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2019/10/14/node模块加载原理/" data-id="ck1stxyno000r4gpl7ao8k19p" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/module/">module</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="default-多线程与单线程服务" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/14/多线程与单线程服务/" class="article-date">
+  <time datetime="2019-10-13T16:00:00.000Z" itemprop="datePublished">2019-10-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Node/">Node</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/14/多线程与单线程服务/">单线程与多线程的基本概念</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="1-什么是进程？"><a href="#1-什么是进程？" class="headerlink" title="1 什么是进程？"></a>1 什么是进程？</h2><p>当一个程序开始运行时，它就是一个进程，进程包括运行中的程序和程序所使用到的内存和系统资源。<br>而一个进程又是由多个线程所组成的。比如渲染线程、JS、引擎线程、HTTP请求线程等等</p>
+<h2 id="2-什么是线程？"><a href="#2-什么是线程？" class="headerlink" title="2 什么是线程？"></a>2 什么是线程？</h2><p>线程是程序中的一个执行流，每个线程都有自己的专有寄存器(栈指针、程序计数器等)，但代码区是共享的，<br>即不同的线程可以执行同样的函数。</p>
+<p>进程表示一个程序，1个进程占用1核CPU，线程是进程中的单位  node的主线程只有一个</p>
+<h2 id="3-什么是多线程？"><a href="#3-什么是多线程？" class="headerlink" title="3 什么是多线程？"></a>3 什么是多线程？</h2><p>多线程是指程序中包含多个执行流，即在一个程序中可以同时运行多个不同的线程来执行不同的任务，<br>也就是说允许单个程序创建多个并行执行的线程来完成各自的任务。</p>
+<p><em>多线程的好处：可以提高CPU的利用率。在多线程程序中，一个线程必须等待的时候，CPU可以运行其它的线程而不是等待，这样就大大提高了程序的效率。</em></p>
+<h2 id="4-什么是单线程？"><a href="#4-什么是单线程？" class="headerlink" title="4 什么是单线程？"></a>4 什么是单线程？</h2><p>单线程程序中只有1个执行流（主线程一个），底层工作线程多个。</p>
+<p><em>单线程优点：解决切换上下文时间，锁的问题，节省内存</em></p>
+<h2 id="5-单线程、多线程服务图解"><a href="#5-单线程、多线程服务图解" class="headerlink" title="5 单线程、多线程服务图解"></a>5 单线程、多线程服务图解</h2><p><img src="/images/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E2%80%94%E2%80%94%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%9C%8D%E5%8A%A1.png" alt="浏览器-event loop"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2019/10/14/多线程与单线程服务/" data-id="ck1stxynr000t4gplpjyrd1xw" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/单线程/">单线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="default-node核心模块-简述" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/14/node核心模块-简述/" class="article-date">
+  <time datetime="2019-10-13T16:00:00.000Z" itemprop="datePublished">2019-10-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Node/">Node</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/14/node核心模块-简述/">Node核心模块 - 简述</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="1-fs-文件的读写模块"><a href="#1-fs-文件的读写模块" class="headerlink" title="1 fs - 文件的读写模块"></a>1 fs - 文件的读写模块</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 导入 fs</span></span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//判断文件是否存在，如果不存在抛出异常</span></span><br><span class="line">fs.accessSync(<span class="string">'c.js'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 同步 读取文件内容</span></span><br><span class="line">fs.readFileSync(fileurl, <span class="string">'utf8'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 异步 读取文件内容</span></span><br><span class="line">fs.readFile(fileurl, (err, data) =&gt; &#123;</span><br><span class="line">    <span class="comment">// 读取完成的回调方法</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-path-专门处理路径的模块"><a href="#2-path-专门处理路径的模块" class="headerlink" title="2 path - 专门处理路径的模块"></a>2 path - 专门处理路径的模块</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 导入 path</span></span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// __dirname ：表示当前目录名</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 以当前根路径下查找a.js的路径</span></span><br><span class="line">path.resolve(<span class="string">'./a.js'</span>);</span><br><span class="line"><span class="comment">// 当前目录下 拼接路径或文件</span></span><br><span class="line">path.resolve(__dirname, <span class="string">'./a.js'</span>); <span class="comment">// XXX/a.js</span></span><br><span class="line">path.resolve(__dirname, <span class="string">'a'</span>, <span class="string">'b'</span>); <span class="comment">// XXX/a/b</span></span><br><span class="line">path.resolve(__dirname, <span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'/'</span>); <span class="comment">// 回到了/下，所以拼接/的时候，只能用join方法</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 简单的以/拼接路径 - 只拼接a和b的</span></span><br><span class="line">path.join(<span class="string">'a'</span>, <span class="string">'b'</span>); <span class="comment">// a/b</span></span><br><span class="line">path.join(<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'/'</span>); <span class="comment">// a/b/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 取扩展名</span></span><br><span class="line">path.extname(<span class="string">'main.js'</span>); <span class="comment">// .js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 取基本名（主名）,需要第二个参数提供扩展名才能得到basename</span></span><br><span class="line">path.basename(<span class="string">'main.js'</span>, <span class="string">'.js'</span>); <span class="comment">// .main</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取父路径</span></span><br><span class="line">path.dirname(__dirname); <span class="comment">// 得到当前目录的上级目录</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-vm-虚拟机模块，执行字符串代码"><a href="#3-vm-虚拟机模块，执行字符串代码" class="headerlink" title="3 vm - 虚拟机模块，执行字符串代码"></a>3 vm - 虚拟机模块，执行字符串代码</h2><p>让字符串执行的3个方法</p>
+<ol>
+<li>new Function    </li>
+<li>eval - 有作用域问题</li>
+<li>vm - vm 可以提供沙箱环境，不受外界变量的干扰</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 导入 vm()</span></span><br><span class="line"><span class="keyword">const</span> vm = <span class="built_in">require</span>(<span class="string">'vm'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在当前上下文中执行</span></span><br><span class="line"><span class="keyword">let</span> b = <span class="number">1000</span>;</span><br><span class="line">vm.runInThisContext(<span class="string">`console.log(b)`</span>);</span><br><span class="line"><span class="comment">// 会报错，因runInThisContext的参数字符串中，没有b变量</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="4-util-工具"><a href="#4-util-工具" class="headerlink" title="4 util - 工具"></a>4 util - 工具</h2><h3 id="4-1-promisify-把普通方法转化为promise方法"><a href="#4-1-promisify-把普通方法转化为promise方法" class="headerlink" title="4.1 promisify - 把普通方法转化为promise方法"></a>4.1 promisify - 把普通方法转化为promise方法</h3><p>promisify应用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 导入 util</span></span><br><span class="line"><span class="keyword">const</span> &#123; promisify &#125; = <span class="built_in">require</span>(<span class="string">'util'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ncp包，功能：拷贝文件，但是只提供了异步方法，需要回调的方式写代码</span></span><br><span class="line"><span class="comment">// 这种情况，就可以使用util 的 promisify 方法把ncp的异步方法转为promise</span></span><br><span class="line"><span class="keyword">let</span> ncp = <span class="built_in">require</span>(<span class="string">'ncp'</span>);</span><br><span class="line"><span class="comment">// promisify 之前的代码</span></span><br><span class="line"><span class="comment">// ncp('绝对路径1', '绝对路径2', (err, data) =&gt; &#123;</span></span><br><span class="line"><span class="comment">//     console.log('拷贝成功')</span></span><br><span class="line"><span class="comment">// &#125;)</span></span><br><span class="line"><span class="comment">// promisify 之后的代码</span></span><br><span class="line"><span class="keyword">let</span> ncopy = promisify(ncp);</span><br><span class="line"><span class="keyword">await</span> ncopy(<span class="string">'绝对路径1'</span>, <span class="string">'绝对路径2'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'拷贝成功'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>promisify原理</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> promisify = <span class="function">(<span class="params">fn</span>) =&gt;</span> <span class="function">(<span class="params">...args</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">        fn(...args, <span class="function"><span class="keyword">function</span> (<span class="params">err, data</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (err) &#123;</span><br><span class="line">                reject(err);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                resolve(data);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-inherits-继承"><a href="#4-2-inherits-继承" class="headerlink" title="4.2 inherits - 继承"></a>4.2 inherits - 继承</h3><p>node内部多半是用es5写的</p>
+<p>继承原型属性的方法总结：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// - 1</span></span><br><span class="line">Child.prototype.__proto__ = Parent.prototype;</span><br><span class="line"><span class="comment">// - 2</span></span><br><span class="line"><span class="built_in">Reflect</span>.setPrototypeOf(Child.prototype, Parent.prototype);</span><br><span class="line"><span class="comment">// - 3</span></span><br><span class="line">Child.prototype = <span class="built_in">Object</span>.create(Parent.prototype);</span><br></pre></td></tr></table></figure>
+
+<p>用 util 的 inherits 实现公共属性的继承</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; inherits &#125; = <span class="built_in">require</span>(<span class="string">'util'</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Parent</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Child</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 继承实例上的方法</span></span><br><span class="line">    Parent.call(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// inherits 的继承方式 ，同上面列举的第2条</span></span><br><span class="line">inherits(Child, Parent);</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-inspect-显示不可枚举的属性"><a href="#4-3-inspect-显示不可枚举的属性" class="headerlink" title="4.3 inspect - 显示不可枚举的属性"></a>4.3 inspect - 显示不可枚举的属性</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">util.inspect(<span class="built_in">Array</span>.prototype, &#123;<span class="attr">showHidden</span>: <span class="literal">true</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-events-事件"><a href="#5-events-事件" class="headerlink" title="5 events - 事件"></a>5 events - 事件</h2><p>发布订阅模块</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 应用</span></span><br><span class="line"><span class="keyword">let</span> EventEmitter = <span class="built_in">require</span>(<span class="string">'events'</span>);</span><br><span class="line"><span class="keyword">let</span> util = <span class="built_in">require</span>(<span class="string">'util'</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Girl</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 继承实例属性</span></span><br><span class="line">    EventEmitter.call(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">this</span>.name = <span class="string">'nv'</span>;</span><br><span class="line">&#125;</span><br><span class="line">util.inherits(Girl, EventEmitter);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> girl = <span class="keyword">new</span> Girl();</span><br><span class="line"><span class="keyword">let</span> listener1 = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'哭'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> listener2 = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.name + <span class="string">' 逛街'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">girl.on(<span class="string">'女生失恋'</span>, listener1);</span><br><span class="line">girl.on(<span class="string">'女生失恋'</span>, listener2);</span><br><span class="line"></span><br><span class="line">girl.emit(<span class="string">'女生失恋'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>事件的实现原理请看<a href="https://github.com/happychong/2019-zhufeng/tree/master/3.nodeEvents" target="_blank" rel="noopener">这里</a></p>
+<h2 id="6-inspect-断点"><a href="#6-inspect-断点" class="headerlink" title="6 inspect - 断点"></a>6 inspect - 断点</h2><p>如果想把node的代码，在谷歌浏览器中打断点（在浏览器中打断点的方式我们比较熟悉），请查阅 <a href="http://caibaojian.com/nodejs/s/LKb8ds.html" target="_blank" rel="noopener">inspect</a> 相关内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -brk   表示一进入文件就进入断点</span></span><br><span class="line">node --inspect-brk a.js</span><br></pre></td></tr></table></figure>
+
+<p>执行完以上命令后，在谷歌浏览器地址栏打开：chrome://inspect，会显示一个DevTools的页面，直接点击Open dedicated DevTools for Node，会跳到断点处</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2019/10/14/node核心模块-简述/" data-id="ck7vkd8ah0001hwplo2exq3l9" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/core/">core</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/events/">events</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/fs/">fs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/path/">path</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/util/">util</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vm/">vm</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="default-node基本概念扫盲" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/12/node基本概念扫盲/" class="article-date">
+  <time datetime="2019-10-11T16:00:00.000Z" itemprop="datePublished">2019-10-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Node/">Node</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="1-Node是什么？"><a href="#1-Node是什么？" class="headerlink" title="1.Node是什么？"></a>1.Node是什么？</h2><p>Node是一个js的运行时（runtime）<br>js由BOM DOM ECMASCRIPT组成，但是Node由ECMASCRIPT和内部模块（http， fs等）组成</p>
+<h2 id="2-能用Node做什么？"><a href="#2-能用Node做什么？" class="headerlink" title="2.能用Node做什么？"></a>2.能用Node做什么？</h2><ul>
+<li>1.写脚本，比如webpack</li>
+<li>2.做中间层，服务端渲染（vue react），实现前后端分离，解决跨域问题，实现数据格式化，实现高性能的web服务</li>
+<li>3.用Node做纯后端服务</li>
+</ul>
+<h2 id="3-Node的基本架构"><a href="#3-Node的基本架构" class="headerlink" title="3.Node的基本架构"></a>3.Node的基本架构</h2><p>提到Node.js的时候，我们耳熟能详的是: Node.js是一个基于ChromeV8引擎的JavaScript运行时。Node.js 使用高效、轻量级的事件驱动、非阻塞 I/O 模型。那么这句话真正想要表达的是什么呢？请看下图：</p>
+<p><img src="/images/node%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84.jpg" alt="node基本架构"></p>
+<ul>
+<li>Node standard library: Node的标准库，也就是我们平时所用的fs, path, http, net, stream等模块。</li>
+<li>Node bindlings: 是C++与JavaScript沟通的桥梁, 封装了V8和Libuv的细节，向上层提供API。</li>
+<li>最后一层是支撑Node的关键。<ul>
+<li>Libuv是一个高性能的，事件驱动的I/O库，并且提供了 跨平台（如windows, *nix）的API。简单的来说，Node.js的异步、非阻塞I/O，底层实际上是Libuv实现的。</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-Node的全局对象"><a href="#4-Node的全局对象" class="headerlink" title="4.Node的全局对象"></a>4.Node的全局对象</h2><p>我们认为直接能访问的对象，就是全局的</p>
+<h3 id="1-global"><a href="#1-global" class="headerlink" title="1) global"></a>1) global</h3><p>Node中每次执行只有一个global</p>
+<p>global中的属性</p>
+<ul>
+<li><p>process 进程 当前我们应用的进程</p>
+<ul>
+<li>process中有platform属性，’darwin’: 代表mac  ‘win32’: 代表windows</li>
+</ul>
+</li>
+<li><p>Buffer 缓存区</p>
+</li>
+<li><p>clearInterval setInterval</p>
+</li>
+<li><p>clearTimeout setTimeout</p>
+</li>
+<li><p>clearImmediate setImmediate 宏任务</p>
+</li>
+<li><p>argv 代表用户传入的参数: []，第三个参数后面的参数，只能通过命令 + 文件名 + –参数的方式传参</p>
+<ul>
+<li>0 : node执行文件</li>
+<li>1 : 当前执行的文件</li>
+<li>＞= 2 之后的内容为用户传入的参数</li>
+</ul>
+</li>
+<li><p>chdir() - 手动改变目录</p>
+</li>
+<li><p>cwd() - 当前工作目录（在哪里执行这个文件，目录就是哪里）</p>
+</li>
+<li><p>kill 杀死</p>
+</li>
+<li><p>evn 环境变量 - 我们可以根据环境变量的不同 执行不同的结果</p>
+<ul>
+<li>实际多数都用临时变量，mac环境，执行命令行时候，用export设置， windows用set设置</li>
+</ul>
+</li>
+<li><p>nextTick 下一队列，node中的微任务，node中的nextTick，比promise.then快，</p>
+<ul>
+<li>了解node事件环，请看 <a href="http://happychong.github.io/2019/10/16/Node%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%EF%BC%88event%20loop%EF%BC%89/">这里</a></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 收集 argv 的方法</span></span><br><span class="line"><span class="comment">// 方法 1</span></span><br><span class="line"><span class="keyword">let</span> config = process.argv.slice(<span class="number">2</span>).reduce(<span class="function">(<span class="params">memo, cur, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (cur.includes(<span class="string">'--'</span>)) &#123;</span><br><span class="line">        memo[cur.slice(<span class="number">2</span>)] = arr[index + <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> memo;</span><br><span class="line">&#125;, &#123;&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(config); <span class="comment">// &#123;port: '3000', config: 'xxx'&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法 2 应用 commander</span></span><br><span class="line"><span class="comment">// commander - 命令行管家 帮你提供 --help,第三方模块，需要先安装</span></span><br><span class="line"><span class="keyword">const</span> program = <span class="built_in">require</span>(<span class="string">'commander'</span>);</span><br><span class="line"><span class="comment">// 也可以同时应用 chalk 包，增加输出行的颜色</span></span><br><span class="line"><span class="keyword">const</span> chalk = <span class="built_in">require</span>(<span class="string">'chalk'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 解析用户的参数 默认提供--help</span></span><br><span class="line">program <span class="comment">// 配置命令 我输入命令后 要执行一些内容</span></span><br><span class="line">    .command(<span class="string">'create'</span>)</span><br><span class="line">    .alias(<span class="string">'c'</span>)</span><br><span class="line">    .description(<span class="string">'create project'</span>)</span><br><span class="line">    .action(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'create project'</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">program <span class="comment">// 配置属性 给代码传递参数</span></span><br><span class="line">    .option(<span class="string">'-p'</span>, <span class="string">'--port &lt;val&gt;'</span>, <span class="string">'set port'</span>)</span><br><span class="line">    .version(<span class="string">'1.0.0.0'</span>)</span><br><span class="line">    .parse(process.argv)</span><br><span class="line">program.on(<span class="string">'--help'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'\r\nExamples'</span>);</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'想额外输出的内容'</span> + chalk.green(<span class="string">'我是chalk输出绿色'</span>))</span><br><span class="line">&#125;).parse(process.argv)</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-module-exports-require-dirname-filename"><a href="#2-module-exports-require-dirname-filename" class="headerlink" title="2) module, exports, require, __dirname, __filename"></a>2) module, exports, require, __dirname, __filename</h3><p>node中，每个文件都是一个模块，模块外面包了一层匿名函数,module, exports, require, __dirname, __filename这几个就是这个函数的参数，所以我们也认为是全局变量</p>
+<ul>
+<li>module ： 模块</li>
+<li>exports ： module.exports</li>
+<li>require ： 加载模块的方法</li>
+<li>__filename ： 当前执行文件的绝对路径</li>
+<li>__dirname ： 当前执行文件的所在文件夹</li>
+</ul>
+<p>默认声明的属性是不放在global上的</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 每个模块中的this指向module.exports,所以如下</span></span><br><span class="line"><span class="keyword">this</span> === global <span class="comment">// false</span></span><br><span class="line"><span class="keyword">this</span> === <span class="built_in">module</span>.exports <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 模块中 匿名函数执行中的this指向global</span></span><br><span class="line">    <span class="comment">// 因为匿名函数执行之前，没有XXX.，所以this指向全局</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// global</span></span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+
+<p><em>浏览器中无法直接访问global对象，所以用window来代理</em></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2019/10/12/node基本概念扫盲/" data-id="ck1stxyna000h4gpl0wdk09zq" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Node/">Node</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="default-浏览器中js的事件循环（event loop）" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/12/浏览器中js的事件循环（event loop）/" class="article-date">
+  <time datetime="2019-10-11T16:00:00.000Z" itemprop="datePublished">2019-10-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我们都知道，javascript从诞生之日起就是一门单线程的非阻塞的脚本语言。这是由其最初的用途来决定的：与浏览器交互。</p>
+<p>单线程意味着，javascript代码在执行的任何时候，都只有一个主线程来处理所有的任务。</p>
+<p>而非阻塞则是当代码需要进行一项异步任务（无法立刻返回结果，需要花一定时间才能返回的任务，如I/O事件）的时候，主线程会挂起（pending）这个任务，然后在异步任务返回结果的时候再根据一定规则去执行相应的回调。</p>
+<p>单线程是必要的，也是javascript这门语言的基石，原因之一在其最初也是最主要的执行环境——浏览器中，我们需要进行各种各样的dom操作。试想一下 如果javascript是多线程的，那么当两个线程同时对dom进行一项操作，例如一个向其添加事件，而另一个删除了这个dom，此时该如何处理呢？因此，为了保证不会 发生类似于这个例子中的情景，javascript选择只用一个主线程来执行代码，这样就保证了程序执行的一致性。</p>
+<p>当然，现如今人们也意识到，单线程在保证了执行顺序的同时也限制了javascript的效率，因此开发出了web worker技术。这项技术号称让javascript成为一门多线程语言。</p>
+<p>然而，使用web worker技术开的多线程有着诸多限制，例如：所有新线程都受主线程的完全控制，不能独立执行。这意味着这些“线程” 实际上应属于主线程的子线程。另外，这些子线程并没有执行I/O操作的权限，只能为主线程分担一些诸如计算等任务。所以严格来讲这些线程并没有完整的功能，也因此这项技术并非改变了javascript语言的单线程本质。</p>
+<p>可以预见，未来的javascript也会一直是一门单线程的语言。</p>
+<p>话说回来，前面提到javascript的另一个特点是“非阻塞”，那么javascript引擎到底是如何实现的这一点呢？答案就是今天这篇文章的主角——event loop（事件循环）。</p>
+<h2 id="浏览器环境下js引擎的事件循环机制"><a href="#浏览器环境下js引擎的事件循环机制" class="headerlink" title="浏览器环境下js引擎的事件循环机制"></a>浏览器环境下js引擎的事件循环机制</h2><h3 id="1-执行栈与事件队列"><a href="#1-执行栈与事件队列" class="headerlink" title="1.执行栈与事件队列"></a>1.执行栈与事件队列</h3><p>当javascript代码执行的时候会将不同的变量存于内存中的不同位置：堆（heap）和栈（stack）中来加以区分。其中，堆里存放着一些对象。而栈中则存放着一些基础类型变量以及对象的指针。 但是我们这里说的执行栈和上面这个栈的意义却有些不同。</p>
+<p>我们知道，当我们调用一个方法的时候，js会生成一个与这个方法对应的执行环境（context），又叫执行上下文。这个执行环境中存在着这个方法的私有作用域，上层作用域的指向，方法的参数，这个作用域中定义的变量以及这个作用域的this对象。 而当一系列方法被依次调用的时候，因为js是单线程的，同一时间只能执行一个方法，于是这些方法被排队在一个单独的地方。这个地方被称为执行栈。</p>
+<p>当一个脚本第一次执行的时候，js引擎会解析这段代码，并将其中的同步代码按照执行顺序加入执行栈中，然后从头开始执行。如果当前执行的是一个方法，那么js会向执行栈中添加这个方法的执行环境，然后进入这个执行环境继续执行其中的代码。当这个执行环境中的代码 执行完毕并返回结果后，js会退出这个执行环境并把这个执行环境销毁，回到上一个方法的执行环境。。这个过程反复进行，直到执行栈中的代码全部执行完毕。</p>
+<p>一个方法执行会向执行栈中加入这个方法的执行环境，在这个执行环境中还可以调用其他方法，甚至是自己，其结果不过是在执行栈中再添加一个执行环境。这个过程可以是无限进行下去的，除非发生了栈溢出，即超过了所能使用内存的最大值。</p>
+<p>以上的过程说的都是同步代码的执行。那么当一个异步代码（如发送ajax请求数据）执行后会如何呢？前文提过，js的另一大特点是非阻塞，实现这一点的关键在于下面要说的这项机制——事件队列（Task Queue）。</p>
+<p>js引擎遇到一个异步事件后并不会一直等待其返回结果，而是会将这个事件挂起，继续执行执行栈中的其他任务。当一个异步事件返回结果后，js会将这个事件加入与当前执行栈不同的另一个队列，我们称之为事件队列。被放入事件队列不会立刻执行其回调，而是等待当前执行栈中的所有任务都执行完毕， 主线程处于闲置状态时，主线程会去查找事件队列是否有任务。如果有，那么主线程会从中取出排在第一位的事件，并把这个事件对应的回调放入执行栈中，然后执行其中的同步代码…，如此反复，这样就形成了一个无限的循环。这就是这个过程被称为“事件循环（Event Loop）”的原因。</p>
+<h3 id="2-macro-task（宏任务）与micro-task（微任务）"><a href="#2-macro-task（宏任务）与micro-task（微任务）" class="headerlink" title="2.macro task（宏任务）与micro task（微任务）"></a>2.macro task（宏任务）与micro task（微任务）</h3><p>以上的事件循环过程是一个宏观的表述，实际上因为异步任务之间并不相同，因此他们的执行优先级也有区别。不同的异步任务被分为两类：微任务（micro task）和宏任务（macro task）。</p>
+<p>以下事件属于宏任务：</p>
+<p>setInterval()<br>setTimeout()<br>以下事件属于微任务</p>
+<p>new Promise()<br>new MutaionObserver()<br>前面我们介绍过，在一个事件循环中，异步事件返回结果后会被放到一个任务队列中。然而，根据这个异步事件的类型，这个事件实际上会被对应的宏任务队列或者微任务队列中去。并且在当前执行栈为空的时候，主线程会 查看微任务队列是否有事件存在。如果不存在，那么再去宏任务队列中取出一个事件并把对应的回到加入当前执行栈；如果存在，则会依次执行队列中事件对应的回调，直到微任务队列为空，然后去宏任务队列中取出最前面的一个事件，把对应的回调加入当前执行栈…如此反复，进入循环。</p>
+<p>我们只需记住当当前执行栈执行完毕时会立刻先处理所有微任务队列中的事件，然后再去宏任务队列中取出一个事件。同一次事件循环中，微任务永远在宏任务之前执行。</p>
+<p>这样就能解释下面这段代码的结果：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve,reject</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">2</span>)</span><br><span class="line">    resolve(<span class="number">3</span>)</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">val</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(val);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>结果为：</p>
+<p>2<br>3<br>1</p>
+<h2 id="3-画图如下，帮助理解"><a href="#3-画图如下，帮助理解" class="headerlink" title="3.画图如下，帮助理解"></a>3.画图如下，帮助理解</h2><p><img src="/images/eventLoop.png" alt="浏览器-event loop"></p>
+<hr>
+<ul>
+<li>新版本Node中的事件环和浏览器中的基本一样</li>
+<li>本文说明性文字内容摘抄自<a href="https://www.cnblogs.com/cangqinglang/p/8967268.html" target="_blank" rel="noopener">https://www.cnblogs.com/cangqinglang/p/8967268.html</a>*</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2019/10/12/浏览器中js的事件循环（event loop）/" data-id="ck1stxyng000l4gploiqrr8i5" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/event-loop/">event loop</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="default-vue nextTick原理" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/05/vue nextTick原理/" class="article-date">
+  <time datetime="2019-10-04T16:00:00.000Z" itemprop="datePublished">2019-10-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/vue/">vue</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/05/vue nextTick原理/">vue nextTick原理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><p>vue中的视图更新有缓存机制，会把多次数据的修改集中在一次视图更新中来更新视图，我们想视图更新之后再获取数据，那么就可用vue的nextTick，nextTick中的代码可以在下一队列中执行，实现代码的延迟执行，多次调用nextTick，会将其中的方法放入一个队列中，视图更新的时候会调用flushCallbacks方法，这个方法会执行所有nextTick中的方法。至于下一队列的执行时机，会按以下列表优先级进行选择。</p>
+<ul>
+<li>prosise.then (微任务)</li>
+<li>MutationObserver (微任务，非IE，h5方法)</li>
+<li>setImmediate (宏任务，IE)</li>
+<li>setTimeout (宏任务)</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2019/10/05/vue nextTick原理/" data-id="ck1stxyn7000f4gplhg1udvfc" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nextTick/">nextTick</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="default-es6+---类的修饰" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/09/05/es6+---类的修饰/" class="article-date">
+  <time datetime="2019-09-04T16:00:00.000Z" itemprop="datePublished">2019-09-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/es6/">es6</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/09/05/es6+---类的修饰/">es6+---类的修饰</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="1-装饰器本身是方法"><a href="#1-装饰器本身是方法" class="headerlink" title="1:装饰器本身是方法"></a>1:装饰器本身是方法</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 装饰模式， 在执行类之前可以进行包装,只能修饰类的属性和类中的方法</span></span><br><span class="line"></span><br><span class="line">@type1</span><br><span class="line">@type2</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span></span>&#123;</span><br><span class="line">    <span class="comment">// 装饰器的执行顺序，按书写顺序的从近到远顺序执行，如上代码，先执行type2，再执行type1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 对类进行扩展</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">type1</span>(<span class="params">Constructor</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 装饰类的装饰器函数，参数为类的构造原型</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>)</span><br><span class="line">    Constructor.type1 = <span class="string">'哺乳类1'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">type2</span>(<span class="params">typeName</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">2</span>)</span><br><span class="line">    Constructor.type1 = <span class="string">'哺乳类2'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-装饰器方法返回function-装饰器传参"><a href="#2-装饰器方法返回function-装饰器传参" class="headerlink" title="2:装饰器方法返回function(装饰器传参)"></a>2:装饰器方法返回function(装饰器传参)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 装饰器必须是一个函数，所以这里type1，type2是方法里返回函数</span></span><br><span class="line">@type1(<span class="string">'哺乳类1'</span>)</span><br><span class="line">@type2(<span class="string">'哺乳类2'</span>)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span></span>&#123;</span><br><span class="line">    <span class="comment">// 装饰器的执行顺序，会先执行type1，再执行type2</span></span><br><span class="line">    <span class="comment">// 但是对Animal进行装饰的时候，还是会按从近到远的顺序执行</span></span><br><span class="line">    <span class="comment">// 也就是先执行type2返回的函数，再执行type1返回的函数——洋葱模型，如下图</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">type1</span>(<span class="params">typeName</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'type1'</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">Constructor</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'t1'</span>);</span><br><span class="line">        Constructor.type1 = typeName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">type2</span>(<span class="params">typeName</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'type2'</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">Constructor</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'t2'</span>);</span><br><span class="line">        Constructor.type2 = typeName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/2019-09-03-es6-yangcong.png" alt="执行顺序-洋葱"></p>
+<h2 id="3-装饰器-例子-装饰属性-amp-方法"><a href="#3-装饰器-例子-装饰属性-amp-方法" class="headerlink" title="3:装饰器-例子(装饰属性&amp;方法)"></a>3:装饰器-例子(装饰属性&amp;方法)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// PI属性不应该被修改</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Circle</span>() </span>&#123;</span><br><span class="line">    <span class="comment">// 装饰属性和方法 构造器中的参数为 类的原型，装饰的key 和 key对应的属性描述器</span></span><br><span class="line">    @readonly PI = <span class="number">3.14</span>;</span><br><span class="line">    <span class="comment">// 想在say之前执行一些别的方法，以前用before，现在用装饰器</span></span><br><span class="line">    @before</span><br><span class="line">    say() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'I can say'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">readonly</span>(<span class="params">circlePrototype, key, descriptor</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 设置PI只读</span></span><br><span class="line">    descriptor.writable = <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">// 设置PI不可枚举</span></span><br><span class="line">    descriptor.enumerable = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">before</span>(<span class="params">circlePrototype, key, descriptor</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 修饰方法，参数和修饰属性一样，但是descriptor的value变成了say方法</span></span><br><span class="line">    <span class="keyword">let</span> oldSay = descriptor.value;</span><br><span class="line">    descriptor.value = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; <span class="comment">// 函数劫持</span></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'我是另外增加的say'</span>);</span><br><span class="line">        oldSay();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> c = <span class="keyword">new</span> Circle();</span><br><span class="line">c.PI = <span class="number">31.5</span>;</span><br><span class="line"><span class="built_in">console</span>.log(c)</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-装饰器-例子-mixin-混合"><a href="#4-装饰器-例子-mixin-混合" class="headerlink" title="4:装饰器-例子(mixin-混合)"></a>4:装饰器-例子(mixin-混合)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;</span><br><span class="line">    name: <span class="string">'happy'</span>,</span><br><span class="line">    age: <span class="string">'18'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@mixin(obj)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">School</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mixin</span>(<span class="params">obj</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">Constructor</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">Object</span>.assign(Constructor.prototype, obj);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> school = <span class="keyword">new</span> School;</span><br><span class="line"><span class="built_in">console</span>.log(school.name, school.age);</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2019/09/05/es6+---类的修饰/" data-id="ck1stxyn2000b4gplb49f08w5" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/class/">class</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="default-es+---class用法笔记 " class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/09/03/es+---class用法笔记 /" class="article-date">
+  <time datetime="2019-09-02T16:00:00.000Z" itemprop="datePublished">2019-09-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/es6/">es6</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/09/03/es+---class用法笔记 /">es6、7-类的定义</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="基础语法"><a href="#基础语法" class="headerlink" title="基础语法"></a>基础语法</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">    <span class="comment">// type声明到实例上的，同下面的constructor写法一样的效果</span></span><br><span class="line">    type = <span class="string">'哺乳类'</span>;</span><br><span class="line">    <span class="comment">// constructor() &#123;</span></span><br><span class="line">    <span class="comment">//    // constructor同es5定义类的方法体类似含义</span></span><br><span class="line">    <span class="comment">//     this.type = '哺乳类'</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 原型上设置a属性</span></span><br><span class="line">    <span class="keyword">get</span> a() &#123;</span><br><span class="line">        <span class="comment">// 原理：Object.defineProperty(Animal.prototype, a)</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 声明到了原型上 // Animal.prototype.say</span></span><br><span class="line">    say() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 静态属性就是定义到类上的属性</span></span><br><span class="line">    <span class="keyword">static</span> flag = <span class="string">'动物'</span> <span class="comment">// es7写法</span></span><br><span class="line">    <span class="comment">// es6中只有静态方法,代码如下</span></span><br><span class="line">    <span class="comment">// static flag() &#123; // es6语法 1）</span></span><br><span class="line">    <span class="comment">//     return '动物'</span></span><br><span class="line">    <span class="comment">//     // 获取的时候 Animal.flag()</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="comment">// static get flag() &#123; // es6语法 1）</span></span><br><span class="line">    <span class="comment">//     return '动物'</span></span><br><span class="line">    <span class="comment">//     // 获取的时候 Animal.flag</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 注意如下代码，es6中把原型上的方法拿出来用，this是undefined</span></span><br><span class="line"><span class="keyword">let</span> animal= <span class="keyword">new</span> Animal();</span><br><span class="line"><span class="keyword">let</span> say = animal.say;</span><br><span class="line">say();  <span class="comment">//   打印的this是undefined</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 需要bind，this才能有所指向，代码如下</span></span><br><span class="line"><span class="comment">// 如果将类中的方法拿出来用必须绑定this 否则默认指向undefined</span></span><br><span class="line"><span class="keyword">let</span> aniamlOk = <span class="keyword">new</span> Animal();</span><br><span class="line"><span class="keyword">let</span> sayOk = animal.say.bind(animal);</span><br><span class="line">sayOk();</span><br></pre></td></tr></table></figure>
+
+<h2 id="类的继承"><a href="#类的继承" class="headerlink" title="类的继承"></a>类的继承</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>(name) &#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.type = <span class="string">'哺乳类'</span></span><br><span class="line">    &#125;</span><br><span class="line">    say() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'say'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> flag = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 继承实例和原型上的属性 extends = call + Object.create() +  Object.setPrototypeOf</span></span><br><span class="line"><span class="comment">// 原理：通过Object.defineProperty实现了 原型 + 静态方法属性的定义</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Tiger</span> <span class="keyword">extends</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>(name) &#123;</span><br><span class="line">        <span class="keyword">super</span>(name); <span class="comment">// 调用supper = Animal.call(tiger, name)</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> getAnimal() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">super</span>.flag, <span class="string">'-----'</span>); <span class="comment">// 在静态方法的定义中，super 指向的是 父类</span></span><br><span class="line">    &#125;</span><br><span class="line">    say() &#123;</span><br><span class="line">        <span class="keyword">super</span>.say(); <span class="comment">// 在原型方法中，super 指向的是 父类的原型</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> tiger = <span class="keyword">new</span> Tiger(<span class="string">'老虎'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(Tiger.flag); <span class="comment">// 1</span></span><br><span class="line"><span class="built_in">console</span>.log(tiger.name); <span class="comment">// 老虎</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="new的原理"><a href="#new的原理" class="headerlink" title="new的原理"></a>new的原理</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">this</span>.age = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// new 一个类</span></span><br><span class="line">        <span class="comment">// 1：得到一个对象，这个对象上的方法的this指向这个对象---代码如上</span></span><br><span class="line">        <span class="comment">// 2：如果一个类返回的是一个引用空间，那个实例将指向这个空间---代码如下</span></span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="attr">c</span>: <span class="number">1</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line">A.prototype.say = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'say'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 模拟new一个类</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mockNew</span>(<span class="params">mockClass</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 1) 创建一个对象，并且将对象传入到函数中作为this</span></span><br><span class="line">    <span class="keyword">let</span> obj = &#123;&#125;;</span><br><span class="line">    <span class="keyword">let</span> returnVal = mockClass.call(obj);</span><br><span class="line">    <span class="keyword">if</span> (returnVal !==<span class="literal">null</span> &amp;&amp; (<span class="keyword">typeof</span> returnVal === <span class="string">'object'</span> || <span class="keyword">typeof</span> returnVal === <span class="string">'function'</span>)) &#123;</span><br><span class="line">        <span class="comment">// 如果一个类返回的是一个引用空间，那个实例将指向这个空间</span></span><br><span class="line">        <span class="keyword">return</span> returnVal</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 2) 继承原型上的方法</span></span><br><span class="line">    obj.__proto__ = mockClass.prototype;</span><br><span class="line">    <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> o = mockNew(A);</span><br><span class="line">o.say();</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2019/09/03/es+---class用法笔记 /" data-id="ck1stxymy000a4gplb2u23dio" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/class/">class</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="default-vue 强制更新试图的方法" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/08/08/vue 强制更新试图的方法/" class="article-date">
+  <time datetime="2018-08-07T16:00:00.000Z" itemprop="datePublished">2018-08-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/vue/">vue</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/08/vue 强制更新试图的方法/">vue 强制更新试图 的方法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="1-情况说明"><a href="#1-情况说明" class="headerlink" title="1.情况说明"></a>1.情况说明</h2><p>vue应用中，偶尔会出现数据已经更新，但是视图不更新的情况，这里总结了4种方法</p>
+<h2 id="2-前三种方法"><a href="#2-前三种方法" class="headerlink" title="2.前三种方法"></a>2.前三种方法</h2><p>前三种方法网上一搜一大堆，只做简单文字描述</p>
+<ul>
+<li><p>1.通过索引直接设置数组的某个值，this.objArr[index] = newValue;</p>
+</li>
+<li><p>2.通过索引直接设置数组中对象的某个属性，this.objArr[index].pro = newValue;</p>
+</li>
+<li><p>3.通过修改数组的长度，this.objArr.length = newLength;</p>
+</li>
+</ul>
+<h2 id="3-第四种方法-vue提供的强制刷新dom的方法"><a href="#3-第四种方法-vue提供的强制刷新dom的方法" class="headerlink" title="3.第四种方法 - vue提供的强制刷新dom的方法"></a>3.第四种方法 - vue提供的强制刷新dom的方法</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vue 强制更新dom</span></span><br><span class="line">vm.$forceUpdate();</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2018/08/08/vue 强制更新试图的方法/" data-id="ck1stxymq00054gplejsjgv8u" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue/">vue</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="default-宋晓丹的个人简历" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/05/19/宋晓丹的个人简历/" class="article-date">
+  <time datetime="2016-05-18T16:00:00.000Z" itemprop="datePublished">2016-05-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/个人/">个人</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/19/宋晓丹的个人简历/">宋晓丹的个人简历</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="1-基本信息"><a href="#1-基本信息" class="headerlink" title="1.基本信息"></a>1.基本信息</h2><ul>
+<li>性别：女</li>
+<li>婚姻状况：已婚已育</li>
+<li>出生年份：1984</li>
+<li>户口所在地：北京</li>
+<li>现居住地：北京房山</li>
+<li>手机号码：15901298780</li>
+<li>邮箱：<a href="mailto:1173290465@qq.com" target="_blank" rel="noopener">1173290465@qq.com</a></li>
+<li>前端工作年限：10年</li>
+<li>当前薪资：21.5K/月</li>
+<li>最高学历：本科</li>
+</ul>
+<h2 id="2-求职意向"><a href="#2-求职意向" class="headerlink" title="2.求职意向"></a>2.求职意向</h2><ul>
+<li>期望职位：web前端开发</li>
+<li>工作地区：北京-房山，丰台，石景山，海淀</li>
+<li>期望月薪：27K/月</li>
+<li>目前状况：在职，正考虑换个新环境（可以比较快进入新环境）</li>
+</ul>
+<h2 id="3-专业技能"><a href="#3-专业技能" class="headerlink" title="3.专业技能"></a>3.专业技能</h2><ul>
+<li>了解react，webpack，gulp，sass，less，babel，es6等新兴技术及相关生态</li>
+<li>精通HTML+ CSS，处理各浏览器兼容问题，了解掌握CSS sprite、负边距布局、栅格布局</li>
+<li>项目中已经本着渐进渐强的原则应用css3，H5等新技术</li>
+<li>熟练掌握JavaScript前端脚本语言及其运行原理，Ajax技术进行异步操作，精通开发调试工具，如Firebug、chrome console等</li>
+</ul>
+<h2 id="4-工作经历"><a href="#4-工作经历" class="headerlink" title="4.工作经历"></a>4.工作经历</h2><h3 id="北京汇商融通信息技术有限公司（小笨鸟）-WEB前端开发-（2016-12-—-至今）"><a href="#北京汇商融通信息技术有限公司（小笨鸟）-WEB前端开发-（2016-12-—-至今）" class="headerlink" title="北京汇商融通信息技术有限公司（小笨鸟） | WEB前端开发 （2016/12 — 至今）"></a>北京汇商融通信息技术有限公司（小笨鸟） | WEB前端开发 （2016/12 — 至今）</h3><ul>
+<li>行业类别：互联网/电子商务</li>
+<li>职位月薪：15000-25000元/月</li>
+</ul>
+<h4 id="工作描述"><a href="#工作描述" class="headerlink" title="工作描述"></a>工作描述</h4><h5 id="负责公司前后台核心业务开发"><a href="#负责公司前后台核心业务开发" class="headerlink" title="负责公司前后台核心业务开发"></a>负责公司前后台核心业务开发</h5><ul>
+<li>商品模块（主商品、刊登商品等)</li>
+<li>图片管理模块</li>
+<li>模板管理模块</li>
+<li>订单管理模块</li>
+</ul>
+<h5 id="负责平台公共组件开发"><a href="#负责平台公共组件开发" class="headerlink" title="负责平台公共组件开发"></a>负责平台公共组件开发</h5><ul>
+<li>title、页码、公共请求处理等</li>
+<li>选择小笨鸟分类，选择站点分类组件</li>
+<li>公用边栏组件（返回顶部、快速填写等）</li>
+<li>选择模板组件，编辑器中使用模块组件</li>
+<li>多规格表格组件</li>
+<li>mock数据模拟</li>
+</ul>
+<h5 id="负责B2C组前端管理工作"><a href="#负责B2C组前端管理工作" class="headerlink" title="负责B2C组前端管理工作"></a>负责B2C组前端管理工作</h5><ul>
+<li>人员任务分配</li>
+<li>需求调研及任务跟进</li>
+<li>git分支管理等</li>
+</ul>
+<h5 id="跟踪业内发展趋势，对前端相关技术进行学习，研究"><a href="#跟踪业内发展趋势，对前端相关技术进行学习，研究" class="headerlink" title="跟踪业内发展趋势，对前端相关技术进行学习，研究"></a>跟踪业内发展趋势，对前端相关技术进行学习，研究</h5><h5 id="完善文件及模块组织，性能优化，构建和部署自动化等"><a href="#完善文件及模块组织，性能优化，构建和部署自动化等" class="headerlink" title="完善文件及模块组织，性能优化，构建和部署自动化等"></a>完善文件及模块组织，性能优化，构建和部署自动化等</h5><h3 id="百度-神州飞腾-WEB前端开发-（2014-12-—-2016-05）"><a href="#百度-神州飞腾-WEB前端开发-（2014-12-—-2016-05）" class="headerlink" title="百度(神州飞腾) | WEB前端开发 （2014/12 — 2016/05）"></a>百度(神州飞腾) | WEB前端开发 （2014/12 — 2016/05）</h3><ul>
+<li>行业类别：互联网/电子商务</li>
+<li>职位月薪：15000-25000元/月</li>
+</ul>
+<h4 id="工作描述-1"><a href="#工作描述-1" class="headerlink" title="工作描述"></a>工作描述</h4><h5 id="负责CRM内部运营系统的交互效果及动态数据交互，主要负责模块如下"><a href="#负责CRM内部运营系统的交互效果及动态数据交互，主要负责模块如下" class="headerlink" title="负责CRM内部运营系统的交互效果及动态数据交互，主要负责模块如下"></a>负责CRM内部运营系统的交互效果及动态数据交互，主要负责模块如下</h5><ul>
+<li>任务模块</li>
+<li>罗盘数据模块</li>
+<li>框架合同模块</li>
+<li>iManager报表分析模块</li>
+<li>纵横分析模块</li>
+<li>沟通平台模块</li>
+</ul>
+<h5 id="完善文件及模块组织，性能优化，构建和部署自动化等-1"><a href="#完善文件及模块组织，性能优化，构建和部署自动化等-1" class="headerlink" title="完善文件及模块组织，性能优化，构建和部署自动化等"></a>完善文件及模块组织，性能优化，构建和部署自动化等</h5><h5 id="跟踪业内发展趋势，对前端相关新技术进行学习，研究"><a href="#跟踪业内发展趋势，对前端相关新技术进行学习，研究" class="headerlink" title="跟踪业内发展趋势，对前端相关新技术进行学习，研究"></a>跟踪业内发展趋势，对前端相关新技术进行学习，研究</h5><h3 id="中科软科技股份有限公司-WEB前端开发-（2008-12-–-2014-12）"><a href="#中科软科技股份有限公司-WEB前端开发-（2008-12-–-2014-12）" class="headerlink" title="中科软科技股份有限公司 | WEB前端开发 （2008/12 – 2014/12）"></a>中科软科技股份有限公司 | WEB前端开发 （2008/12 – 2014/12）</h3><ul>
+<li>行业类别：计算机软件</li>
+<li>职位月薪：8001-10000元/月</li>
+</ul>
+<h4 id="工作描述-2"><a href="#工作描述-2" class="headerlink" title="工作描述"></a>工作描述</h4><ul>
+<li>各项目界面制作及相应改版页面制作。</li>
+<li>各项目界面的javascript效果制作。</li>
+<li>与后台程序配合动态页面制作。</li>
+</ul>
+<h3 id="大旗网，凌云互动科技有限公司—www-daqi-com-WEB前端开发-（2007-07-–-2008-12）"><a href="#大旗网，凌云互动科技有限公司—www-daqi-com-WEB前端开发-（2007-07-–-2008-12）" class="headerlink" title="大旗网，凌云互动科技有限公司—www.daqi.com | WEB前端开发 （2007/07 – 2008/12）"></a>大旗网，凌云互动科技有限公司—<a href="http://www.daqi.com" target="_blank" rel="noopener">www.daqi.com</a> | WEB前端开发 （2007/07 – 2008/12）</h3><ul>
+<li>行业类别：互联网/电子商务</li>
+<li>职位月薪：4001-6000元/月</li>
+</ul>
+<h4 id="工作描述-3"><a href="#工作描述-3" class="headerlink" title="工作描述"></a>工作描述</h4><ul>
+<li>频道改版页面制作。</li>
+<li>专题页面制作。</li>
+<li>客户招募页面制作以及参与网站各个页面的制作。</li>
+<li>网站栏目的更新和维护。</li>
+<li>网站频道二级页面、三级页面、产品介绍页面设计。</li>
+<li>javascript技术支持。</li>
+<li>flash技术支持。</li>
+</ul>
+<h3 id="社区中国网-www-chinasq-com-cn-网页制作-（2005-05-–-2007-07）"><a href="#社区中国网-www-chinasq-com-cn-网页制作-（2005-05-–-2007-07）" class="headerlink" title="社区中国网 - www.chinasq.com.cn| 网页制作 （2005/05 – 2007/07）"></a>社区中国网 - <a href="http://www.chinasq.com.cn|" target="_blank" rel="noopener">www.chinasq.com.cn|</a> 网页制作 （2005/05 – 2007/07）</h3><ul>
+<li>行业类别：互联网/电子商务</li>
+<li>职位月薪：2001-4000元/月</li>
+</ul>
+<h4 id="工作描述-4"><a href="#工作描述-4" class="headerlink" title="工作描述"></a>工作描述</h4><ul>
+<li>页面切图。</li>
+<li>把图片转成静态页面，使用DIV+CSS构建页面。</li>
+<li>参与网站各个页面的制作。</li>
+<li>网站栏目的更新和维护。</li>
+</ul>
+<h2 id="项目经验"><a href="#项目经验" class="headerlink" title="项目经验"></a>项目经验</h2><h3 id="icrm内部运营系统"><a href="#icrm内部运营系统" class="headerlink" title="icrm内部运营系统"></a>icrm内部运营系统</h3><h4 id="责任描述"><a href="#责任描述" class="headerlink" title="责任描述"></a>责任描述</h4><p>工作台，罗盘，呼叫中心，idata，框架合同等项目的前端开发（主要js）。</p>
+<h4 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h4><p>百度的CRM客服运营系统。</p>
+<h3 id="大连党校APP"><a href="#大连党校APP" class="headerlink" title="大连党校APP"></a>大连党校APP</h3><h4 id="责任描述-1"><a href="#责任描述-1" class="headerlink" title="责任描述"></a>责任描述</h4><p>响应式网页制作。</p>
+<h4 id="项目简介-1"><a href="#项目简介-1" class="headerlink" title="项目简介"></a>项目简介</h4><p>主要是关于党校介绍，课程介绍，服务介绍类网站。</p>
+<h3 id="简单博客（node）-express"><a href="#简单博客（node）-express" class="headerlink" title="简单博客（node）- express"></a>简单博客（node）- express</h3><h4 id="责任描述-2"><a href="#责任描述-2" class="headerlink" title="责任描述"></a>责任描述</h4><p>Node搭建blog框架及相关数据库，redis等。（学习项目经验）</p>
+<h4 id="项目简介-2"><a href="#项目简介-2" class="headerlink" title="项目简介"></a>项目简介</h4><p>只是一个blog的简单demo。<br>其中应用了express，mysql等，自己写了redis的中间件。</p>
+<p>自学node的相关内容可查：(<a href="https://github.com/happychong)[https://github.com/happychong]" target="_blank" rel="noopener">https://github.com/happychong)[https://github.com/happychong]</a></p>
+<h2 id="教育经历"><a href="#教育经历" class="headerlink" title="教育经历"></a>教育经历</h2><h3 id="北京对外经济贸易大学-本科"><a href="#北京对外经济贸易大学-本科" class="headerlink" title="北京对外经济贸易大学 - 本科"></a>北京对外经济贸易大学 - 本科</h3><ul>
+<li>专业：计算机网络技术</li>
+<li>时间：2008/03– 2010/03</li>
+</ul>
+<h3 id="北京政法职业学院-专科"><a href="#北京政法职业学院-专科" class="headerlink" title="北京政法职业学院 - 专科"></a>北京政法职业学院 - 专科</h3><ul>
+<li>专业：计算机网络技术</li>
+<li>时间：2003/09– 2005/08</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2016/05/19/宋晓丹的个人简历/" data-id="ck1stxyms00064gpl2li51yxw" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/happyChong/">happyChong</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">下一页 &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/03/17/2018-1-11-hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/20/webpack优化/">webpack 4.0 + 笔记(优化)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/16/webpack基础配置/">webpack 4.0+ 笔记(基础配置)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/19/HTTP基础/">HTTP基础扫盲</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/07/node深度删除目录及目录里的内容-fs删除扩展/">Node - 深度（完全）删除目录及目录里的内容 - 扩展</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/01/Node中文件的读写模块---FS/">Node -文件读写模块--- fs</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/30/Node---buffer/">Node --- buffer</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/24/npm命令与配置解析/">npm 命令与配置解析</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/16/Node中的事件循环（event loop）/">Node中的事件轮询（event loop）</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/14/node模块加载原理/">Node模块加载原理</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/14/多线程与单线程服务/">单线程与多线程的基本概念</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/14/node核心模块-简述/">Node核心模块 - 简述</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/05/vue nextTick原理/">vue nextTick原理</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/05/es6+---类的修饰/">es6+---类的修饰</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/03/es+---class用法笔记 /">es6、7-类的定义</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/08/vue 强制更新试图的方法/">vue 强制更新试图 的方法</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/19/宋晓丹的个人简历/">宋晓丹的个人简历</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/11/windows下，ATOM常用编辑器快捷键/">ATOM常用快捷键</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/05/基本shell命令/">基本SHELL命令使用</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/05/Git命令/">Git常用命令</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Node/">Node</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/es6/">es6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/个人/">个人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/周边/">周边</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node/">Node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/buffer/">buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/core/">core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/event-loop/">event loop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fs/">fs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/happyChong/">happyChong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/module/">module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextTick/">nextTick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/path/">path</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/util/">util</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vm/">vm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单线程/">单线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/EventLoop/" style="font-size: 15px;">EventLoop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/buffer/" style="font-size: 10px;">buffer</a> <a href="/tags/class/" style="font-size: 15px;">class</a> <a href="/tags/core/" style="font-size: 10px;">core</a> <a href="/tags/event-loop/" style="font-size: 15px;">event loop</a> <a href="/tags/events/" style="font-size: 10px;">events</a> <a href="/tags/fs/" style="font-size: 20px;">fs</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/happyChong/" style="font-size: 10px;">happyChong</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/module/" style="font-size: 10px;">module</a> <a href="/tags/nextTick/" style="font-size: 10px;">nextTick</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/path/" style="font-size: 10px;">path</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/util/" style="font-size: 10px;">util</a> <a href="/tags/vm/" style="font-size: 10px;">vm</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 15px;">webpack</a> <a href="/tags/单线程/" style="font-size: 10px;">单线程</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 happyChong<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
