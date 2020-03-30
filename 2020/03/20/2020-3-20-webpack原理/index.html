@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>webpack 原理与实现 | 快乐虫の地带</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="webpack">
+<meta name="keywords" content="webpack">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webpack 原理与实现">
+<meta property="og:url" content="http://happychong.github.io/2020/03/20/2020-3-20-webpack原理/index.html">
+<meta property="og:site_name" content="快乐虫の地带">
+<meta property="og:description" content="webpack">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-03-25T03:26:26.379Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="webpack 原理与实现">
+<meta name="twitter:description" content="webpack">
+  
+    <link rel="alternate" href="/atom.xml" title="快乐虫の地带" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">快乐虫の地带</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://happychong.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="default-2020-3-20-webpack原理" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/20/2020-3-20-webpack原理/" class="article-date">
+  <time datetime="2020-03-20T01:22:17.393Z" itemprop="datePublished">2020-03-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/周边/">周边</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      webpack 原理与实现
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一：预备知识点-—-提前了解这些知识，接下来会用到"><a href="#一：预备知识点-—-提前了解这些知识，接下来会用到" class="headerlink" title="一：预备知识点 — 提前了解这些知识，接下来会用到"></a>一：预备知识点 — 提前了解这些知识，接下来会用到</h2><h3 id="1：Symbol-toStringTag-—-自定义类型标签"><a href="#1：Symbol-toStringTag-—-自定义类型标签" class="headerlink" title="1：Symbol.toStringTag — 自定义类型标签"></a>1：Symbol.toStringTag — 自定义类型标签</h3><p>Symbol.toStringTag 是一个内置 symbol，它通常作为对象的属性键使用，对应的属性值应该为字符串类型，这个字符串用来表示该对象的自定义类型标签，通常只有内置的 Object.prototype.toString() 方法会去读取这个标签并把它包含在自己的返回值里。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Symbol.toStringTag 自定义类型标签 Module</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.prototype.toString.call(&#123;<span class="attr">name</span>: <span class="string">'webpack'</span>&#125;)); <span class="comment">// [object Object]</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.prototype.toString.call([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])); <span class="comment">// [object Array]</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.prototype.toString.call(<span class="number">10</span>)); <span class="comment">// [object Number]</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.prototype.toString.call(<span class="literal">true</span>)); <span class="comment">// [object Boolean]</span></span><br><span class="line"><span class="comment">// Object.prototype.toString.call 方法返回 类同 [object Object] 这样的字符串</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Symbol.toStringTag 可以设置对象的返回类型，如下，把 useExports 的 类型改为 Module</span></span><br><span class="line"><span class="keyword">let</span> useExports = &#123;&#125;;</span><br><span class="line"><span class="built_in">Object</span>.defineProperty(useExports, <span class="built_in">Symbol</span>.toStringTag, &#123;<span class="attr">value</span>: <span class="string">'Module'</span>&#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.prototype.toString.call(useExports)); <span class="comment">// [object Module]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2：Object-create-null"><a href="#2：Object-create-null" class="headerlink" title="2：Object.create(null)"></a>2：Object.create(null)</h3><p>Object.create(null) 可以得到一个非常干净的对象，不会继承 Object 上的任何属性</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = <span class="built_in">Object</span>.create(<span class="literal">null</span>);</span><br><span class="line"><span class="built_in">console</span>.log(obj); <span class="comment">// [Object: null prototype] &#123;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 原理 - new 一个对象，使这个对象的原型链指向create的参数</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="built_in">Object</span>.create) &#123;</span><br><span class="line">  <span class="built_in">Object</span>.create = <span class="function"><span class="keyword">function</span> (<span class="params">proto</span>) </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">F</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">    F.prototype = proto;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> F();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3：getter"><a href="#3：getter" class="headerlink" title="3：getter"></a>3：getter</h3><p>Object.defineProperty() 方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性， 并返回这个对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 语法</span></span><br><span class="line"><span class="built_in">Object</span>.defineProperty(obj, prop, descriptor)</span><br><span class="line"><span class="comment">// obj：要在其上定义属性的对象。</span></span><br><span class="line"><span class="comment">// prop：要定义或修改的属性的名称。</span></span><br><span class="line"><span class="comment">// descriptor：将被定义或修改的属性描述符。</span></span><br><span class="line"><span class="comment">// 返回值：被传递给函数的对象。</span></span><br></pre></td></tr></table></figure>
+
+<p>基础语法如上，更多内容请自行百度 Object.defineProperty</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 示例</span></span><br><span class="line"><span class="keyword">let</span> ageValue;</span><br><span class="line"><span class="keyword">let</span> obj = &#123;&#125;;</span><br><span class="line"><span class="comment">// obj.age = ageValue; // 老写法改为下面的 defineProperty 方式</span></span><br><span class="line"><span class="built_in">Object</span>.defineProperty(obj, <span class="string">'age'</span>, &#123;</span><br><span class="line">  <span class="comment">// value: 10, // value: 10 的设置方式与get方法的设置方式只能2选1</span></span><br><span class="line">  <span class="keyword">get</span>()&#123;</span><br><span class="line">    <span class="keyword">return</span> ageValue;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="keyword">set</span>(newValue)&#123;</span><br><span class="line">    ageValue = newValue;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">obj.age = <span class="number">3</span>; <span class="comment">// 走 set 方法</span></span><br><span class="line"><span class="built_in">console</span>.log(obj.age); <span class="comment">// 走 get 方法</span></span><br><span class="line"><span class="comment">// 3</span></span><br><span class="line"><span class="built_in">console</span>.log(ageValue);</span><br><span class="line"><span class="comment">// 3</span></span><br><span class="line">ageValue = <span class="number">4</span></span><br><span class="line"><span class="built_in">console</span>.log(ageValue);</span><br><span class="line"><span class="comment">// 4</span></span><br><span class="line"><span class="built_in">console</span>.log(obj.age);</span><br><span class="line"><span class="comment">// 4</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="二：webpack-源代码"><a href="#二：webpack-源代码" class="headerlink" title="二：webpack 源代码"></a>二：webpack 源代码</h2><h3 id="提前准备webpack项目"><a href="#提前准备webpack项目" class="headerlink" title="提前准备webpack项目"></a>提前准备webpack项目</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  mode: <span class="string">'development'</span>,</span><br><span class="line">  devtool: <span class="string">'none'</span>,</span><br><span class="line">  entry: <span class="string">'./src/index.js'</span>,</span><br><span class="line">  <span class="comment">// index.js 文件内容在原理中展示，因为同步和异步代码不同</span></span><br><span class="line">  output: &#123;</span><br><span class="line">    path: path.resolve(__dirname, <span class="string">'dist'</span>),</span><br><span class="line">    filename: <span class="string">'bundle.js'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: []</span><br><span class="line">  &#125;,</span><br><span class="line">  plugins: [</span><br><span class="line"></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/title.js</span></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="string">'title'</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="同步打包原理"><a href="#同步打包原理" class="headerlink" title="同步打包原理"></a>同步打包原理</h3><h4 id="提前准备文件"><a href="#提前准备文件" class="headerlink" title="提前准备文件"></a>提前准备文件</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/index.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 同步加载</span></span><br><span class="line"><span class="keyword">let</span> title = <span class="built_in">require</span>(<span class="string">'./title.js'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(title);</span><br></pre></td></tr></table></figure>
+
+<h4 id="打包原理"><a href="#打包原理" class="headerlink" title="打包原理"></a>打包原理</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 自执行函数 参数为应用到的模块</span></span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params">modules</span>)</span>&#123; <span class="comment">// webpackBootstrap : 启动函数</span></span><br><span class="line">  <span class="keyword">var</span> installedModules = &#123;&#125;; <span class="comment">// The module cache ： 模块缓存</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">__webpack_require__</span>(<span class="params">moduleId</span>) </span>&#123; <span class="comment">// The require function ：webpack 实现的浏览器的 require 方法</span></span><br><span class="line">    <span class="comment">// Check if module is in cache ： 检查模块是否在缓存中，有的话直接返回模块的exports</span></span><br><span class="line">    <span class="keyword">if</span> (installedModules[moduleId]) &#123;</span><br><span class="line">      <span class="keyword">return</span> installedModules[moduleId].exports;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Create a new module (and put it into the cache)：创建一个新的模块 （并且放入缓存中）</span></span><br><span class="line">    <span class="keyword">var</span> <span class="built_in">module</span> = installedModules[moduleId] = &#123;</span><br><span class="line">      i: moduleId, <span class="comment">// i - index - 模块id</span></span><br><span class="line">      l: <span class="literal">false</span>, <span class="comment">// l - loaded - 模块是否加载完成</span></span><br><span class="line">      exports: &#123;&#125; <span class="comment">// 模块的导出对象</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">// Execute the module function ： 执行模块的方法</span></span><br><span class="line">    modules[moduleId].call(<span class="built_in">module</span>.exports, <span class="built_in">module</span>, <span class="built_in">module</span>.exports, __webpack_require__);</span><br><span class="line">    <span class="comment">// Flag the module as loaded ： loaded设置为true</span></span><br><span class="line">    <span class="built_in">module</span>.l = <span class="literal">true</span>;</span><br><span class="line">    <span class="comment">// Return the exports of the module ： 返回模块的导出对象(module.exports)</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">module</span>.exports;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// Load entry module and return exports : 加载入口模块并返回道处对象 __webpack_require__.s = 入口模块Id</span></span><br><span class="line">  <span class="keyword">return</span> __webpack_require__(<span class="string">'./src/index.js'</span>);</span><br><span class="line">&#125;)(&#123;</span><br><span class="line">  <span class="string">'./src/index.js'</span>: (<span class="function"><span class="keyword">function</span> (<span class="params">module, exports, __webpack_require__</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> title = __webpack_require__(<span class="string">'./src/title.js'</span>);</span><br><span class="line">    <span class="built_in">console</span>.log(title);</span><br><span class="line">  &#125;),</span><br><span class="line">  <span class="string">'./src/title.js'</span>: (<span class="function"><span class="keyword">function</span> (<span class="params">module, exports, __webpack_require__</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">module</span>.exports = <span class="string">'title'</span>;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="异步打包原理：import-方式"><a href="#异步打包原理：import-方式" class="headerlink" title="异步打包原理：import()方式"></a>异步打包原理：import()方式</h3><h4 id="提前准备文件-1"><a href="#提前准备文件-1" class="headerlink" title="提前准备文件"></a>提前准备文件</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/index.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> button = <span class="built_in">document</span>.createElement(<span class="string">'button'</span>);</span><br><span class="line">button.innerHTML = <span class="string">'点我异步加载'</span>;</span><br><span class="line">button.addEventListener(<span class="string">'click'</span>, () =&gt; &#123;</span><br><span class="line">  <span class="keyword">import</span>(<span class="comment">/*webpackChunkName: 'title'*/</span><span class="string">'./title.js'</span>).then(<span class="function"><span class="params">result</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(result.default);</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">document</span>.body.appendChild(button);</span><br></pre></td></tr></table></figure>
+
+<h4 id="打包原理-1"><a href="#打包原理-1" class="headerlink" title="打包原理"></a>打包原理</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params">modules</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> installedModules = &#123;&#125;; <span class="comment">// 模块缓存</span></span><br><span class="line">	<span class="keyword">var</span> installChunks = &#123;</span><br><span class="line">		main: <span class="number">0</span></span><br><span class="line">	&#125;;</span><br><span class="line">	<span class="comment">// 1：标记 installChunks[x] 为0表示加载成功</span></span><br><span class="line">	<span class="comment">// 2：modules 中加入新加载的模块，使新的模块可以被require</span></span><br><span class="line">	<span class="comment">// 2：执行异步加载的resolve方法</span></span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">webpackJsonpCallback</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">		<span class="comment">// data 格式如下</span></span><br><span class="line">		<span class="comment">// [["title"],&#123;</span></span><br><span class="line">		<span class="comment">// 	"./src/title.js":</span></span><br><span class="line">		<span class="comment">// 	(function(module, exports) &#123;</span></span><br><span class="line">		<span class="comment">// 		module.exports = 'title';</span></span><br><span class="line">		<span class="comment">// 	&#125;)</span></span><br><span class="line">		<span class="comment">// &#125;]</span></span><br><span class="line">		<span class="keyword">let</span> chunkIds = data[<span class="number">0</span>]; <span class="comment">// ["title"]</span></span><br><span class="line">		<span class="keyword">let</span> moreModules = data[<span class="number">1</span>]; <span class="comment">// &#123;"./src/title.js": (fn)&#125;</span></span><br><span class="line">		<span class="keyword">let</span> resolves = [];</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; chunkIds.length; i++) &#123;</span><br><span class="line">			<span class="keyword">let</span> chunkId = chunkIds[i];</span><br><span class="line">			resolves.push(installChunks[chunkId][<span class="number">0</span>]);</span><br><span class="line">			installChunks[chunkId] = <span class="number">0</span>; <span class="comment">// 0:加载成功  原本是数组 这里重置为0</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 模块中（modules）加入新加载的模块 ，加入后就可以require（__webpack_require__）了</span></span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">let</span> moduleId <span class="keyword">in</span> moreModules) &#123;</span><br><span class="line">			modules[moduleId] = moreModules[moduleId];</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">while</span>(resolves.length) &#123;</span><br><span class="line">			resolves.shift()(); <span class="comment">// 取出第一个元素，并执行</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// if (parentJsonFunction) &#123;</span></span><br><span class="line">		<span class="comment">// 	parentJsonFunction(data);</span></span><br><span class="line">		<span class="comment">// &#125;</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 加载模块 - 同步</span></span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">__webpack_require__</span>(<span class="params">moduleId</span>) </span>&#123; <span class="comment">// webpack 实现的浏览器的 require 方法</span></span><br><span class="line">    <span class="comment">// 检查模块是否在缓存中，有的话直接返回模块的exports</span></span><br><span class="line">    <span class="keyword">if</span> (installedModules[moduleId]) &#123;</span><br><span class="line">      <span class="keyword">return</span> installedModules[moduleId].exports;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 创建一个新的模块 （并且放入缓存中）</span></span><br><span class="line">    <span class="keyword">var</span> <span class="built_in">module</span> = installedModules[moduleId] = &#123;</span><br><span class="line">      i: moduleId, <span class="comment">// i - index - 模块id</span></span><br><span class="line">      l: <span class="literal">false</span>, <span class="comment">// l - loaded - 模块是否加载完成</span></span><br><span class="line">      exports: &#123;&#125; <span class="comment">// 模块的导出对象</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">// 执行模块的方法</span></span><br><span class="line">    modules[moduleId].call(<span class="built_in">module</span>.exports, <span class="built_in">module</span>, <span class="built_in">module</span>.exports, __webpack_require__);</span><br><span class="line">    <span class="comment">// loaded设置为true</span></span><br><span class="line">    <span class="built_in">module</span>.l = <span class="literal">true</span>;</span><br><span class="line">    <span class="comment">// 返回模块的导出对象(module.exports)</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">module</span>.exports;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 把模块的exports抛出为下一步then的参数</span></span><br><span class="line">	__webpack_require__.t = <span class="function"><span class="keyword">function</span> (<span class="params">value, mode</span>) </span>&#123;</span><br><span class="line">		<span class="comment">// value="./src/title.js"     mode+7</span></span><br><span class="line">		value = __webpack_require__(value); <span class="comment">// module.exports = 'title';</span></span><br><span class="line">		<span class="keyword">let</span> ns = <span class="built_in">Object</span>.create(<span class="literal">null</span>);</span><br><span class="line">		<span class="built_in">Object</span>.defineProperty(ns, <span class="string">'__esModule'</span>, &#123; <span class="attr">value</span>: <span class="literal">true</span> &#125;); <span class="comment">// 表示这是一个es6modules</span></span><br><span class="line">		<span class="built_in">Object</span>.defineProperty(ns, <span class="string">'default'</span>, &#123; value &#125;);</span><br><span class="line">		<span class="keyword">return</span> ns; <span class="comment">// &#123;__esModule: true, default: 'title'&#125;</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// .e 加载模块 - 异步jsonp</span></span><br><span class="line">	__webpack_require__.e = <span class="function"><span class="keyword">function</span> (<span class="params">chunkId</span>) </span>&#123; <span class="comment">// title</span></span><br><span class="line">		<span class="comment">// let promises = []; // 声明一个promise</span></span><br><span class="line">		<span class="keyword">var</span> installChunkData = installChunks[chunkId]; <span class="comment">// 取老的代码块数据</span></span><br><span class="line">		<span class="keyword">let</span> promise = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">			<span class="comment">// 如果调用了resolve方法，此promise会变成成功态</span></span><br><span class="line">			installChunkData = installChunks[chunkId] = [resolve, reject];</span><br><span class="line">		&#125;);</span><br><span class="line">		installChunkData[<span class="number">2</span>] = promise; <span class="comment">// installChunkData = [resolve, reject, promise]</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">var</span> script = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>); <span class="comment">// 创建一个脚本标签</span></span><br><span class="line">		script.src = chunkId + <span class="string">'.bundle.js'</span>; <span class="comment">// title.bundle.js</span></span><br><span class="line">		<span class="built_in">document</span>.head.appendChild(script); <span class="comment">// jsonP原理，script标签加到页面里，立刻会请求服务器的文件，执行脚本</span></span><br><span class="line">		<span class="keyword">return</span> promise;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// .e 方法加载的脚本立即执行，执行时候执行了window['webpackJsonp'].push方法，下面代码重写了push方法，指向了webpackJsonpCallback</span></span><br><span class="line">	<span class="keyword">var</span> jsonArray = (<span class="built_in">window</span>[<span class="string">'webpackJsonp'</span>] = <span class="built_in">window</span>[<span class="string">'webpackJsonp'</span>] || []); <span class="comment">// jsonArray = window['webpackJsonp'] || [];</span></span><br><span class="line">	<span class="keyword">var</span> oldJsonpFunction = jsonArray.push.bind(jsonArray); <span class="comment">// oldJsonpFunction = jsonArray原有的push方法</span></span><br><span class="line">	jsonArray.push = webpackJsonpCallback; 	<span class="comment">// 重写jsonArr的push方法</span></span><br><span class="line">	<span class="keyword">var</span> parentJsonFunction = oldJsonpFunction; <span class="comment">// </span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 加载入口模块并返回道处对象 __webpack_require__.s = 入口模块Id</span></span><br><span class="line">  <span class="keyword">return</span> __webpack_require__(<span class="string">'./src/index.js'</span>);</span><br><span class="line">&#125;)(&#123;</span><br><span class="line">	<span class="string">'./src/index.js'</span>: (<span class="function"><span class="keyword">function</span>(<span class="params">module, exports, __webpack_require__</span>) </span>&#123;</span><br><span class="line">		<span class="comment">// 同步加载</span></span><br><span class="line">		<span class="comment">// let title = require('./title.js');</span></span><br><span class="line">		<span class="comment">// console.log(title);</span></span><br><span class="line">	</span><br><span class="line">		<span class="comment">// 异步加载</span></span><br><span class="line">		<span class="keyword">let</span> button = <span class="built_in">document</span>.createElement(<span class="string">'button'</span>);</span><br><span class="line">		button.innerHTML = <span class="string">'点我异步加载'</span>;</span><br><span class="line">		button.addEventListener(<span class="string">'click'</span>, () =&gt; &#123;</span><br><span class="line">			__webpack_require__.e(<span class="comment">/*! import() | title */</span> <span class="string">"title"</span>)</span><br><span class="line">			.then(__webpack_require__.t.bind(<span class="literal">null</span>, <span class="comment">/*! ./title.js */</span> <span class="string">"./src/title.js"</span>, <span class="number">7</span>))</span><br><span class="line">			.then(<span class="function"><span class="params">result</span> =&gt;</span> &#123;</span><br><span class="line">				<span class="built_in">console</span>.log(result.default);</span><br><span class="line">			&#125;)</span><br><span class="line">		&#125;)</span><br><span class="line">		<span class="built_in">document</span>.body.appendChild(button);</span><br><span class="line">	</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2020/03/20/2020-3-20-webpack原理/" data-id="ck8dxkzr2001lzwpljgfrwetd" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/03/25/2020-3-25-webpack-loader原理/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          webpack - loader 原理与实现
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/03/17/2018-1-11-hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/03/25/2020-3-25-webpack-loader原理/">webpack - loader 原理与实现</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/20/2020-3-20-webpack原理/">webpack 原理与实现</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/17/2018-1-11-hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/20/webpack优化/">webpack 4.0 + 笔记(优化)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/16/webpack基础配置/">webpack 4.0+ 笔记(基础配置)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/19/HTTP基础/">HTTP基础扫盲</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/07/node深度删除目录及目录里的内容-fs删除扩展/">Node - 深度（完全）删除目录及目录里的内容 - 扩展</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/01/Node中文件的读写模块---FS/">Node -文件读写模块--- fs</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/30/Node---buffer/">Node --- buffer</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/24/npm命令与配置解析/">npm 命令与配置解析</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/16/Node中的事件循环（event loop）/">Node中的事件轮询（event loop）</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/14/node核心模块-简述/">Node核心模块 - 简述</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/14/node模块加载原理/">Node模块加载原理</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/14/多线程与单线程服务/">单线程与多线程的基本概念</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/05/vue nextTick原理/">vue nextTick原理</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/05/es6+---类的修饰/">es6+---类的修饰</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/03/es+---class用法笔记 /">es6、7-类的定义</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/08/vue 强制更新试图的方法/">vue 强制更新试图 的方法</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/19/宋晓丹的个人简历/">宋晓丹的个人简历</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/11/windows下，ATOM常用编辑器快捷键/">ATOM常用快捷键</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/05/基本shell命令/">基本SHELL命令使用</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/05/Git命令/">Git常用命令</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Node/">Node</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/es6/">es6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/个人/">个人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/周边/">周边</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node/">Node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/buffer/">buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/core/">core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/event-loop/">event loop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fs/">fs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/happyChong/">happyChong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loader/">loader</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/module/">module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextTick/">nextTick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/path/">path</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/util/">util</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vm/">vm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单线程/">单线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/EventLoop/" style="font-size: 13.33px;">EventLoop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/buffer/" style="font-size: 10px;">buffer</a> <a href="/tags/class/" style="font-size: 13.33px;">class</a> <a href="/tags/core/" style="font-size: 10px;">core</a> <a href="/tags/event-loop/" style="font-size: 13.33px;">event loop</a> <a href="/tags/events/" style="font-size: 10px;">events</a> <a href="/tags/fs/" style="font-size: 16.67px;">fs</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/happyChong/" style="font-size: 10px;">happyChong</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/loader/" style="font-size: 10px;">loader</a> <a href="/tags/module/" style="font-size: 10px;">module</a> <a href="/tags/nextTick/" style="font-size: 10px;">nextTick</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/path/" style="font-size: 10px;">path</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/util/" style="font-size: 10px;">util</a> <a href="/tags/vm/" style="font-size: 10px;">vm</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 20px;">webpack</a> <a href="/tags/单线程/" style="font-size: 10px;">单线程</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 happyChong<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>webpack - loader 原理与实现 | 快乐虫の地带</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="webpack">
+<meta name="keywords" content="webpack,loader">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webpack - loader 原理与实现">
+<meta property="og:url" content="http://happychong.github.io/2020/03/25/2020-3-25-webpack-loader原理/index.html">
+<meta property="og:site_name" content="快乐虫の地带">
+<meta property="og:description" content="webpack">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://happychong.github.io/images/webpack-loader.png">
+<meta property="og:updated_time" content="2020-03-30T03:42:59.052Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="webpack - loader 原理与实现">
+<meta name="twitter:description" content="webpack">
+<meta name="twitter:image" content="http://happychong.github.io/images/webpack-loader.png">
+  
+    <link rel="alternate" href="/atom.xml" title="快乐虫の地带" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">快乐虫の地带</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://happychong.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="default-2020-3-25-webpack-loader原理" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/25/2020-3-25-webpack-loader原理/" class="article-date">
+  <time datetime="2020-03-25T03:24:22.495Z" itemprop="datePublished">2020-03-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/周边/">周边</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      webpack - loader 原理与实现
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="提前准备webpack项目"><a href="#提前准备webpack项目" class="headerlink" title="提前准备webpack项目"></a>提前准备webpack项目</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package.json</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>: <span class="string">"10.mywebpack"</span>,</span><br><span class="line">  <span class="string">"version"</span>: <span class="string">"1.0.0"</span>,</span><br><span class="line">  <span class="string">"description"</span>: <span class="string">""</span>,</span><br><span class="line">  <span class="string">"main"</span>: <span class="string">"index.js"</span>,</span><br><span class="line">  <span class="string">"scripts"</span>: &#123;</span><br><span class="line">    <span class="string">"build"</span>: <span class="string">"webpack"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"author"</span>: <span class="string">""</span>,</span><br><span class="line">  <span class="string">"license"</span>: <span class="string">"ISC"</span>,</span><br><span class="line">  <span class="string">"devDependencies"</span>: &#123;</span><br><span class="line">    <span class="string">"@babel/core"</span>: <span class="string">"^7.9.0"</span>,</span><br><span class="line">    <span class="string">"@babel/preset-env"</span>: <span class="string">"^7.9.0"</span>,</span><br><span class="line">    <span class="string">"webpack"</span>: <span class="string">"^4.42.1"</span>,</span><br><span class="line">    <span class="string">"webpack-cli"</span>: <span class="string">"^3.3.11"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  mode: <span class="string">'development'</span>,</span><br><span class="line">  devtool: <span class="string">'none'</span>,</span><br><span class="line">  entry: <span class="string">'./src/index.js'</span>,</span><br><span class="line">  output: &#123;</span><br><span class="line">    path: path.resolve(__dirname, <span class="string">'dist'</span>),</span><br><span class="line">    filename: <span class="string">'bundle.js'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  resolveLoader: &#123;</span><br><span class="line">    alias: &#123;</span><br><span class="line">      <span class="comment">// 配置 module -&gt; rules -&gt; babel-loader 路径</span></span><br><span class="line">      <span class="string">'babel-loader'</span>: path.resolve(__dirname, <span class="string">'loaders/babel-loader.js'</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// 配置 module -&gt; rules 下配置的loader都先去当前路径的loaders目录下查找，再去node_modules下查找</span></span><br><span class="line">    modules: [path.resolve(__dirname, <span class="string">'loaders'</span>), <span class="string">'node_modules'</span>]</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.js$/</span>,</span><br><span class="line">        use: [<span class="string">'babel-loader'</span>] <span class="comment">// 这样的写法会到node_modules下找babel-loader</span></span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  plugins: [</span><br><span class="line"></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/index.js</span></span><br><span class="line"><span class="keyword">let</span> title = <span class="built_in">require</span>(<span class="string">'./title'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(title);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/title.js</span></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="string">'title'</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="最简单的打包原理——最简单的-babel-loader"><a href="#最简单的打包原理——最简单的-babel-loader" class="headerlink" title="最简单的打包原理——最简单的 babel-loader"></a>最简单的打包原理——最简单的 babel-loader</h2><p>loader是个函数，参数接受一些代码内容，经过一些转换返回新的内容，loader的执行顺序是倒序执行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// loaders/babel-loader.js</span></span><br><span class="line"><span class="keyword">const</span> babel = <span class="built_in">require</span>(<span class="string">'@babel/core'</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loader</span>(<span class="params">source, sourceMap</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// source - 输入的内容 要串换的内容</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'this is my loader ! ~~~~~~~~~~~~'</span>);</span><br><span class="line">  <span class="comment">// console.log运行的时候，这里会被打印出2次，因为有2个文件啊，index.js &amp; title.js</span></span><br><span class="line">  <span class="keyword">const</span> options = &#123;</span><br><span class="line">    presets: [], <span class="comment">// babel预设 '@bebal/preset-env'</span></span><br><span class="line">    inputSourceMap: sourceMap, <span class="comment">// 输入的 源映射</span></span><br><span class="line">    sourceMaps: <span class="literal">true</span>, <span class="comment">// 输出 要 sourceMaps</span></span><br><span class="line">    <span class="comment">// this.request = loader1!loader2!loader3!indexedDB.css</span></span><br><span class="line">    filename: <span class="keyword">this</span>.request.split(<span class="string">'!'</span>).pop() <span class="comment">// 指定文件名</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// code : 转译后代码  map：sourcemap   ast：抽象语法树</span></span><br><span class="line">  <span class="keyword">let</span> &#123;code, map, ast&#125; = babel.transform(source, options);</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.callback(<span class="literal">null</span>, code, map, ast)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = loader;</span><br></pre></td></tr></table></figure>
+
+<p>现在命令行执行 npm run build ，就会看到dist目录下有用了我们自己写的loader（loaders/babel-loader.js ）的 bundle.js 文件了</p>
+<h2 id="loader-的加载顺序"><a href="#loader-的加载顺序" class="headerlink" title="loader 的加载顺序"></a>loader 的加载顺序</h2><h3 id="pitch-与-normal-的执行顺序"><a href="#pitch-与-normal-的执行顺序" class="headerlink" title="pitch 与 normal 的执行顺序"></a>pitch 与 normal 的执行顺序</h3><p>假如我们现在对.js类型的文件配置了3个loader [‘loader1’, ‘loader2’, ‘loader3’],那么现在loader的执行顺序应该是 源代码（ex: index.js） -&gt; loader3 -&gt; loader2 -&gt; loader1，实践代码如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      <span class="comment">// pitch</span></span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.js$/</span>,</span><br><span class="line">        use: [<span class="string">'patch-loader1'</span>, <span class="string">'patch-loader2'</span>, <span class="string">'patch-loader3'</span>]</span><br><span class="line">			&#125;</span><br><span class="line">		]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// loaders/patch-loader1.js</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loader</span>(<span class="params">source, sourceMap</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'patch-loader1111'</span>);</span><br><span class="line">  <span class="keyword">return</span> source + <span class="string">'///patch-loader1111///'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">module</span>.exports = loader;</span><br><span class="line"></span><br><span class="line"><span class="comment">// loaders/patch-loader2.js</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loader</span>(<span class="params">source, sourceMap</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'patch-loader222'</span>);</span><br><span class="line">  <span class="keyword">return</span> source + <span class="string">'///patch-loader222///'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">module</span>.exports = loader;</span><br><span class="line"></span><br><span class="line"><span class="comment">// loaders/patch-loader3.js</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loader</span>(<span class="params">source, sourceMap</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'patch-loader333'</span>);</span><br><span class="line">  <span class="keyword">return</span> source + <span class="string">'///patch-loader333///'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">module</span>.exports = loader;</span><br></pre></td></tr></table></figure>
+
+<p>命令行运行 npm run build 可以看到 loader 的执行顺序为 3 - 2 - 1，，dist下打包的bundle.js中也可以看到执行顺序，但是其实这里看到的执行顺序是不完全的，实际上每个loader有2个方法，以上的执行方法叫做 normal 方法，另外还有一个方法，就叫做 pitch，pitch 方法是可有可无的，如果有 pitch 方法的话，会先顺序执行每个 loader 的 pitch 方法，然后再倒序执行 loader 的 normal 方法，但是如果某个 loader 有 pitch 方法，并且 pitch 方法有返回值，那么就会跳过剩下的其他方法，直接执行上一个loader的一个 normal 方法，并且这个方法的source参数就是pitch方法的返回值。</p>
+<p>完整的 loader 执行顺序如下图</p>
+<p><img src="/images/webpack-loader.png" alt="webpack-loader-执行顺序"></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 我们可以修改之前的代码验证一下</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// patch-loader1.js</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loader</span>(<span class="params">source, sourceMap</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'normal-loader1111'</span>);</span><br><span class="line">  <span class="keyword">return</span> source + <span class="string">'///normal-loader1111///'</span>;</span><br><span class="line">&#125;</span><br><span class="line">loader.pitch = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'pitch1'</span>);</span><br><span class="line">  <span class="comment">// return '1'</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">module</span>.exports = loader;</span><br><span class="line"></span><br><span class="line"><span class="comment">// patch-loader2.js</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loader</span>(<span class="params">source, sourceMap</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'normal-loader222'</span>);</span><br><span class="line">  <span class="keyword">return</span> source + <span class="string">'///normal-loader222///'</span>;</span><br><span class="line">&#125;</span><br><span class="line">loader.pitch = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'pitch2'</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="string">'loader2 --- pitch2'</span></span><br><span class="line">  <span class="comment">// 这里返回的值，会作为下一个normal方法的source参数传入</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">module</span>.exports = loader;</span><br><span class="line"></span><br><span class="line"><span class="comment">// patch-loader3.js</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loader</span>(<span class="params">source, sourceMap</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// source - 输入的内容 要串换的内容</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'normal-loader333'</span>);</span><br><span class="line">  <span class="keyword">return</span> source + <span class="string">'///normal-loader333///'</span>;</span><br><span class="line">&#125;</span><br><span class="line">loader.pitch = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'pitch3'</span>);</span><br><span class="line">  <span class="comment">// return 'loader3 --- pitch3'</span></span><br><span class="line">  <span class="comment">// 如果loader2的pitch方法有返回值，那这个loader3的方法都不执行了</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">module</span>.exports = loader;</span><br></pre></td></tr></table></figure>
+
+<p>命令行运行 npm run build 可以看到 loader 的执行顺序为 loader1(pitch) -&gt; loader2(pitch) -&gt; loader1(normal)</p>
+<h3 id="不同类型-loader-的执行顺序"><a href="#不同类型-loader-的执行顺序" class="headerlink" title="不同类型 loader 的执行顺序"></a>不同类型 loader 的执行顺序</h3><p>对单文件打包的方式的loader被称为行内（inline）loader；对于rules中的loader，webpack还定义了一个属性 enforce，可取值有 pre（为pre loader）、post（为post loader），如果没有值则为（normal loader）。所以loader在webpack中有4种:normal，inline，pre，post。</p>
+<p>loader的叠加顺序 = post(后置) + inline(内联) + normal(正常) + pre(前置)</p>
+<h2 id="loaders-configuration——特殊配置"><a href="#loaders-configuration——特殊配置" class="headerlink" title="loaders/#configuration——特殊配置"></a>loaders/#configuration——特殊配置</h2><ul>
+<li>!   前缀禁用配置文件中的普通loader，比如：require(“!raw!./script.coffee”)</li>
+<li>!!  前缀禁用配置文件中所有的loader，比如：require(“!!raw!./script.coffee”)</li>
+<li>-!  禁用pre loader和普通loader，但是不包括post loader，比如：require(“!!raw!./script.coffee”)</li>
+</ul>
+<p>关于loader的禁用，webpack官方的建议是：除非从另一个loader处理生成的，一般不建议主动使用，以下下是使用场景</p>
+<ul>
+<li>pre loader 配置：图片压缩</li>
+<li>普通loader 配置：coffee-script转换</li>
+<li>inline loader 配置：bundle loader</li>
+<li>post loader 配置： 代码覆盖率工具</li>
+</ul>
+<h2 id="webpack-的-loader-runner-库的原理"><a href="#webpack-的-loader-runner-库的原理" class="headerlink" title="webpack 的 loader-runner 库的原理"></a>webpack 的 loader-runner 库的原理</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// loaders/myLoader-runner-getPath.js</span></span><br><span class="line"><span class="comment">// 此文件功能：按loader的类别及loaders/#configuration配置获得要执行的loader绝对路径的数组</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// loader 的4种类型：inline normal pre post</span></span><br><span class="line"><span class="comment">// ex：eslint 代码风格检查 一般用于前置</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="comment">// 正常情况下module的查找路径（变量模拟）</span></span><br><span class="line"><span class="keyword">let</span> nodeModules = path.resolve(__dirname, <span class="string">'node_modules'</span>);</span><br><span class="line"><span class="comment">// 模拟需要加载的文件 - 行内（inline）loader </span></span><br><span class="line"><span class="comment">// 业务代码示例：import a from ''!inline-loader1!inline-loader2!./style.css'' 或者 require('!inline-loader1!inline-loader2!./style.css'u)</span></span><br><span class="line"><span class="keyword">let</span> request = <span class="string">'!inline-loader1!inline-loader2!./style.css'</span>;</span><br><span class="line"><span class="comment">// 模拟webpack loader 的配置</span></span><br><span class="line"><span class="keyword">let</span> rules = [</span><br><span class="line">  <span class="comment">// enforce ：配置loader类型-手动配置loader执行顺序</span></span><br><span class="line">  &#123; <span class="attr">test</span>: <span class="regexp">/\.css$/</span>, <span class="attr">enforce</span>: <span class="string">'pre'</span>, <span class="attr">use</span>:[<span class="string">'pre-loader1'</span>, <span class="string">'pre-loader2'</span>] &#125;, <span class="comment">// pre 前置的</span></span><br><span class="line">  &#123; <span class="attr">test</span>: <span class="regexp">/\.css$/</span>, <span class="attr">use</span>:[<span class="string">'normal-loader1'</span>, <span class="string">'normal-loader2'</span>] &#125;, <span class="comment">// normal 普通的</span></span><br><span class="line">  &#123; <span class="attr">test</span>: <span class="regexp">/\.css$/</span>, <span class="attr">enforce</span>: <span class="string">'post'</span>, <span class="attr">use</span>:[<span class="string">'post-loader1'</span>, <span class="string">'post-loader2'</span>] &#125; <span class="comment">// post 后置</span></span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 以上模拟数据结束，一下开始原理部分</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Fn：把路径变为绝对路径</span></span><br><span class="line"><span class="keyword">var</span> resolveLoader = <span class="function"><span class="params">loader</span> =&gt;</span> path.resolve(nodeModules, loader + <span class="string">'.js'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// loaders/#configuration——特殊配置 相关</span></span><br><span class="line"><span class="comment">// 不要前置&amp;普通的loader，只剩下inline&amp;post</span></span><br><span class="line"><span class="keyword">const</span> noPreAutoLoaders = request.startsWith(<span class="string">'-!'</span>);</span><br><span class="line"><span class="comment">// 不要普通的loader</span></span><br><span class="line"><span class="keyword">const</span> noAutoLoaders = noPreAutoLoaders || request.startsWith(<span class="string">'!'</span>);</span><br><span class="line"><span class="comment">// 不要pre&amp;post&amp;auto，只剩下inline了</span></span><br><span class="line"><span class="keyword">const</span> noPrePostAutoLoaders = request.startsWith(<span class="string">'!!'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> inlineLoaders = request.replace(<span class="regexp">/^-?!+/</span>, <span class="string">''</span>).replace(<span class="regexp">/^!!+/g</span>, <span class="string">'!'</span>).split(<span class="string">'!'</span>); <span class="comment">// ["inline-loader1", "inline-loader2", "./style.css"]</span></span><br><span class="line"><span class="comment">// 加载的资源</span></span><br><span class="line"><span class="keyword">let</span> resource = inlineLoaders.pop(); <span class="comment">// "./style.css"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> preLoaders = [];</span><br><span class="line"><span class="keyword">let</span> postLoaders = [];</span><br><span class="line"><span class="keyword">let</span> normalLoaders = [];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; rules.length; i++) &#123;</span><br><span class="line">  <span class="keyword">let</span> rule = rules[i];</span><br><span class="line">  <span class="keyword">if</span> (rule.test.test(resource)) &#123;</span><br><span class="line">    <span class="keyword">if</span> (rule.enforce === <span class="string">'pre'</span>) &#123;</span><br><span class="line">      preLoaders.push(...rule.use);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (rule.enforce === <span class="string">'post'</span>) &#123;</span><br><span class="line">      postLoaders.push(...rule.use);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      normalLoaders.push(...rule.use);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> loaders = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">if</span> (noPrePostAutoLoaders) &#123;</span><br><span class="line">  loaders = [...inlineLoaders];</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (noPreAutoLoaders) &#123;</span><br><span class="line">  loaders = [...postLoaders, ...inlineLoaders];</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (noAutoLoaders) &#123;</span><br><span class="line">  loaders = [...postLoaders, ...inlineLoaders, ...preLoaders];</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  loaders = [...postLoaders, ...inlineLoaders, ...normalLoaders, ...preLoaders];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 把模块名转变成绝对路径</span></span><br><span class="line">loaders = loaders.map(<span class="function"><span class="params">loader</span> =&gt;</span> resolveLoader(loader));</span><br><span class="line"><span class="built_in">console</span>.log(loaders);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// loaders/myLoader-runner-run.js</span></span><br><span class="line"><span class="comment">// 此文件功能：按顺序执行loader的pitch和normal</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="comment">// 把loader变成对象</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createLoaderObject</span>(<span class="params">loader</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> loaderObj = &#123;<span class="attr">data</span>: &#123;&#125;&#125;;</span><br><span class="line">  loaderObj.request = loader;</span><br><span class="line">  loaderObj.normal = <span class="built_in">require</span>(loader);</span><br><span class="line">  loaderObj.pitch = loaderObj.normal.pitch;</span><br><span class="line">  <span class="keyword">return</span> loaderObj;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">runLoaders</span>(<span class="params">options, callback</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 设置loader函数中的this对象</span></span><br><span class="line">  <span class="keyword">let</span> loadercontext= &#123;</span><br><span class="line">    loaderIndex: <span class="number">0</span>, <span class="comment">// 当前索引</span></span><br><span class="line">    readResource: fs, <span class="comment">// 读文件的模块</span></span><br><span class="line">    resource: options.resource, <span class="comment">// 要加载的资源 (index.js)</span></span><br><span class="line">    loaders: options.loaders <span class="comment">// [loader1, loader2, loader3] pathStr</span></span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">let</span> loaders = options.loaders;</span><br><span class="line">  <span class="comment">// loaders 路径Str -&gt; 有paitch， normal，request属性的对象</span></span><br><span class="line">  loadercontext.loaders = loaders.map(<span class="function"><span class="params">loader</span> =&gt;</span> createLoaderObject(loader)); <span class="comment">// [&#123;normal, pitch&#125;, &#123;normal, pitch&#125;]</span></span><br><span class="line">  iteratePitchLoader(loadercontext, callback);</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">processResource</span> (<span class="params">loadercontext, callback</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 读源文件</span></span><br><span class="line">    <span class="keyword">let</span> buffer = loadercontext.readResource.readFileSync(loadercontext.resource, <span class="string">'utf8'</span>);</span><br><span class="line">    iterateNormalLoader(loadercontext, buffer, callback);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">iterateNormalLoader</span>(<span class="params">loadercontext, code, callback</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 遍历loaders 的 normal 方法</span></span><br><span class="line">    <span class="keyword">if</span> (loadercontext.loaderIndex &lt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> callback(<span class="literal">null</span>, code);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> curLoaderObj = loadercontext.loaders[loadercontext.loaderIndex];</span><br><span class="line">    <span class="keyword">let</span> normalFn = curLoaderObj.normal;</span><br><span class="line">    <span class="keyword">let</span> result = normalFn.call(loadercontext, code);</span><br><span class="line">    loadercontext.loaderIndex--;</span><br><span class="line">    iterateNormalLoader(loadercontext, result, callback);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">iteratePitchLoader</span>(<span class="params">loadercontext, callback</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 遍历pitch方法</span></span><br><span class="line">    <span class="keyword">if</span> (loadercontext.loaderIndex &gt;= loadercontext.loaders.length) &#123;</span><br><span class="line">      <span class="comment">// pitch 方法执行完了，读文件资源，翻转执行normal方法</span></span><br><span class="line">      loadercontext.loaderIndex--;</span><br><span class="line">      <span class="keyword">return</span> processResource(loadercontext, callback);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> curLoaderObj = loadercontext.loaders[loadercontext.loaderIndex];</span><br><span class="line">    <span class="keyword">let</span> pitchFn = curLoaderObj.pitch;</span><br><span class="line">    <span class="keyword">if</span> (!pitchFn) &#123;</span><br><span class="line">      <span class="comment">// 没有pitch函数，下一个pitch方法</span></span><br><span class="line">      loadercontext.loaderIndex++;</span><br><span class="line">      <span class="keyword">return</span> iteratePitchLoader(loadercontext, callback);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> result = pitchFn.apply(loadercontext);</span><br><span class="line">    <span class="comment">// 有pitch方法</span></span><br><span class="line">    <span class="keyword">if</span> (result) &#123;</span><br><span class="line">      <span class="comment">// pitch方法有返回值，要返回上一个loader的normal，且pitch的返回值作为normal方法的第一个参数，没有上一个loader的话，直接返回pitch的值</span></span><br><span class="line">      loadercontext.loaderIndex--;</span><br><span class="line">      iterateNormalLoader(loadercontext, result, callback);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// pitch方法没有返回值 下一个pitch</span></span><br><span class="line">      loadercontext.loaderIndex++;</span><br><span class="line">      iteratePitchLoader(loadercontext, callback);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 以上原理部分，以下是原理的方法调用</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> entry = <span class="string">'../src/index.js'</span>;</span><br><span class="line"><span class="keyword">let</span> options = &#123;</span><br><span class="line">  resource: path.resolve(__dirname, entry),</span><br><span class="line">  loaders: [ <span class="comment">// 这里的数据实际应该是 myLoader-runner-getPath.js 中获取到的loaders</span></span><br><span class="line">    path.resolve(__dirname, <span class="string">'patch-loader1.js'</span>),</span><br><span class="line">    path.resolve(__dirname, <span class="string">'patch-loader2.js'</span>),</span><br><span class="line">    path.resolve(__dirname, <span class="string">'patch-loader3.js'</span>)</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line">runLoaders(options, (err, result) =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.error(<span class="string">'执行完毕'</span>);</span><br><span class="line">  <span class="built_in">console</span>.error(result);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>webpack 9视频 - 1小时<br>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2020/03/25/2020-3-25-webpack-loader原理/" data-id="ck8dxkzr5001nzwpldqenzdsk" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loader/">loader</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/03/20/2020-3-20-webpack原理/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">webpack 原理与实现</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/03/25/2020-3-25-webpack-loader原理/">webpack - loader 原理与实现</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/20/2020-3-20-webpack原理/">webpack 原理与实现</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/17/2018-1-11-hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/20/webpack优化/">webpack 4.0 + 笔记(优化)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/16/webpack基础配置/">webpack 4.0+ 笔记(基础配置)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/19/HTTP基础/">HTTP基础扫盲</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/07/node深度删除目录及目录里的内容-fs删除扩展/">Node - 深度（完全）删除目录及目录里的内容 - 扩展</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/01/Node中文件的读写模块---FS/">Node -文件读写模块--- fs</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/30/Node---buffer/">Node --- buffer</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/24/npm命令与配置解析/">npm 命令与配置解析</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/16/Node中的事件循环（event loop）/">Node中的事件轮询（event loop）</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/14/node核心模块-简述/">Node核心模块 - 简述</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/14/node模块加载原理/">Node模块加载原理</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/14/多线程与单线程服务/">单线程与多线程的基本概念</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/05/vue nextTick原理/">vue nextTick原理</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/05/es6+---类的修饰/">es6+---类的修饰</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/03/es+---class用法笔记 /">es6、7-类的定义</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/08/vue 强制更新试图的方法/">vue 强制更新试图 的方法</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/19/宋晓丹的个人简历/">宋晓丹的个人简历</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/11/windows下，ATOM常用编辑器快捷键/">ATOM常用快捷键</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/05/基本shell命令/">基本SHELL命令使用</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/05/Git命令/">Git常用命令</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Node/">Node</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/es6/">es6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/个人/">个人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/周边/">周边</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node/">Node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/buffer/">buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/core/">core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/event-loop/">event loop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fs/">fs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/happyChong/">happyChong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loader/">loader</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/module/">module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextTick/">nextTick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/path/">path</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/util/">util</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vm/">vm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单线程/">单线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/EventLoop/" style="font-size: 13.33px;">EventLoop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/buffer/" style="font-size: 10px;">buffer</a> <a href="/tags/class/" style="font-size: 13.33px;">class</a> <a href="/tags/core/" style="font-size: 10px;">core</a> <a href="/tags/event-loop/" style="font-size: 13.33px;">event loop</a> <a href="/tags/events/" style="font-size: 10px;">events</a> <a href="/tags/fs/" style="font-size: 16.67px;">fs</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/happyChong/" style="font-size: 10px;">happyChong</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/loader/" style="font-size: 10px;">loader</a> <a href="/tags/module/" style="font-size: 10px;">module</a> <a href="/tags/nextTick/" style="font-size: 10px;">nextTick</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/path/" style="font-size: 10px;">path</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/util/" style="font-size: 10px;">util</a> <a href="/tags/vm/" style="font-size: 10px;">vm</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 20px;">webpack</a> <a href="/tags/单线程/" style="font-size: 10px;">单线程</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 happyChong<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
