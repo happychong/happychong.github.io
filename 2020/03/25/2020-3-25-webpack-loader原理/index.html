@@ -16,7 +16,7 @@
 <meta property="og:description" content="webpack">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://happychong.github.io/images/webpack-loader.png">
-<meta property="og:updated_time" content="2020-03-30T03:42:59.052Z">
+<meta property="og:updated_time" content="2020-03-30T05:30:08.496Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="webpack - loader 原理与实现">
 <meta name="twitter:description" content="webpack">
@@ -134,14 +134,12 @@
 
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// loaders/myLoader-runner-run.js</span></span><br><span class="line"><span class="comment">// 此文件功能：按顺序执行loader的pitch和normal</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="comment">// 把loader变成对象</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createLoaderObject</span>(<span class="params">loader</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> loaderObj = &#123;<span class="attr">data</span>: &#123;&#125;&#125;;</span><br><span class="line">  loaderObj.request = loader;</span><br><span class="line">  loaderObj.normal = <span class="built_in">require</span>(loader);</span><br><span class="line">  loaderObj.pitch = loaderObj.normal.pitch;</span><br><span class="line">  <span class="keyword">return</span> loaderObj;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">runLoaders</span>(<span class="params">options, callback</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 设置loader函数中的this对象</span></span><br><span class="line">  <span class="keyword">let</span> loadercontext= &#123;</span><br><span class="line">    loaderIndex: <span class="number">0</span>, <span class="comment">// 当前索引</span></span><br><span class="line">    readResource: fs, <span class="comment">// 读文件的模块</span></span><br><span class="line">    resource: options.resource, <span class="comment">// 要加载的资源 (index.js)</span></span><br><span class="line">    loaders: options.loaders <span class="comment">// [loader1, loader2, loader3] pathStr</span></span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">let</span> loaders = options.loaders;</span><br><span class="line">  <span class="comment">// loaders 路径Str -&gt; 有paitch， normal，request属性的对象</span></span><br><span class="line">  loadercontext.loaders = loaders.map(<span class="function"><span class="params">loader</span> =&gt;</span> createLoaderObject(loader)); <span class="comment">// [&#123;normal, pitch&#125;, &#123;normal, pitch&#125;]</span></span><br><span class="line">  iteratePitchLoader(loadercontext, callback);</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">processResource</span> (<span class="params">loadercontext, callback</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 读源文件</span></span><br><span class="line">    <span class="keyword">let</span> buffer = loadercontext.readResource.readFileSync(loadercontext.resource, <span class="string">'utf8'</span>);</span><br><span class="line">    iterateNormalLoader(loadercontext, buffer, callback);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">iterateNormalLoader</span>(<span class="params">loadercontext, code, callback</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 遍历loaders 的 normal 方法</span></span><br><span class="line">    <span class="keyword">if</span> (loadercontext.loaderIndex &lt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> callback(<span class="literal">null</span>, code);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> curLoaderObj = loadercontext.loaders[loadercontext.loaderIndex];</span><br><span class="line">    <span class="keyword">let</span> normalFn = curLoaderObj.normal;</span><br><span class="line">    <span class="keyword">let</span> result = normalFn.call(loadercontext, code);</span><br><span class="line">    loadercontext.loaderIndex--;</span><br><span class="line">    iterateNormalLoader(loadercontext, result, callback);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">iteratePitchLoader</span>(<span class="params">loadercontext, callback</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 遍历pitch方法</span></span><br><span class="line">    <span class="keyword">if</span> (loadercontext.loaderIndex &gt;= loadercontext.loaders.length) &#123;</span><br><span class="line">      <span class="comment">// pitch 方法执行完了，读文件资源，翻转执行normal方法</span></span><br><span class="line">      loadercontext.loaderIndex--;</span><br><span class="line">      <span class="keyword">return</span> processResource(loadercontext, callback);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> curLoaderObj = loadercontext.loaders[loadercontext.loaderIndex];</span><br><span class="line">    <span class="keyword">let</span> pitchFn = curLoaderObj.pitch;</span><br><span class="line">    <span class="keyword">if</span> (!pitchFn) &#123;</span><br><span class="line">      <span class="comment">// 没有pitch函数，下一个pitch方法</span></span><br><span class="line">      loadercontext.loaderIndex++;</span><br><span class="line">      <span class="keyword">return</span> iteratePitchLoader(loadercontext, callback);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> result = pitchFn.apply(loadercontext);</span><br><span class="line">    <span class="comment">// 有pitch方法</span></span><br><span class="line">    <span class="keyword">if</span> (result) &#123;</span><br><span class="line">      <span class="comment">// pitch方法有返回值，要返回上一个loader的normal，且pitch的返回值作为normal方法的第一个参数，没有上一个loader的话，直接返回pitch的值</span></span><br><span class="line">      loadercontext.loaderIndex--;</span><br><span class="line">      iterateNormalLoader(loadercontext, result, callback);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// pitch方法没有返回值 下一个pitch</span></span><br><span class="line">      loadercontext.loaderIndex++;</span><br><span class="line">      iteratePitchLoader(loadercontext, callback);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 以上原理部分，以下是原理的方法调用</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> entry = <span class="string">'../src/index.js'</span>;</span><br><span class="line"><span class="keyword">let</span> options = &#123;</span><br><span class="line">  resource: path.resolve(__dirname, entry),</span><br><span class="line">  loaders: [ <span class="comment">// 这里的数据实际应该是 myLoader-runner-getPath.js 中获取到的loaders</span></span><br><span class="line">    path.resolve(__dirname, <span class="string">'patch-loader1.js'</span>),</span><br><span class="line">    path.resolve(__dirname, <span class="string">'patch-loader2.js'</span>),</span><br><span class="line">    path.resolve(__dirname, <span class="string">'patch-loader3.js'</span>)</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line">runLoaders(options, (err, result) =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.error(<span class="string">'执行完毕'</span>);</span><br><span class="line">  <span class="built_in">console</span>.error(result);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
-<blockquote>
-<p>webpack 9视频 - 1小时<br>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-</blockquote>
+<p><a href="https://github.com/happychong/2019-zhufeng/tree/master/10.myWebpack/3-webpack-loader" target="_blank" rel="noopener">webpack原理代码地址点击这里</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2020/03/25/2020-3-25-webpack-loader原理/" data-id="ck8dxkzr5001nzwpldqenzdsk" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2020/03/25/2020-3-25-webpack-loader原理/" data-id="ck8pifm55001ynoplzn4xfd6d" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loader/">loader</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
@@ -151,6 +149,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/2020/03/30/webpack源码编译流程/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          webpack - 源码编译流程
+        
+      </div>
+    </a>
   
   
     <a href="/2020/03/20/2020-3-20-webpack原理/" id="article-nav-older" class="article-nav-link-wrap">
@@ -172,6 +179,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/03/30/webpack源码编译流程/">webpack - 源码编译流程</a>
+          </li>
         
           <li>
             <a href="/2020/03/25/2020-3-25-webpack-loader原理/">webpack - loader 原理与实现</a>
@@ -202,11 +213,11 @@
           </li>
         
           <li>
-            <a href="/2019/11/01/Node中文件的读写模块---FS/">Node -文件读写模块--- fs</a>
+            <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
           </li>
         
           <li>
-            <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
+            <a href="/2019/11/01/Node中文件的读写模块---FS/">Node -文件读写模块--- fs</a>
           </li>
         
           <li>
@@ -234,11 +245,11 @@
           </li>
         
           <li>
-            <a href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
+            <a href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
           </li>
         
           <li>
-            <a href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
+            <a href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
           </li>
         
           <li>

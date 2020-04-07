@@ -65,6 +65,52 @@
       <div class="outer">
         <section id="main">
   
+    <article id="default-es+---class用法笔记 " class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/09/03/es+---class用法笔记 /" class="article-date">
+  <time datetime="2019-09-02T16:00:00.000Z" itemprop="datePublished">2019-09-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/es6/">es6</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/09/03/es+---class用法笔记 /">es6、7-类的定义</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="基础语法"><a href="#基础语法" class="headerlink" title="基础语法"></a>基础语法</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">    <span class="comment">// type声明到实例上的，同下面的constructor写法一样的效果</span></span><br><span class="line">    type = <span class="string">'哺乳类'</span>;</span><br><span class="line">    <span class="comment">// constructor() &#123;</span></span><br><span class="line">    <span class="comment">//    // constructor同es5定义类的方法体类似含义</span></span><br><span class="line">    <span class="comment">//     this.type = '哺乳类'</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 原型上设置a属性</span></span><br><span class="line">    <span class="keyword">get</span> a() &#123;</span><br><span class="line">        <span class="comment">// 原理：Object.defineProperty(Animal.prototype, a)</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 声明到了原型上 // Animal.prototype.say</span></span><br><span class="line">    say() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 静态属性就是定义到类上的属性</span></span><br><span class="line">    <span class="keyword">static</span> flag = <span class="string">'动物'</span> <span class="comment">// es7写法</span></span><br><span class="line">    <span class="comment">// es6中只有静态方法,代码如下</span></span><br><span class="line">    <span class="comment">// static flag() &#123; // es6语法 1）</span></span><br><span class="line">    <span class="comment">//     return '动物'</span></span><br><span class="line">    <span class="comment">//     // 获取的时候 Animal.flag()</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="comment">// static get flag() &#123; // es6语法 1）</span></span><br><span class="line">    <span class="comment">//     return '动物'</span></span><br><span class="line">    <span class="comment">//     // 获取的时候 Animal.flag</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 注意如下代码，es6中把原型上的方法拿出来用，this是undefined</span></span><br><span class="line"><span class="keyword">let</span> animal= <span class="keyword">new</span> Animal();</span><br><span class="line"><span class="keyword">let</span> say = animal.say;</span><br><span class="line">say();  <span class="comment">//   打印的this是undefined</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 需要bind，this才能有所指向，代码如下</span></span><br><span class="line"><span class="comment">// 如果将类中的方法拿出来用必须绑定this 否则默认指向undefined</span></span><br><span class="line"><span class="keyword">let</span> aniamlOk = <span class="keyword">new</span> Animal();</span><br><span class="line"><span class="keyword">let</span> sayOk = animal.say.bind(animal);</span><br><span class="line">sayOk();</span><br></pre></td></tr></table></figure>
+
+<h2 id="类的继承"><a href="#类的继承" class="headerlink" title="类的继承"></a>类的继承</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>(name) &#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.type = <span class="string">'哺乳类'</span></span><br><span class="line">    &#125;</span><br><span class="line">    say() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'say'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> flag = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 继承实例和原型上的属性 extends = call + Object.create() +  Object.setPrototypeOf</span></span><br><span class="line"><span class="comment">// 原理：通过Object.defineProperty实现了 原型 + 静态方法属性的定义</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Tiger</span> <span class="keyword">extends</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>(name) &#123;</span><br><span class="line">        <span class="keyword">super</span>(name); <span class="comment">// 调用supper = Animal.call(tiger, name)</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> getAnimal() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">super</span>.flag, <span class="string">'-----'</span>); <span class="comment">// 在静态方法的定义中，super 指向的是 父类</span></span><br><span class="line">    &#125;</span><br><span class="line">    say() &#123;</span><br><span class="line">        <span class="keyword">super</span>.say(); <span class="comment">// 在原型方法中，super 指向的是 父类的原型</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> tiger = <span class="keyword">new</span> Tiger(<span class="string">'老虎'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(Tiger.flag); <span class="comment">// 1</span></span><br><span class="line"><span class="built_in">console</span>.log(tiger.name); <span class="comment">// 老虎</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="new的原理"><a href="#new的原理" class="headerlink" title="new的原理"></a>new的原理</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">this</span>.age = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// new 一个类</span></span><br><span class="line">        <span class="comment">// 1：得到一个对象，这个对象上的方法的this指向这个对象---代码如上</span></span><br><span class="line">        <span class="comment">// 2：如果一个类返回的是一个引用空间，那个实例将指向这个空间---代码如下</span></span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="attr">c</span>: <span class="number">1</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line">A.prototype.say = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'say'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 模拟new一个类</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mockNew</span>(<span class="params">mockClass</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 1) 创建一个对象，并且将对象传入到函数中作为this</span></span><br><span class="line">    <span class="keyword">let</span> obj = &#123;&#125;;</span><br><span class="line">    <span class="keyword">let</span> returnVal = mockClass.call(obj);</span><br><span class="line">    <span class="keyword">if</span> (returnVal !==<span class="literal">null</span> &amp;&amp; (<span class="keyword">typeof</span> returnVal === <span class="string">'object'</span> || <span class="keyword">typeof</span> returnVal === <span class="string">'function'</span>)) &#123;</span><br><span class="line">        <span class="comment">// 如果一个类返回的是一个引用空间，那个实例将指向这个空间</span></span><br><span class="line">        <span class="keyword">return</span> returnVal</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 2) 继承原型上的方法</span></span><br><span class="line">    obj.__proto__ = mockClass.prototype;</span><br><span class="line">    <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> o = mockNew(A);</span><br><span class="line">o.say();</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2019/09/03/es+---class用法笔记 /" data-id="ck8pifm2a000bnopljoa8e7r3" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/class/">class</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="default-vue 强制更新试图的方法" class="article article-type-default" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/08/08/vue 强制更新试图的方法/" class="article-date">
@@ -107,7 +153,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2018/08/08/vue 强制更新试图的方法/" data-id="ck8dxkzo80001zwplcnp5gp1j" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2018/08/08/vue 强制更新试图的方法/" data-id="ck8pifm1e0006noplx1hh8atx" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue/">vue</a></li></ul>
@@ -255,7 +301,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2016/05/19/宋晓丹的个人简历/" data-id="ck8dxkzou000azwplui5zfbuw" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2016/05/19/宋晓丹的个人简历/" data-id="ck8pifm1c0005noplehjc72xs" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/happyChong/">happyChong</a></li></ul>
@@ -346,7 +392,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2016/05/11/windows下，ATOM常用编辑器快捷键/" data-id="ck8dxkzo10000zwplsdcauwpd" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2016/05/11/windows下，ATOM常用编辑器快捷键/" data-id="ck8pifm180004noplquh3q4lk" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
@@ -521,7 +567,7 @@ $ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2016/05/05/基本shell命令/" data-id="ck8dxkzoi0005zwplza0ni8js" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2016/05/05/基本shell命令/" data-id="ck8pifm0n0000noplwxu8rpz2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li></ul>
@@ -631,7 +677,7 @@ $ git reset --hard 希望回退的版本号</code></pre><blockquote>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2016/05/05/Git命令/" data-id="ck8dxkzpp000pzwpl69w1ime3" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2016/05/05/Git命令/" data-id="ck8pifm0x0001noplxqorpuwg" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
@@ -659,6 +705,10 @@ $ git reset --hard 希望回退的版本号</code></pre><blockquote>
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/03/30/webpack源码编译流程/">webpack - 源码编译流程</a>
+          </li>
         
           <li>
             <a href="/2020/03/25/2020-3-25-webpack-loader原理/">webpack - loader 原理与实现</a>
@@ -689,11 +739,11 @@ $ git reset --hard 希望回退的版本号</code></pre><blockquote>
           </li>
         
           <li>
-            <a href="/2019/11/01/Node中文件的读写模块---FS/">Node -文件读写模块--- fs</a>
+            <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
           </li>
         
           <li>
-            <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
+            <a href="/2019/11/01/Node中文件的读写模块---FS/">Node -文件读写模块--- fs</a>
           </li>
         
           <li>
@@ -721,11 +771,11 @@ $ git reset --hard 希望回退的版本号</code></pre><blockquote>
           </li>
         
           <li>
-            <a href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
+            <a href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
           </li>
         
           <li>
-            <a href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
+            <a href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
           </li>
         
           <li>

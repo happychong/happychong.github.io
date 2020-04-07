@@ -65,6 +65,58 @@
       <div class="outer">
         <section id="main">
   
+    <article id="default-webpack源码编译流程" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/30/webpack源码编译流程/" class="article-date">
+  <time datetime="2020-03-29T16:00:00.000Z" itemprop="datePublished">2020-03-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/周边/">周边</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/30/webpack源码编译流程/">webpack - 源码编译流程</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="webpack编译流程"><a href="#webpack编译流程" class="headerlink" title="webpack编译流程"></a>webpack编译流程</h2><ul>
+<li>初始化参数：合并配置文件（一般为webpack.config.js)的参数和命令行的参数</li>
+<li>开始编译：用上一步得到的参数初始化Compiler对象，加载需要的拆件，执行对象的run方法开始执行编译，找到入口文件</li>
+<li>编译模块：从入口文件出发，调用所有配置的loader对模块进行编译，再找出该模块依赖的模块，递归本步骤直到所有入口依赖的文件都经过了本步骤的处理</li>
+<li>完成模块编译：得到每个模块被翻译后的最终内容以及它们之间的依赖关系</li>
+<li>输出资源：根据入口和模块之间的依赖关系，组装成一个个包含多个模块的Chunk，再把每个Chunk转换成一个单独的文件加入道输出列表</li>
+<li>输出完成：在确定好输出内容后，根据配置确定输出的路径和文件名，把文件内容写入到文件系统</li>
+</ul>
+<h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><p><img src="/images/webpack%E6%89%93%E5%8C%85%E5%8E%9F%E7%90%86%E6%B5%81%E7%A8%8B%E5%9B%BE.png" alt="webpack打包原理流程图"></p>
+<h2 id="代码内容好多，直接贴源码地址吧"><a href="#代码内容好多，直接贴源码地址吧" class="headerlink" title="代码内容好多，直接贴源码地址吧"></a>代码内容好多，直接贴源码地址吧</h2><p><a href="https://github.com/happychong/2019-zhufeng/tree/master/10.myWebpack/4-webpack-core" target="_blank" rel="noopener">源码地址</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2020/03/30/webpack源码编译流程/" data-id="ck8pifm4p001rnoplyjg7gwlh" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="default-2020-3-25-webpack-loader原理" class="article article-type-default" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/03/25/2020-3-25-webpack-loader原理/" class="article-date">
@@ -132,14 +184,12 @@
 
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// loaders/myLoader-runner-run.js</span></span><br><span class="line"><span class="comment">// 此文件功能：按顺序执行loader的pitch和normal</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="comment">// 把loader变成对象</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createLoaderObject</span>(<span class="params">loader</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> loaderObj = &#123;<span class="attr">data</span>: &#123;&#125;&#125;;</span><br><span class="line">  loaderObj.request = loader;</span><br><span class="line">  loaderObj.normal = <span class="built_in">require</span>(loader);</span><br><span class="line">  loaderObj.pitch = loaderObj.normal.pitch;</span><br><span class="line">  <span class="keyword">return</span> loaderObj;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">runLoaders</span>(<span class="params">options, callback</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 设置loader函数中的this对象</span></span><br><span class="line">  <span class="keyword">let</span> loadercontext= &#123;</span><br><span class="line">    loaderIndex: <span class="number">0</span>, <span class="comment">// 当前索引</span></span><br><span class="line">    readResource: fs, <span class="comment">// 读文件的模块</span></span><br><span class="line">    resource: options.resource, <span class="comment">// 要加载的资源 (index.js)</span></span><br><span class="line">    loaders: options.loaders <span class="comment">// [loader1, loader2, loader3] pathStr</span></span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">let</span> loaders = options.loaders;</span><br><span class="line">  <span class="comment">// loaders 路径Str -&gt; 有paitch， normal，request属性的对象</span></span><br><span class="line">  loadercontext.loaders = loaders.map(<span class="function"><span class="params">loader</span> =&gt;</span> createLoaderObject(loader)); <span class="comment">// [&#123;normal, pitch&#125;, &#123;normal, pitch&#125;]</span></span><br><span class="line">  iteratePitchLoader(loadercontext, callback);</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">processResource</span> (<span class="params">loadercontext, callback</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 读源文件</span></span><br><span class="line">    <span class="keyword">let</span> buffer = loadercontext.readResource.readFileSync(loadercontext.resource, <span class="string">'utf8'</span>);</span><br><span class="line">    iterateNormalLoader(loadercontext, buffer, callback);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">iterateNormalLoader</span>(<span class="params">loadercontext, code, callback</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 遍历loaders 的 normal 方法</span></span><br><span class="line">    <span class="keyword">if</span> (loadercontext.loaderIndex &lt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> callback(<span class="literal">null</span>, code);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> curLoaderObj = loadercontext.loaders[loadercontext.loaderIndex];</span><br><span class="line">    <span class="keyword">let</span> normalFn = curLoaderObj.normal;</span><br><span class="line">    <span class="keyword">let</span> result = normalFn.call(loadercontext, code);</span><br><span class="line">    loadercontext.loaderIndex--;</span><br><span class="line">    iterateNormalLoader(loadercontext, result, callback);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">iteratePitchLoader</span>(<span class="params">loadercontext, callback</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 遍历pitch方法</span></span><br><span class="line">    <span class="keyword">if</span> (loadercontext.loaderIndex &gt;= loadercontext.loaders.length) &#123;</span><br><span class="line">      <span class="comment">// pitch 方法执行完了，读文件资源，翻转执行normal方法</span></span><br><span class="line">      loadercontext.loaderIndex--;</span><br><span class="line">      <span class="keyword">return</span> processResource(loadercontext, callback);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> curLoaderObj = loadercontext.loaders[loadercontext.loaderIndex];</span><br><span class="line">    <span class="keyword">let</span> pitchFn = curLoaderObj.pitch;</span><br><span class="line">    <span class="keyword">if</span> (!pitchFn) &#123;</span><br><span class="line">      <span class="comment">// 没有pitch函数，下一个pitch方法</span></span><br><span class="line">      loadercontext.loaderIndex++;</span><br><span class="line">      <span class="keyword">return</span> iteratePitchLoader(loadercontext, callback);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> result = pitchFn.apply(loadercontext);</span><br><span class="line">    <span class="comment">// 有pitch方法</span></span><br><span class="line">    <span class="keyword">if</span> (result) &#123;</span><br><span class="line">      <span class="comment">// pitch方法有返回值，要返回上一个loader的normal，且pitch的返回值作为normal方法的第一个参数，没有上一个loader的话，直接返回pitch的值</span></span><br><span class="line">      loadercontext.loaderIndex--;</span><br><span class="line">      iterateNormalLoader(loadercontext, result, callback);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// pitch方法没有返回值 下一个pitch</span></span><br><span class="line">      loadercontext.loaderIndex++;</span><br><span class="line">      iteratePitchLoader(loadercontext, callback);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 以上原理部分，以下是原理的方法调用</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> entry = <span class="string">'../src/index.js'</span>;</span><br><span class="line"><span class="keyword">let</span> options = &#123;</span><br><span class="line">  resource: path.resolve(__dirname, entry),</span><br><span class="line">  loaders: [ <span class="comment">// 这里的数据实际应该是 myLoader-runner-getPath.js 中获取到的loaders</span></span><br><span class="line">    path.resolve(__dirname, <span class="string">'patch-loader1.js'</span>),</span><br><span class="line">    path.resolve(__dirname, <span class="string">'patch-loader2.js'</span>),</span><br><span class="line">    path.resolve(__dirname, <span class="string">'patch-loader3.js'</span>)</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line">runLoaders(options, (err, result) =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.error(<span class="string">'执行完毕'</span>);</span><br><span class="line">  <span class="built_in">console</span>.error(result);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
-<blockquote>
-<p>webpack 9视频 - 1小时<br>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-</blockquote>
+<p><a href="https://github.com/happychong/2019-zhufeng/tree/master/10.myWebpack/3-webpack-loader" target="_blank" rel="noopener">webpack原理代码地址点击这里</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2020/03/25/2020-3-25-webpack-loader原理/" data-id="ck8dxkzr5001nzwpldqenzdsk" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2020/03/25/2020-3-25-webpack-loader原理/" data-id="ck8pifm55001ynoplzn4xfd6d" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loader/">loader</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
@@ -205,7 +255,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2020/03/20/2020-3-20-webpack原理/" data-id="ck8dxkzr2001lzwpljgfrwetd" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2020/03/20/2020-3-20-webpack原理/" data-id="ck8pifm4w001vnoplthh3gd9y" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
@@ -260,7 +310,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2020/03/17/2018-1-11-hello-world/" data-id="ck8dxkzof0004zwplacng24ov" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2020/03/17/2018-1-11-hello-world/" data-id="ck8pifm26000anoplq76zsrq1" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
@@ -403,7 +453,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/12/20/webpack优化/" data-id="ck8dxkzrk001wzwpllk2iw524" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/12/20/webpack优化/" data-id="ck8pifm4k001onoplgfst3iai" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
@@ -572,7 +622,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/12/16/webpack基础配置/" data-id="ck8dxkzra001rzwplnoi9v9d2" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/12/16/webpack基础配置/" data-id="ck8pifm4e001knoplusri9wlo" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/">webpack</a></li></ul>
@@ -675,7 +725,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/11/19/HTTP基础/" data-id="ck8dxkzre001tzwpl8z08lue7" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/11/19/HTTP基础/" data-id="ck8pifm4a001inoplqzvdgp0t" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HTTP/">HTTP</a></li></ul>
@@ -729,10 +779,74 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/11/07/node深度删除目录及目录里的内容-fs删除扩展/" data-id="ck8dxkzqg0019zwply036q2ys" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/11/07/node深度删除目录及目录里的内容-fs删除扩展/" data-id="ck8pifm3y001bnoplofm6dm9x" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/fs/">fs</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="default-JS中，0.1+0.2＞0.3为什么？" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/" class="article-date">
+  <time datetime="2019-10-31T16:00:00.000Z" itemprop="datePublished">2019-11-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="一：抛砖"><a href="#一：抛砖" class="headerlink" title="一：抛砖"></a>一：抛砖</h2><p>众所周知，js中，浮点数的运算是不靠谱的（因为JS仅有Number这个数值类型，而Number采用的时IEEE 754 64位双精度浮点数编码），正如标题所示，0.1 + 0.2 并不等于 0.3</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 浏览器的console中查看</span></span><br><span class="line"><span class="number">0.1</span>+<span class="number">0.2</span></span><br><span class="line"><span class="comment">// 0.30000000000000004</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="二：引玉"><a href="#二：引玉" class="headerlink" title="二：引玉"></a>二：引玉</h2><p>如果想搞清楚 0.1 + 0.2 等于几，首先需要先看看 0.1 转换成二进制数是什么样的，接下来就先看看进制转化的方法吧</p>
+<h3 id="1-小数转换成2进制的方法"><a href="#1-小数转换成2进制的方法" class="headerlink" title="1 小数转换成2进制的方法"></a>1 小数转换成2进制的方法</h3><p>乘 2 取整法 ，具体转化过程如下，0.1 的转换过程</p>
+<h3 id="2-0-1-转化为2进制"><a href="#2-0-1-转化为2进制" class="headerlink" title="2 - 0.1 转化为2进制"></a>2 - 0.1 转化为2进制</h3><p>结果：0.0001100110011001100110011001100110011001100110011001101</p>
+<p>过程：</p>
+<ul>
+<li>0.1 * 2 = 0.2    =&gt; 0</li>
+<li>0.2 * 2 = 0.4    =&gt; 0</li>
+<li>0.4 * 2 = 0.8    =&gt; 0</li>
+<li>0.8 * 2 = 1.6    =&gt; 1 ———</li>
+<li>0.6 * 2 = 1.2    =&gt; 1    |</li>
+<li>0.2 * 2 = 0.4    =&gt; 0    |  这个1100的结果会一直重复下去，直到最后一位，会被进1</li>
+<li>0.4 * 2 = 0.8    =&gt; 0 ———</li>
+<li>0.8 * 2 = 1.6    =&gt; 1</li>
+<li>0.6 * 2 = 1.2    =&gt; 1</li>
+</ul>
+<p>因为最后一位进1，所以 0.1 转换为2进制后，实际比以前大了一点点</p>
+<h3 id="2-0-2-转化为2进制"><a href="#2-0-2-转化为2进制" class="headerlink" title="2 - 0.2 转化为2进制"></a>2 - 0.2 转化为2进制</h3><p>结果：0.001100110011001100110011001100110011001100110011001101</p>
+<p>可以发现，也是个1100无线循环的过程，最后一位进1，所以同样 0.2 转换为2进制后，也比以前大了一点点</p>
+<h3 id="3-结论"><a href="#3-结论" class="headerlink" title="3 - 结论"></a>3 - 结论</h3><p>那么比 0.1 大了一点点的数 + 比 0.2 大了一点点的数，当然这2个数相加就大于 0.3 了</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2019/11/01/JS中，0.1+0.2＞0.3为什么？/" data-id="ck8pifm3u0019noplxgfip8pf" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
 
     </footer>
   </div>
@@ -913,171 +1027,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/11/01/Node中文件的读写模块---FS/" data-id="ck8dxkzqc0016zwplg90px5wg" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/11/01/Node中文件的读写模块---FS/" data-id="ck8pifm44001enoplc38960po" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/fs/">fs</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="default-JS中，0.1+0.2＞0.3为什么？" class="article article-type-default" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/" class="article-date">
-  <time datetime="2019-10-31T16:00:00.000Z" itemprop="datePublished">2019-11-01</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/javascript/">javascript</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="一：抛砖"><a href="#一：抛砖" class="headerlink" title="一：抛砖"></a>一：抛砖</h2><p>众所周知，js中，浮点数的运算是不靠谱的（因为JS仅有Number这个数值类型，而Number采用的时IEEE 754 64位双精度浮点数编码），正如标题所示，0.1 + 0.2 并不等于 0.3</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 浏览器的console中查看</span></span><br><span class="line"><span class="number">0.1</span>+<span class="number">0.2</span></span><br><span class="line"><span class="comment">// 0.30000000000000004</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="二：引玉"><a href="#二：引玉" class="headerlink" title="二：引玉"></a>二：引玉</h2><p>如果想搞清楚 0.1 + 0.2 等于几，首先需要先看看 0.1 转换成二进制数是什么样的，接下来就先看看进制转化的方法吧</p>
-<h3 id="1-小数转换成2进制的方法"><a href="#1-小数转换成2进制的方法" class="headerlink" title="1 小数转换成2进制的方法"></a>1 小数转换成2进制的方法</h3><p>乘 2 取整法 ，具体转化过程如下，0.1 的转换过程</p>
-<h3 id="2-0-1-转化为2进制"><a href="#2-0-1-转化为2进制" class="headerlink" title="2 - 0.1 转化为2进制"></a>2 - 0.1 转化为2进制</h3><p>结果：0.0001100110011001100110011001100110011001100110011001101</p>
-<p>过程：</p>
-<ul>
-<li>0.1 * 2 = 0.2    =&gt; 0</li>
-<li>0.2 * 2 = 0.4    =&gt; 0</li>
-<li>0.4 * 2 = 0.8    =&gt; 0</li>
-<li>0.8 * 2 = 1.6    =&gt; 1 ———</li>
-<li>0.6 * 2 = 1.2    =&gt; 1    |</li>
-<li>0.2 * 2 = 0.4    =&gt; 0    |  这个1100的结果会一直重复下去，直到最后一位，会被进1</li>
-<li>0.4 * 2 = 0.8    =&gt; 0 ———</li>
-<li>0.8 * 2 = 1.6    =&gt; 1</li>
-<li>0.6 * 2 = 1.2    =&gt; 1</li>
-</ul>
-<p>因为最后一位进1，所以 0.1 转换为2进制后，实际比以前大了一点点</p>
-<h3 id="2-0-2-转化为2进制"><a href="#2-0-2-转化为2进制" class="headerlink" title="2 - 0.2 转化为2进制"></a>2 - 0.2 转化为2进制</h3><p>结果：0.001100110011001100110011001100110011001100110011001101</p>
-<p>可以发现，也是个1100无线循环的过程，最后一位进1，所以同样 0.2 转换为2进制后，也比以前大了一点点</p>
-<h3 id="3-结论"><a href="#3-结论" class="headerlink" title="3 - 结论"></a>3 - 结论</h3><p>那么比 0.1 大了一点点的数 + 比 0.2 大了一点点的数，当然这2个数相加就大于 0.3 了</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/11/01/JS中，0.1+0.2＞0.3为什么？/" data-id="ck8dxkzqs001hzwpl820izqdl" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="default-Node---buffer" class="article article-type-default" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/10/30/Node---buffer/" class="article-date">
-  <time datetime="2019-10-29T16:00:00.000Z" itemprop="datePublished">2019-10-30</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Node/">Node</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/30/Node---buffer/">Node --- buffer</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="一：简述"><a href="#一：简述" class="headerlink" title="一：简述"></a>一：简述</h2><p>Buffer 类是作为 Node.js API 的一部分引入的，用于在 TCP 流、文件系统操作、以及其他上下文中与八位字节流进行交互。</p>
-<p>Buffer 类的实例类似于从 0 到 255 之间的整数数组（其他整数会通过 ＆ 255 操作强制转换到此范围）</p>
-<p>Buffer 的大小在创建时确定，且无法更改。</p>
-<p>Buffer 类在全局作用域中，因此无需使用 require(‘buffer’).Buffer。</p>
-<p>Buffer的实例存放的是内存地址。</p>
-<h2 id="二：buffer的常用方法"><a href="#二：buffer的常用方法" class="headerlink" title="二：buffer的常用方法"></a>二：buffer的常用方法</h2><h3 id="1-创建"><a href="#1-创建" class="headerlink" title="1.创建"></a>1.创建</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个长度为 10、且用零填充的 Buffer。</span></span><br><span class="line"><span class="keyword">const</span> buf1 = Buffer.alloc(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个长度为 10、且用 0x1 填充的 Buffer。 </span></span><br><span class="line"><span class="keyword">const</span> buf2 = Buffer.alloc(<span class="number">10</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个长度为 10、且未初始化的 Buffer。</span></span><br><span class="line"><span class="comment">// 这个方法比调用 Buffer.alloc() 更快，</span></span><br><span class="line"><span class="comment">// 但返回的 Buffer 实例可能包含旧数据，</span></span><br><span class="line"><span class="comment">// 因此需要使用 fill() 或 write() 重写。</span></span><br><span class="line"><span class="keyword">const</span> buf3 = Buffer.allocUnsafe(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个包含 [0x1, 0x2, 0x3] 的 Buffer。</span></span><br><span class="line"><span class="keyword">const</span> buf4 = Buffer.from([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个包含 UTF-8 字节 [0x74, 0xc3, 0xa9, 0x73, 0x74] 的 Buffer。</span></span><br><span class="line"><span class="keyword">const</span> buf5 = Buffer.from(<span class="string">'tést'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个包含 Latin-1 字节 [0x74, 0xe9, 0x73, 0x74] 的 Buffer。</span></span><br><span class="line"><span class="keyword">const</span> buf6 = Buffer.from(<span class="string">'tést'</span>, <span class="string">'latin1'</span>);</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-写入"><a href="#2-写入" class="headerlink" title="2.写入"></a>2.写入</h3><h4 id="2-1-fill"><a href="#2-1-fill" class="headerlink" title="2.1 fill"></a>2.1 fill</h4><p>用指定的 value 填充 buf。 如果没有指定 offset 与 end，则填充整个 buf</p>
-<p>语法：buf.fill(value[, offset[, end]][, encoding])</p>
-<ul>
-<li>value : 用来填充 buf 的值</li>
-<li>offset : 开始填充 buf 的偏移量。默认值: 0</li>
-<li>end : 结束填充 buf 的偏移量（不包含）。默认值: buf.length</li>
-<li>encoding : 如果 value 是字符串，则指定 value 的字符编码。默认值: ‘utf8’</li>
-<li>return : 返回 buf 的引用</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> buf = Buffer.allocUnsafe(<span class="number">5</span>)</span><br><span class="line">buf.fill(<span class="string">'h'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(buf.toString());</span><br><span class="line"><span class="comment">// 打印: hhhhh</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="2-2-write"><a href="#2-2-write" class="headerlink" title="2.2 write"></a>2.2 write</h4><p>buf.write(string[, offset[, length]][, encoding])</p>
-<ul>
-<li>string : 要写入 buf 的字符串</li>
-<li>offset : 开始写入 string 之前要跳过的字节数。默认值: 0</li>
-<li>length : 要写入的字节数。默认值: buf.length - offset</li>
-<li>encoding : string 的字符编码。默认值: ‘utf8’</li>
-<li>return : 返回 已写入的字节数</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> buf = Buffer.alloc(<span class="number">10</span>);</span><br><span class="line"><span class="built_in">console</span>.log(buf.length); <span class="comment">// 10</span></span><br><span class="line"><span class="keyword">const</span> len = buf.write(<span class="string">'abcdef'</span>, <span class="number">0</span>);</span><br><span class="line"><span class="built_in">console</span>.log(len); <span class="comment">// 6</span></span><br><span class="line"><span class="built_in">console</span>.log(buf.toString()); <span class="comment">// abcdef</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="3-slice-拷贝"><a href="#3-slice-拷贝" class="headerlink" title="3.slice - 拷贝"></a>3.slice - 拷贝</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> buffer = Buffer.from(<span class="string">'hello world'</span>);</span><br><span class="line"><span class="keyword">let</span> newBuffer = buffer.slice(<span class="number">0</span>);</span><br><span class="line">newBuffer[<span class="number">0</span>] = <span class="number">100</span>;</span><br><span class="line"><span class="comment">// 此时，buffer的第1项也会被修改，因为buffer存放的是内存地址</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="4-isBuffer-判断是否是buffer类型"><a href="#4-isBuffer-判断是否是buffer类型" class="headerlink" title="4.isBuffer - 判断是否是buffer类型"></a>4.isBuffer - 判断是否是buffer类型</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> buffer = Buffer.from(<span class="string">'hello world'</span>);</span><br><span class="line">Buffer.isBuffer(buffer) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="5-copy-拷贝"><a href="#5-copy-拷贝" class="headerlink" title="5.copy - 拷贝"></a>5.copy - 拷贝</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> buffer1 = Buffer.from(<span class="string">'你'</span>);</span><br><span class="line"><span class="keyword">let</span> buffer2 = Buffer.from(<span class="string">'好'</span>);</span><br><span class="line"><span class="keyword">let</span> buff = Buffer.alloc(<span class="number">6</span>); <span class="comment">// 创建可以放下6个字符大小的Buffer实例</span></span><br><span class="line">buffer1.copy(buff, <span class="number">0</span>, <span class="number">0</span>, <span class="number">3</span>);</span><br><span class="line">buffer2.copy(buff, <span class="number">3</span>, <span class="number">0</span>, <span class="number">3</span>);</span><br><span class="line">    <span class="comment">// buffer2 : 源buffer</span></span><br><span class="line">    <span class="comment">// buff : 目标buffer</span></span><br><span class="line">    <span class="comment">// 3 : 目标的开始位置</span></span><br><span class="line">    <span class="comment">// 0 : 源的开始拷贝位置</span></span><br><span class="line">    <span class="comment">// 3 : 源的结束拷贝位置</span></span><br><span class="line"><span class="built_in">console</span>.log(buff.toString()); <span class="comment">// 你好</span></span><br></pre></td></tr></table></figure>
-
-<p>copy原理如下</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Buffer.prototype.copy = <span class="function"><span class="keyword">function</span> (<span class="params">targetBuffer, targetStart, sourceStart=<span class="number">0</span>, sourceEnd=this.length</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; sourceEnd - sourceStart; i++) &#123;</span><br><span class="line">        targetBuffer[targetStart + i] = <span class="keyword">this</span>[sourceStart + i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="6-concat-拼接"><a href="#6-concat-拼接" class="headerlink" title="6.concat - 拼接"></a>6.concat - 拼接</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// concat - 类上的方法</span></span><br><span class="line"><span class="keyword">let</span> buffer1 = Buffer.from(<span class="string">'你'</span>);</span><br><span class="line"><span class="keyword">let</span> buffer2 = Buffer.from(<span class="string">'好'</span>);</span><br><span class="line"><span class="keyword">let</span> buff = Buffer.concat([buffer1, buffer2]); <span class="comment">// 你好</span></span><br><span class="line"><span class="keyword">let</span> buff2 = Buffer.concat([buffer1, buffer2], <span class="number">3</span>); <span class="comment">// 你</span></span><br><span class="line">    <span class="comment">// Buffer.concat(list[, totalLength])</span></span><br><span class="line">    <span class="comment">// list : 要合并的 Buffer 数组</span></span><br><span class="line">    <span class="comment">// totalLength : 合并后 list 中的 Buffer 实例的总长度</span></span><br><span class="line">    <span class="comment">// return : 返回一个合并了 list 中所有 Buffer 实例的新 Buffer</span></span><br></pre></td></tr></table></figure>
-
-<p>concat原理</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Buffer.concat = <span class="function"><span class="keyword">function</span> (<span class="params">list, totalLength = list.reduce((pre, cur</span>) =&gt; <span class="title">pre</span>+<span class="title">cur</span>.<span class="title">length</span>, 0)) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> newBuf = Buffer.alloc(totalLength);</span><br><span class="line">    <span class="keyword">let</span> index = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> buf <span class="keyword">of</span> list) &#123;</span><br><span class="line">        <span class="keyword">if</span> (index &gt;= newBuf.length) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        buf.copy(newBuf, index);</span><br><span class="line">        index += buf.length;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> newBuf</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="7-indexOf-or-lastIndexOf-取索引"><a href="#7-indexOf-or-lastIndexOf-取索引" class="headerlink" title="7.indexOf or lastIndexOf - 取索引"></a>7.indexOf or lastIndexOf - 取索引</h3><p>buf.indexOf(value[, byteOffset][, encoding])</p>
-<ul>
-<li>value : 要查找的值</li>
-<li>byteOffset : 中开始查找的偏移量。默认值: 0</li>
-<li>encoding : 如果 value 是字符串，则指定 value 的字符编码。默认值: ‘utf8’</li>
-<li>return : 返回 buf 中首次出现 value 的索引，如果 buf 没包含 value 则返回 -1</li>
-</ul>
-<p>buf.lastIndexOf(value[, byteOffset][, encoding])</p>
-<p>lastIndexOf 与 indexOf 不同的是：lastIndexOf 会从buf最后的位置往前查找，但是返回的索引值仍然是从前往后的位置</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> buf = Buffer.from(<span class="string">'你好你好吗'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(buf.indexOf(<span class="string">'你'</span>)); <span class="comment">// 0</span></span><br><span class="line"><span class="built_in">console</span>.log(buf.indexOf(<span class="string">'你'</span>, <span class="number">2</span>)); <span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="三：buffer的扩展"><a href="#三：buffer的扩展" class="headerlink" title="三：buffer的扩展"></a>三：buffer的扩展</h2><h3 id="1-split-分割"><a href="#1-split-分割" class="headerlink" title="1 split - 分割"></a>1 split - 分割</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">Buffer.prototype.split = <span class="function"><span class="keyword">function</span> (<span class="params">sep</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 分隔符的长度</span></span><br><span class="line">    sep = Buffer.from(sep);</span><br><span class="line">    <span class="keyword">let</span> len = sep.length;</span><br><span class="line">    <span class="keyword">let</span> offset = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> result = [];</span><br><span class="line">    <span class="keyword">let</span> current;</span><br><span class="line">    <span class="keyword">while</span> ((current = <span class="keyword">this</span>.indexOf(sep, offset)) &gt; <span class="number">-1</span>) &#123;</span><br><span class="line">        result.push(<span class="keyword">this</span>.slice(offset, current));</span><br><span class="line">        offset = current + len;</span><br><span class="line">    &#125;</span><br><span class="line">    result.push(<span class="keyword">this</span>.slice(offset));</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> buf = Buffer.from(<span class="string">`你1</span></span><br><span class="line"><span class="string">你好2</span></span><br><span class="line"><span class="string">你好你3</span></span><br><span class="line"><span class="string">你好你好4`</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> item <span class="keyword">of</span> buf.split(<span class="string">'\n'</span>)) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(item.toString());</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 你1</span></span><br><span class="line"><span class="comment">// 你好2</span></span><br><span class="line"><span class="comment">// 你好你3</span></span><br><span class="line"><span class="comment">// 你好你好4</span></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/30/Node---buffer/" data-id="ck8dxkzq60013zwpl0i9vpmp3" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/buffer/">buffer</a></li></ul>
 
     </footer>
   </div>
@@ -1102,6 +1055,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/03/30/webpack源码编译流程/">webpack - 源码编译流程</a>
+          </li>
         
           <li>
             <a href="/2020/03/25/2020-3-25-webpack-loader原理/">webpack - loader 原理与实现</a>
@@ -1132,11 +1089,11 @@
           </li>
         
           <li>
-            <a href="/2019/11/01/Node中文件的读写模块---FS/">Node -文件读写模块--- fs</a>
+            <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
           </li>
         
           <li>
-            <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
+            <a href="/2019/11/01/Node中文件的读写模块---FS/">Node -文件读写模块--- fs</a>
           </li>
         
           <li>
@@ -1164,11 +1121,11 @@
           </li>
         
           <li>
-            <a href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
+            <a href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
           </li>
         
           <li>
-            <a href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
+            <a href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
           </li>
         
           <li>

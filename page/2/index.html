@@ -65,6 +65,103 @@
       <div class="outer">
         <section id="main">
   
+    <article id="default-Node---buffer" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/30/Node---buffer/" class="article-date">
+  <time datetime="2019-10-29T16:00:00.000Z" itemprop="datePublished">2019-10-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Node/">Node</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/30/Node---buffer/">Node --- buffer</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="一：简述"><a href="#一：简述" class="headerlink" title="一：简述"></a>一：简述</h2><p>Buffer 类是作为 Node.js API 的一部分引入的，用于在 TCP 流、文件系统操作、以及其他上下文中与八位字节流进行交互。</p>
+<p>Buffer 类的实例类似于从 0 到 255 之间的整数数组（其他整数会通过 ＆ 255 操作强制转换到此范围）</p>
+<p>Buffer 的大小在创建时确定，且无法更改。</p>
+<p>Buffer 类在全局作用域中，因此无需使用 require(‘buffer’).Buffer。</p>
+<p>Buffer的实例存放的是内存地址。</p>
+<h2 id="二：buffer的常用方法"><a href="#二：buffer的常用方法" class="headerlink" title="二：buffer的常用方法"></a>二：buffer的常用方法</h2><h3 id="1-创建"><a href="#1-创建" class="headerlink" title="1.创建"></a>1.创建</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个长度为 10、且用零填充的 Buffer。</span></span><br><span class="line"><span class="keyword">const</span> buf1 = Buffer.alloc(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个长度为 10、且用 0x1 填充的 Buffer。 </span></span><br><span class="line"><span class="keyword">const</span> buf2 = Buffer.alloc(<span class="number">10</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个长度为 10、且未初始化的 Buffer。</span></span><br><span class="line"><span class="comment">// 这个方法比调用 Buffer.alloc() 更快，</span></span><br><span class="line"><span class="comment">// 但返回的 Buffer 实例可能包含旧数据，</span></span><br><span class="line"><span class="comment">// 因此需要使用 fill() 或 write() 重写。</span></span><br><span class="line"><span class="keyword">const</span> buf3 = Buffer.allocUnsafe(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个包含 [0x1, 0x2, 0x3] 的 Buffer。</span></span><br><span class="line"><span class="keyword">const</span> buf4 = Buffer.from([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个包含 UTF-8 字节 [0x74, 0xc3, 0xa9, 0x73, 0x74] 的 Buffer。</span></span><br><span class="line"><span class="keyword">const</span> buf5 = Buffer.from(<span class="string">'tést'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个包含 Latin-1 字节 [0x74, 0xe9, 0x73, 0x74] 的 Buffer。</span></span><br><span class="line"><span class="keyword">const</span> buf6 = Buffer.from(<span class="string">'tést'</span>, <span class="string">'latin1'</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-写入"><a href="#2-写入" class="headerlink" title="2.写入"></a>2.写入</h3><h4 id="2-1-fill"><a href="#2-1-fill" class="headerlink" title="2.1 fill"></a>2.1 fill</h4><p>用指定的 value 填充 buf。 如果没有指定 offset 与 end，则填充整个 buf</p>
+<p>语法：buf.fill(value[, offset[, end]][, encoding])</p>
+<ul>
+<li>value : 用来填充 buf 的值</li>
+<li>offset : 开始填充 buf 的偏移量。默认值: 0</li>
+<li>end : 结束填充 buf 的偏移量（不包含）。默认值: buf.length</li>
+<li>encoding : 如果 value 是字符串，则指定 value 的字符编码。默认值: ‘utf8’</li>
+<li>return : 返回 buf 的引用</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> buf = Buffer.allocUnsafe(<span class="number">5</span>)</span><br><span class="line">buf.fill(<span class="string">'h'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(buf.toString());</span><br><span class="line"><span class="comment">// 打印: hhhhh</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-write"><a href="#2-2-write" class="headerlink" title="2.2 write"></a>2.2 write</h4><p>buf.write(string[, offset[, length]][, encoding])</p>
+<ul>
+<li>string : 要写入 buf 的字符串</li>
+<li>offset : 开始写入 string 之前要跳过的字节数。默认值: 0</li>
+<li>length : 要写入的字节数。默认值: buf.length - offset</li>
+<li>encoding : string 的字符编码。默认值: ‘utf8’</li>
+<li>return : 返回 已写入的字节数</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> buf = Buffer.alloc(<span class="number">10</span>);</span><br><span class="line"><span class="built_in">console</span>.log(buf.length); <span class="comment">// 10</span></span><br><span class="line"><span class="keyword">const</span> len = buf.write(<span class="string">'abcdef'</span>, <span class="number">0</span>);</span><br><span class="line"><span class="built_in">console</span>.log(len); <span class="comment">// 6</span></span><br><span class="line"><span class="built_in">console</span>.log(buf.toString()); <span class="comment">// abcdef</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-slice-拷贝"><a href="#3-slice-拷贝" class="headerlink" title="3.slice - 拷贝"></a>3.slice - 拷贝</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> buffer = Buffer.from(<span class="string">'hello world'</span>);</span><br><span class="line"><span class="keyword">let</span> newBuffer = buffer.slice(<span class="number">0</span>);</span><br><span class="line">newBuffer[<span class="number">0</span>] = <span class="number">100</span>;</span><br><span class="line"><span class="comment">// 此时，buffer的第1项也会被修改，因为buffer存放的是内存地址</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-isBuffer-判断是否是buffer类型"><a href="#4-isBuffer-判断是否是buffer类型" class="headerlink" title="4.isBuffer - 判断是否是buffer类型"></a>4.isBuffer - 判断是否是buffer类型</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> buffer = Buffer.from(<span class="string">'hello world'</span>);</span><br><span class="line">Buffer.isBuffer(buffer) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-copy-拷贝"><a href="#5-copy-拷贝" class="headerlink" title="5.copy - 拷贝"></a>5.copy - 拷贝</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> buffer1 = Buffer.from(<span class="string">'你'</span>);</span><br><span class="line"><span class="keyword">let</span> buffer2 = Buffer.from(<span class="string">'好'</span>);</span><br><span class="line"><span class="keyword">let</span> buff = Buffer.alloc(<span class="number">6</span>); <span class="comment">// 创建可以放下6个字符大小的Buffer实例</span></span><br><span class="line">buffer1.copy(buff, <span class="number">0</span>, <span class="number">0</span>, <span class="number">3</span>);</span><br><span class="line">buffer2.copy(buff, <span class="number">3</span>, <span class="number">0</span>, <span class="number">3</span>);</span><br><span class="line">    <span class="comment">// buffer2 : 源buffer</span></span><br><span class="line">    <span class="comment">// buff : 目标buffer</span></span><br><span class="line">    <span class="comment">// 3 : 目标的开始位置</span></span><br><span class="line">    <span class="comment">// 0 : 源的开始拷贝位置</span></span><br><span class="line">    <span class="comment">// 3 : 源的结束拷贝位置</span></span><br><span class="line"><span class="built_in">console</span>.log(buff.toString()); <span class="comment">// 你好</span></span><br></pre></td></tr></table></figure>
+
+<p>copy原理如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Buffer.prototype.copy = <span class="function"><span class="keyword">function</span> (<span class="params">targetBuffer, targetStart, sourceStart=<span class="number">0</span>, sourceEnd=this.length</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; sourceEnd - sourceStart; i++) &#123;</span><br><span class="line">        targetBuffer[targetStart + i] = <span class="keyword">this</span>[sourceStart + i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-concat-拼接"><a href="#6-concat-拼接" class="headerlink" title="6.concat - 拼接"></a>6.concat - 拼接</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// concat - 类上的方法</span></span><br><span class="line"><span class="keyword">let</span> buffer1 = Buffer.from(<span class="string">'你'</span>);</span><br><span class="line"><span class="keyword">let</span> buffer2 = Buffer.from(<span class="string">'好'</span>);</span><br><span class="line"><span class="keyword">let</span> buff = Buffer.concat([buffer1, buffer2]); <span class="comment">// 你好</span></span><br><span class="line"><span class="keyword">let</span> buff2 = Buffer.concat([buffer1, buffer2], <span class="number">3</span>); <span class="comment">// 你</span></span><br><span class="line">    <span class="comment">// Buffer.concat(list[, totalLength])</span></span><br><span class="line">    <span class="comment">// list : 要合并的 Buffer 数组</span></span><br><span class="line">    <span class="comment">// totalLength : 合并后 list 中的 Buffer 实例的总长度</span></span><br><span class="line">    <span class="comment">// return : 返回一个合并了 list 中所有 Buffer 实例的新 Buffer</span></span><br></pre></td></tr></table></figure>
+
+<p>concat原理</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Buffer.concat = <span class="function"><span class="keyword">function</span> (<span class="params">list, totalLength = list.reduce((pre, cur</span>) =&gt; <span class="title">pre</span>+<span class="title">cur</span>.<span class="title">length</span>, 0)) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> newBuf = Buffer.alloc(totalLength);</span><br><span class="line">    <span class="keyword">let</span> index = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> buf <span class="keyword">of</span> list) &#123;</span><br><span class="line">        <span class="keyword">if</span> (index &gt;= newBuf.length) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        buf.copy(newBuf, index);</span><br><span class="line">        index += buf.length;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> newBuf</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-indexOf-or-lastIndexOf-取索引"><a href="#7-indexOf-or-lastIndexOf-取索引" class="headerlink" title="7.indexOf or lastIndexOf - 取索引"></a>7.indexOf or lastIndexOf - 取索引</h3><p>buf.indexOf(value[, byteOffset][, encoding])</p>
+<ul>
+<li>value : 要查找的值</li>
+<li>byteOffset : 中开始查找的偏移量。默认值: 0</li>
+<li>encoding : 如果 value 是字符串，则指定 value 的字符编码。默认值: ‘utf8’</li>
+<li>return : 返回 buf 中首次出现 value 的索引，如果 buf 没包含 value 则返回 -1</li>
+</ul>
+<p>buf.lastIndexOf(value[, byteOffset][, encoding])</p>
+<p>lastIndexOf 与 indexOf 不同的是：lastIndexOf 会从buf最后的位置往前查找，但是返回的索引值仍然是从前往后的位置</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> buf = Buffer.from(<span class="string">'你好你好吗'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(buf.indexOf(<span class="string">'你'</span>)); <span class="comment">// 0</span></span><br><span class="line"><span class="built_in">console</span>.log(buf.indexOf(<span class="string">'你'</span>, <span class="number">2</span>)); <span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="三：buffer的扩展"><a href="#三：buffer的扩展" class="headerlink" title="三：buffer的扩展"></a>三：buffer的扩展</h2><h3 id="1-split-分割"><a href="#1-split-分割" class="headerlink" title="1 split - 分割"></a>1 split - 分割</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">Buffer.prototype.split = <span class="function"><span class="keyword">function</span> (<span class="params">sep</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 分隔符的长度</span></span><br><span class="line">    sep = Buffer.from(sep);</span><br><span class="line">    <span class="keyword">let</span> len = sep.length;</span><br><span class="line">    <span class="keyword">let</span> offset = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> result = [];</span><br><span class="line">    <span class="keyword">let</span> current;</span><br><span class="line">    <span class="keyword">while</span> ((current = <span class="keyword">this</span>.indexOf(sep, offset)) &gt; <span class="number">-1</span>) &#123;</span><br><span class="line">        result.push(<span class="keyword">this</span>.slice(offset, current));</span><br><span class="line">        offset = current + len;</span><br><span class="line">    &#125;</span><br><span class="line">    result.push(<span class="keyword">this</span>.slice(offset));</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> buf = Buffer.from(<span class="string">`你1</span></span><br><span class="line"><span class="string">你好2</span></span><br><span class="line"><span class="string">你好你3</span></span><br><span class="line"><span class="string">你好你好4`</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> item <span class="keyword">of</span> buf.split(<span class="string">'\n'</span>)) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(item.toString());</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 你1</span></span><br><span class="line"><span class="comment">// 你好2</span></span><br><span class="line"><span class="comment">// 你好你3</span></span><br><span class="line"><span class="comment">// 你好你好4</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2019/10/30/Node---buffer/" data-id="ck8pifm3q0016noplzh2bv9sg" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/buffer/">buffer</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="default-npm命令与配置解析" class="article article-type-default" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/10/24/npm命令与配置解析/" class="article-date">
@@ -145,7 +242,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/24/npm命令与配置解析/" data-id="ck8dxkzpw000vzwplamx220xh" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/10/24/npm命令与配置解析/" data-id="ck8pifm3k0013noplaebv7igr" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/npm/">npm</a></li></ul>
@@ -200,7 +297,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/16/Node中的事件循环（event loop）/" data-id="ck8dxkzpt000tzwplo68veboo" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/10/16/Node中的事件循环（event loop）/" data-id="ck8pifm3e000ynoplqt8dl1bm" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/event-loop/">event loop</a></li></ul>
@@ -277,7 +374,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/14/node核心模块-简述/" data-id="ck8dxkzpj000mzwplwddadzix" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/10/14/node核心模块-简述/" data-id="ck8pifm37000snopl9sljblq5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/core/">core</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/events/">events</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/fs/">fs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/path/">path</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/util/">util</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vm/">vm</a></li></ul>
@@ -357,7 +454,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/14/node模块加载原理/" data-id="ck8dxkzqk001czwpl9iurd86r" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/10/14/node模块加载原理/" data-id="ck8pifm3a000unopl1710uflz" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/module/">module</a></li></ul>
@@ -407,82 +504,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/14/多线程与单线程服务/" data-id="ck8dxkzqo001fzwpldsgqespe" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/10/14/多线程与单线程服务/" data-id="ck8pifm3h0010noplzkgwof1g" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/单线程/">单线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="default-浏览器中js的事件循环（event loop）" class="article article-type-default" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/10/12/浏览器中js的事件循环（event loop）/" class="article-date">
-  <time datetime="2019-10-11T16:00:00.000Z" itemprop="datePublished">2019-10-12</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/javascript/">javascript</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我们都知道，javascript从诞生之日起就是一门单线程的非阻塞的脚本语言。这是由其最初的用途来决定的：与浏览器交互。</p>
-<p>单线程意味着，javascript代码在执行的任何时候，都只有一个主线程来处理所有的任务。</p>
-<p>而非阻塞则是当代码需要进行一项异步任务（无法立刻返回结果，需要花一定时间才能返回的任务，如I/O事件）的时候，主线程会挂起（pending）这个任务，然后在异步任务返回结果的时候再根据一定规则去执行相应的回调。</p>
-<p>单线程是必要的，也是javascript这门语言的基石，原因之一在其最初也是最主要的执行环境——浏览器中，我们需要进行各种各样的dom操作。试想一下 如果javascript是多线程的，那么当两个线程同时对dom进行一项操作，例如一个向其添加事件，而另一个删除了这个dom，此时该如何处理呢？因此，为了保证不会 发生类似于这个例子中的情景，javascript选择只用一个主线程来执行代码，这样就保证了程序执行的一致性。</p>
-<p>当然，现如今人们也意识到，单线程在保证了执行顺序的同时也限制了javascript的效率，因此开发出了web worker技术。这项技术号称让javascript成为一门多线程语言。</p>
-<p>然而，使用web worker技术开的多线程有着诸多限制，例如：所有新线程都受主线程的完全控制，不能独立执行。这意味着这些“线程” 实际上应属于主线程的子线程。另外，这些子线程并没有执行I/O操作的权限，只能为主线程分担一些诸如计算等任务。所以严格来讲这些线程并没有完整的功能，也因此这项技术并非改变了javascript语言的单线程本质。</p>
-<p>可以预见，未来的javascript也会一直是一门单线程的语言。</p>
-<p>话说回来，前面提到javascript的另一个特点是“非阻塞”，那么javascript引擎到底是如何实现的这一点呢？答案就是今天这篇文章的主角——event loop（事件循环）。</p>
-<h2 id="浏览器环境下js引擎的事件循环机制"><a href="#浏览器环境下js引擎的事件循环机制" class="headerlink" title="浏览器环境下js引擎的事件循环机制"></a>浏览器环境下js引擎的事件循环机制</h2><h3 id="1-执行栈与事件队列"><a href="#1-执行栈与事件队列" class="headerlink" title="1.执行栈与事件队列"></a>1.执行栈与事件队列</h3><p>当javascript代码执行的时候会将不同的变量存于内存中的不同位置：堆（heap）和栈（stack）中来加以区分。其中，堆里存放着一些对象。而栈中则存放着一些基础类型变量以及对象的指针。 但是我们这里说的执行栈和上面这个栈的意义却有些不同。</p>
-<p>我们知道，当我们调用一个方法的时候，js会生成一个与这个方法对应的执行环境（context），又叫执行上下文。这个执行环境中存在着这个方法的私有作用域，上层作用域的指向，方法的参数，这个作用域中定义的变量以及这个作用域的this对象。 而当一系列方法被依次调用的时候，因为js是单线程的，同一时间只能执行一个方法，于是这些方法被排队在一个单独的地方。这个地方被称为执行栈。</p>
-<p>当一个脚本第一次执行的时候，js引擎会解析这段代码，并将其中的同步代码按照执行顺序加入执行栈中，然后从头开始执行。如果当前执行的是一个方法，那么js会向执行栈中添加这个方法的执行环境，然后进入这个执行环境继续执行其中的代码。当这个执行环境中的代码 执行完毕并返回结果后，js会退出这个执行环境并把这个执行环境销毁，回到上一个方法的执行环境。。这个过程反复进行，直到执行栈中的代码全部执行完毕。</p>
-<p>一个方法执行会向执行栈中加入这个方法的执行环境，在这个执行环境中还可以调用其他方法，甚至是自己，其结果不过是在执行栈中再添加一个执行环境。这个过程可以是无限进行下去的，除非发生了栈溢出，即超过了所能使用内存的最大值。</p>
-<p>以上的过程说的都是同步代码的执行。那么当一个异步代码（如发送ajax请求数据）执行后会如何呢？前文提过，js的另一大特点是非阻塞，实现这一点的关键在于下面要说的这项机制——事件队列（Task Queue）。</p>
-<p>js引擎遇到一个异步事件后并不会一直等待其返回结果，而是会将这个事件挂起，继续执行执行栈中的其他任务。当一个异步事件返回结果后，js会将这个事件加入与当前执行栈不同的另一个队列，我们称之为事件队列。被放入事件队列不会立刻执行其回调，而是等待当前执行栈中的所有任务都执行完毕， 主线程处于闲置状态时，主线程会去查找事件队列是否有任务。如果有，那么主线程会从中取出排在第一位的事件，并把这个事件对应的回调放入执行栈中，然后执行其中的同步代码…，如此反复，这样就形成了一个无限的循环。这就是这个过程被称为“事件循环（Event Loop）”的原因。</p>
-<h3 id="2-macro-task（宏任务）与micro-task（微任务）"><a href="#2-macro-task（宏任务）与micro-task（微任务）" class="headerlink" title="2.macro task（宏任务）与micro task（微任务）"></a>2.macro task（宏任务）与micro task（微任务）</h3><p>以上的事件循环过程是一个宏观的表述，实际上因为异步任务之间并不相同，因此他们的执行优先级也有区别。不同的异步任务被分为两类：微任务（micro task）和宏任务（macro task）。</p>
-<p>以下事件属于宏任务：</p>
-<p>setInterval()<br>setTimeout()<br>以下事件属于微任务</p>
-<p>new Promise()<br>new MutaionObserver()<br>前面我们介绍过，在一个事件循环中，异步事件返回结果后会被放到一个任务队列中。然而，根据这个异步事件的类型，这个事件实际上会被对应的宏任务队列或者微任务队列中去。并且在当前执行栈为空的时候，主线程会 查看微任务队列是否有事件存在。如果不存在，那么再去宏任务队列中取出一个事件并把对应的回到加入当前执行栈；如果存在，则会依次执行队列中事件对应的回调，直到微任务队列为空，然后去宏任务队列中取出最前面的一个事件，把对应的回调加入当前执行栈…如此反复，进入循环。</p>
-<p>我们只需记住当当前执行栈执行完毕时会立刻先处理所有微任务队列中的事件，然后再去宏任务队列中取出一个事件。同一次事件循环中，微任务永远在宏任务之前执行。</p>
-<p>这样就能解释下面这段代码的结果：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve,reject</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">2</span>)</span><br><span class="line">    resolve(<span class="number">3</span>)</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">val</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(val);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>结果为：</p>
-<p>2<br>3<br>1</p>
-<h2 id="3-画图如下，帮助理解"><a href="#3-画图如下，帮助理解" class="headerlink" title="3.画图如下，帮助理解"></a>3.画图如下，帮助理解</h2><p><img src="/images/eventLoop.png" alt="浏览器-event loop"></p>
-<hr>
-<ul>
-<li>新版本Node中的事件环和浏览器中的基本一样</li>
-<li>本文说明性文字内容摘抄自<a href="https://www.cnblogs.com/cangqinglang/p/8967268.html" target="_blank" rel="noopener">https://www.cnblogs.com/cangqinglang/p/8967268.html</a>*</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/12/浏览器中js的事件循环（event loop）/" data-id="ck8dxkzp8000izwpl417s9x6i" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/event-loop/">event loop</a></li></ul>
 
     </footer>
   </div>
@@ -592,10 +617,82 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/12/node基本概念扫盲/" data-id="ck8dxkzq0000zzwploq2agfby" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/10/12/node基本概念扫盲/" data-id="ck8pifm2l000hnopldtdot2tl" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Node/">Node</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="default-浏览器中js的事件循环（event loop）" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/12/浏览器中js的事件循环（event loop）/" class="article-date">
+  <time datetime="2019-10-11T16:00:00.000Z" itemprop="datePublished">2019-10-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我们都知道，javascript从诞生之日起就是一门单线程的非阻塞的脚本语言。这是由其最初的用途来决定的：与浏览器交互。</p>
+<p>单线程意味着，javascript代码在执行的任何时候，都只有一个主线程来处理所有的任务。</p>
+<p>而非阻塞则是当代码需要进行一项异步任务（无法立刻返回结果，需要花一定时间才能返回的任务，如I/O事件）的时候，主线程会挂起（pending）这个任务，然后在异步任务返回结果的时候再根据一定规则去执行相应的回调。</p>
+<p>单线程是必要的，也是javascript这门语言的基石，原因之一在其最初也是最主要的执行环境——浏览器中，我们需要进行各种各样的dom操作。试想一下 如果javascript是多线程的，那么当两个线程同时对dom进行一项操作，例如一个向其添加事件，而另一个删除了这个dom，此时该如何处理呢？因此，为了保证不会 发生类似于这个例子中的情景，javascript选择只用一个主线程来执行代码，这样就保证了程序执行的一致性。</p>
+<p>当然，现如今人们也意识到，单线程在保证了执行顺序的同时也限制了javascript的效率，因此开发出了web worker技术。这项技术号称让javascript成为一门多线程语言。</p>
+<p>然而，使用web worker技术开的多线程有着诸多限制，例如：所有新线程都受主线程的完全控制，不能独立执行。这意味着这些“线程” 实际上应属于主线程的子线程。另外，这些子线程并没有执行I/O操作的权限，只能为主线程分担一些诸如计算等任务。所以严格来讲这些线程并没有完整的功能，也因此这项技术并非改变了javascript语言的单线程本质。</p>
+<p>可以预见，未来的javascript也会一直是一门单线程的语言。</p>
+<p>话说回来，前面提到javascript的另一个特点是“非阻塞”，那么javascript引擎到底是如何实现的这一点呢？答案就是今天这篇文章的主角——event loop（事件循环）。</p>
+<h2 id="浏览器环境下js引擎的事件循环机制"><a href="#浏览器环境下js引擎的事件循环机制" class="headerlink" title="浏览器环境下js引擎的事件循环机制"></a>浏览器环境下js引擎的事件循环机制</h2><h3 id="1-执行栈与事件队列"><a href="#1-执行栈与事件队列" class="headerlink" title="1.执行栈与事件队列"></a>1.执行栈与事件队列</h3><p>当javascript代码执行的时候会将不同的变量存于内存中的不同位置：堆（heap）和栈（stack）中来加以区分。其中，堆里存放着一些对象。而栈中则存放着一些基础类型变量以及对象的指针。 但是我们这里说的执行栈和上面这个栈的意义却有些不同。</p>
+<p>我们知道，当我们调用一个方法的时候，js会生成一个与这个方法对应的执行环境（context），又叫执行上下文。这个执行环境中存在着这个方法的私有作用域，上层作用域的指向，方法的参数，这个作用域中定义的变量以及这个作用域的this对象。 而当一系列方法被依次调用的时候，因为js是单线程的，同一时间只能执行一个方法，于是这些方法被排队在一个单独的地方。这个地方被称为执行栈。</p>
+<p>当一个脚本第一次执行的时候，js引擎会解析这段代码，并将其中的同步代码按照执行顺序加入执行栈中，然后从头开始执行。如果当前执行的是一个方法，那么js会向执行栈中添加这个方法的执行环境，然后进入这个执行环境继续执行其中的代码。当这个执行环境中的代码 执行完毕并返回结果后，js会退出这个执行环境并把这个执行环境销毁，回到上一个方法的执行环境。。这个过程反复进行，直到执行栈中的代码全部执行完毕。</p>
+<p>一个方法执行会向执行栈中加入这个方法的执行环境，在这个执行环境中还可以调用其他方法，甚至是自己，其结果不过是在执行栈中再添加一个执行环境。这个过程可以是无限进行下去的，除非发生了栈溢出，即超过了所能使用内存的最大值。</p>
+<p>以上的过程说的都是同步代码的执行。那么当一个异步代码（如发送ajax请求数据）执行后会如何呢？前文提过，js的另一大特点是非阻塞，实现这一点的关键在于下面要说的这项机制——事件队列（Task Queue）。</p>
+<p>js引擎遇到一个异步事件后并不会一直等待其返回结果，而是会将这个事件挂起，继续执行执行栈中的其他任务。当一个异步事件返回结果后，js会将这个事件加入与当前执行栈不同的另一个队列，我们称之为事件队列。被放入事件队列不会立刻执行其回调，而是等待当前执行栈中的所有任务都执行完毕， 主线程处于闲置状态时，主线程会去查找事件队列是否有任务。如果有，那么主线程会从中取出排在第一位的事件，并把这个事件对应的回调放入执行栈中，然后执行其中的同步代码…，如此反复，这样就形成了一个无限的循环。这就是这个过程被称为“事件循环（Event Loop）”的原因。</p>
+<h3 id="2-macro-task（宏任务）与micro-task（微任务）"><a href="#2-macro-task（宏任务）与micro-task（微任务）" class="headerlink" title="2.macro task（宏任务）与micro task（微任务）"></a>2.macro task（宏任务）与micro task（微任务）</h3><p>以上的事件循环过程是一个宏观的表述，实际上因为异步任务之间并不相同，因此他们的执行优先级也有区别。不同的异步任务被分为两类：微任务（micro task）和宏任务（macro task）。</p>
+<p>以下事件属于宏任务：</p>
+<p>setInterval()<br>setTimeout()<br>以下事件属于微任务</p>
+<p>new Promise()<br>new MutaionObserver()<br>前面我们介绍过，在一个事件循环中，异步事件返回结果后会被放到一个任务队列中。然而，根据这个异步事件的类型，这个事件实际上会被对应的宏任务队列或者微任务队列中去。并且在当前执行栈为空的时候，主线程会 查看微任务队列是否有事件存在。如果不存在，那么再去宏任务队列中取出一个事件并把对应的回到加入当前执行栈；如果存在，则会依次执行队列中事件对应的回调，直到微任务队列为空，然后去宏任务队列中取出最前面的一个事件，把对应的回调加入当前执行栈…如此反复，进入循环。</p>
+<p>我们只需记住当当前执行栈执行完毕时会立刻先处理所有微任务队列中的事件，然后再去宏任务队列中取出一个事件。同一次事件循环中，微任务永远在宏任务之前执行。</p>
+<p>这样就能解释下面这段代码的结果：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve,reject</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">2</span>)</span><br><span class="line">    resolve(<span class="number">3</span>)</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">val</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(val);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>结果为：</p>
+<p>2<br>3<br>1</p>
+<h2 id="3-画图如下，帮助理解"><a href="#3-画图如下，帮助理解" class="headerlink" title="3.画图如下，帮助理解"></a>3.画图如下，帮助理解</h2><p><img src="/images/eventLoop.png" alt="浏览器-event loop"></p>
+<hr>
+<ul>
+<li>新版本Node中的事件环和浏览器中的基本一样</li>
+<li>本文说明性文字内容摘抄自<a href="https://www.cnblogs.com/cangqinglang/p/8967268.html" target="_blank" rel="noopener">https://www.cnblogs.com/cangqinglang/p/8967268.html</a>*</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2019/10/12/浏览器中js的事件循环（event loop）/" data-id="ck8pifm30000onoplq5sxltgj" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/event-loop/">event loop</a></li></ul>
 
     </footer>
   </div>
@@ -641,7 +738,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/05/vue nextTick原理/" data-id="ck8dxkzow000bzwpldbur9fny" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/10/05/vue nextTick原理/" data-id="ck8pifm2t000lnoplibd4ecdc" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nextTick/">nextTick</a></li></ul>
@@ -690,53 +787,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/09/05/es6+---类的修饰/" data-id="ck8dxkzon0006zwpljcu8n2qr" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/class/">class</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="default-es+---class用法笔记 " class="article article-type-default" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/09/03/es+---class用法笔记 /" class="article-date">
-  <time datetime="2019-09-02T16:00:00.000Z" itemprop="datePublished">2019-09-03</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/es6/">es6</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/09/03/es+---class用法笔记 /">es6、7-类的定义</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="基础语法"><a href="#基础语法" class="headerlink" title="基础语法"></a>基础语法</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">    <span class="comment">// type声明到实例上的，同下面的constructor写法一样的效果</span></span><br><span class="line">    type = <span class="string">'哺乳类'</span>;</span><br><span class="line">    <span class="comment">// constructor() &#123;</span></span><br><span class="line">    <span class="comment">//    // constructor同es5定义类的方法体类似含义</span></span><br><span class="line">    <span class="comment">//     this.type = '哺乳类'</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 原型上设置a属性</span></span><br><span class="line">    <span class="keyword">get</span> a() &#123;</span><br><span class="line">        <span class="comment">// 原理：Object.defineProperty(Animal.prototype, a)</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 声明到了原型上 // Animal.prototype.say</span></span><br><span class="line">    say() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 静态属性就是定义到类上的属性</span></span><br><span class="line">    <span class="keyword">static</span> flag = <span class="string">'动物'</span> <span class="comment">// es7写法</span></span><br><span class="line">    <span class="comment">// es6中只有静态方法,代码如下</span></span><br><span class="line">    <span class="comment">// static flag() &#123; // es6语法 1）</span></span><br><span class="line">    <span class="comment">//     return '动物'</span></span><br><span class="line">    <span class="comment">//     // 获取的时候 Animal.flag()</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="comment">// static get flag() &#123; // es6语法 1）</span></span><br><span class="line">    <span class="comment">//     return '动物'</span></span><br><span class="line">    <span class="comment">//     // 获取的时候 Animal.flag</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 注意如下代码，es6中把原型上的方法拿出来用，this是undefined</span></span><br><span class="line"><span class="keyword">let</span> animal= <span class="keyword">new</span> Animal();</span><br><span class="line"><span class="keyword">let</span> say = animal.say;</span><br><span class="line">say();  <span class="comment">//   打印的this是undefined</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 需要bind，this才能有所指向，代码如下</span></span><br><span class="line"><span class="comment">// 如果将类中的方法拿出来用必须绑定this 否则默认指向undefined</span></span><br><span class="line"><span class="keyword">let</span> aniamlOk = <span class="keyword">new</span> Animal();</span><br><span class="line"><span class="keyword">let</span> sayOk = animal.say.bind(animal);</span><br><span class="line">sayOk();</span><br></pre></td></tr></table></figure>
-
-<h2 id="类的继承"><a href="#类的继承" class="headerlink" title="类的继承"></a>类的继承</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>(name) &#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.type = <span class="string">'哺乳类'</span></span><br><span class="line">    &#125;</span><br><span class="line">    say() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'say'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> flag = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 继承实例和原型上的属性 extends = call + Object.create() +  Object.setPrototypeOf</span></span><br><span class="line"><span class="comment">// 原理：通过Object.defineProperty实现了 原型 + 静态方法属性的定义</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Tiger</span> <span class="keyword">extends</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>(name) &#123;</span><br><span class="line">        <span class="keyword">super</span>(name); <span class="comment">// 调用supper = Animal.call(tiger, name)</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> getAnimal() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">super</span>.flag, <span class="string">'-----'</span>); <span class="comment">// 在静态方法的定义中，super 指向的是 父类</span></span><br><span class="line">    &#125;</span><br><span class="line">    say() &#123;</span><br><span class="line">        <span class="keyword">super</span>.say(); <span class="comment">// 在原型方法中，super 指向的是 父类的原型</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> tiger = <span class="keyword">new</span> Tiger(<span class="string">'老虎'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(Tiger.flag); <span class="comment">// 1</span></span><br><span class="line"><span class="built_in">console</span>.log(tiger.name); <span class="comment">// 老虎</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="new的原理"><a href="#new的原理" class="headerlink" title="new的原理"></a>new的原理</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">this</span>.age = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// new 一个类</span></span><br><span class="line">        <span class="comment">// 1：得到一个对象，这个对象上的方法的this指向这个对象---代码如上</span></span><br><span class="line">        <span class="comment">// 2：如果一个类返回的是一个引用空间，那个实例将指向这个空间---代码如下</span></span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="attr">c</span>: <span class="number">1</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line">A.prototype.say = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'say'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 模拟new一个类</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mockNew</span>(<span class="params">mockClass</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 1) 创建一个对象，并且将对象传入到函数中作为this</span></span><br><span class="line">    <span class="keyword">let</span> obj = &#123;&#125;;</span><br><span class="line">    <span class="keyword">let</span> returnVal = mockClass.call(obj);</span><br><span class="line">    <span class="keyword">if</span> (returnVal !==<span class="literal">null</span> &amp;&amp; (<span class="keyword">typeof</span> returnVal === <span class="string">'object'</span> || <span class="keyword">typeof</span> returnVal === <span class="string">'function'</span>)) &#123;</span><br><span class="line">        <span class="comment">// 如果一个类返回的是一个引用空间，那个实例将指向这个空间</span></span><br><span class="line">        <span class="keyword">return</span> returnVal</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 2) 继承原型上的方法</span></span><br><span class="line">    obj.__proto__ = mockClass.prototype;</span><br><span class="line">    <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> o = mockNew(A);</span><br><span class="line">o.say();</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/09/03/es+---class用法笔记 /" data-id="ck8dxkzp3000fzwpl50tfbkd3" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/09/05/es6+---类的修饰/" data-id="ck8pifm2g000fnople5rykx82" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/class/">class</a></li></ul>
@@ -764,6 +815,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/03/30/webpack源码编译流程/">webpack - 源码编译流程</a>
+          </li>
         
           <li>
             <a href="/2020/03/25/2020-3-25-webpack-loader原理/">webpack - loader 原理与实现</a>
@@ -794,11 +849,11 @@
           </li>
         
           <li>
-            <a href="/2019/11/01/Node中文件的读写模块---FS/">Node -文件读写模块--- fs</a>
+            <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
           </li>
         
           <li>
-            <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
+            <a href="/2019/11/01/Node中文件的读写模块---FS/">Node -文件读写模块--- fs</a>
           </li>
         
           <li>
@@ -826,11 +881,11 @@
           </li>
         
           <li>
-            <a href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
+            <a href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
           </li>
         
           <li>
-            <a href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
+            <a href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
           </li>
         
           <li>
