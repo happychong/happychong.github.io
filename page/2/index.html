@@ -65,6 +65,70 @@
       <div class="outer">
         <section id="main">
   
+    <article id="default-JS中，0.1+0.2＞0.3为什么？" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/" class="article-date">
+  <time datetime="2019-10-31T16:00:00.000Z" itemprop="datePublished">2019-11-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="一：抛砖"><a href="#一：抛砖" class="headerlink" title="一：抛砖"></a>一：抛砖</h2><p>众所周知，js中，浮点数的运算是不靠谱的（因为JS仅有Number这个数值类型，而Number采用的时IEEE 754 64位双精度浮点数编码），正如标题所示，0.1 + 0.2 并不等于 0.3</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 浏览器的console中查看</span></span><br><span class="line"><span class="number">0.1</span>+<span class="number">0.2</span></span><br><span class="line"><span class="comment">// 0.30000000000000004</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="二：引玉"><a href="#二：引玉" class="headerlink" title="二：引玉"></a>二：引玉</h2><p>如果想搞清楚 0.1 + 0.2 等于几，首先需要先看看 0.1 转换成二进制数是什么样的，接下来就先看看进制转化的方法吧</p>
+<h3 id="1-小数转换成2进制的方法"><a href="#1-小数转换成2进制的方法" class="headerlink" title="1 小数转换成2进制的方法"></a>1 小数转换成2进制的方法</h3><p>乘 2 取整法 ，具体转化过程如下，0.1 的转换过程</p>
+<h3 id="2-0-1-转化为2进制"><a href="#2-0-1-转化为2进制" class="headerlink" title="2 - 0.1 转化为2进制"></a>2 - 0.1 转化为2进制</h3><p>结果：0.0001100110011001100110011001100110011001100110011001101</p>
+<p>过程：</p>
+<ul>
+<li>0.1 * 2 = 0.2    =&gt; 0</li>
+<li>0.2 * 2 = 0.4    =&gt; 0</li>
+<li>0.4 * 2 = 0.8    =&gt; 0</li>
+<li>0.8 * 2 = 1.6    =&gt; 1 ———</li>
+<li>0.6 * 2 = 1.2    =&gt; 1    |</li>
+<li>0.2 * 2 = 0.4    =&gt; 0    |  这个1100的结果会一直重复下去，直到最后一位，会被进1</li>
+<li>0.4 * 2 = 0.8    =&gt; 0 ———</li>
+<li>0.8 * 2 = 1.6    =&gt; 1</li>
+<li>0.6 * 2 = 1.2    =&gt; 1</li>
+</ul>
+<p>因为最后一位进1，所以 0.1 转换为2进制后，实际比以前大了一点点</p>
+<h3 id="2-0-2-转化为2进制"><a href="#2-0-2-转化为2进制" class="headerlink" title="2 - 0.2 转化为2进制"></a>2 - 0.2 转化为2进制</h3><p>结果：0.001100110011001100110011001100110011001100110011001101</p>
+<p>可以发现，也是个1100无线循环的过程，最后一位进1，所以同样 0.2 转换为2进制后，也比以前大了一点点</p>
+<h3 id="3-结论"><a href="#3-结论" class="headerlink" title="3 - 结论"></a>3 - 结论</h3><p>那么比 0.1 大了一点点的数 + 比 0.2 大了一点点的数，当然这2个数相加就大于 0.3 了</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2019/11/01/JS中，0.1+0.2＞0.3为什么？/" data-id="ck8zo7xtc001760plpqyuwihg" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="default-Node---buffer" class="article article-type-default" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/10/30/Node---buffer/" class="article-date">
@@ -150,7 +214,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/30/Node---buffer/" data-id="ck8pifm3q0016noplzh2bv9sg" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/10/30/Node---buffer/" data-id="ck8zo7xsx000x60plr4croi8j" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/buffer/">buffer</a></li></ul>
@@ -242,7 +306,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/24/npm命令与配置解析/" data-id="ck8pifm3k0013noplaebv7igr" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/10/24/npm命令与配置解析/" data-id="ck8zo7xsr000r60plgvsm4h0j" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/npm/">npm</a></li></ul>
@@ -297,7 +361,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/16/Node中的事件循环（event loop）/" data-id="ck8pifm3e000ynoplqt8dl1bm" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/10/16/Node中的事件循环（event loop）/" data-id="ck8zo7xsm000n60plvvdn8b8z" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/event-loop/">event loop</a></li></ul>
@@ -374,7 +438,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/14/node核心模块-简述/" data-id="ck8pifm37000snopl9sljblq5" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/10/14/node核心模块-简述/" data-id="ck8zo7xpx000b60plbgsqji3q" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/core/">core</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/events/">events</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/fs/">fs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/path/">path</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/util/">util</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vm/">vm</a></li></ul>
@@ -454,7 +518,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/14/node模块加载原理/" data-id="ck8pifm3a000unopl1710uflz" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/10/14/node模块加载原理/" data-id="ck8zo7xsa000h60pl2of4sv1y" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/module/">module</a></li></ul>
@@ -504,7 +568,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/14/多线程与单线程服务/" data-id="ck8pifm3h0010noplzkgwof1g" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/10/14/多线程与单线程服务/" data-id="ck8zo7xsg000l60plyewfz49t" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/单线程/">单线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
@@ -617,7 +681,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/12/node基本概念扫盲/" data-id="ck8pifm2l000hnopldtdot2tl" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/10/12/node基本概念扫盲/" data-id="ck8zo7xsu000u60plr9z08smm" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Node/">Node</a></li></ul>
@@ -689,7 +753,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/12/浏览器中js的事件循环（event loop）/" data-id="ck8pifm30000onoplq5sxltgj" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/10/12/浏览器中js的事件循环（event loop）/" data-id="ck8zo7xtz001k60plz7lv0nj5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/event-loop/">event loop</a></li></ul>
@@ -738,59 +802,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/05/vue nextTick原理/" data-id="ck8pifm2t000lnoplibd4ecdc" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/10/05/vue nextTick原理/" data-id="ck8zo7xs7000f60plkpv0rrwc" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nextTick/">nextTick</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="default-es6+---类的修饰" class="article article-type-default" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/09/05/es6+---类的修饰/" class="article-date">
-  <time datetime="2019-09-04T16:00:00.000Z" itemprop="datePublished">2019-09-05</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/es6/">es6</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/09/05/es6+---类的修饰/">es6+---类的修饰</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="1-装饰器本身是方法"><a href="#1-装饰器本身是方法" class="headerlink" title="1:装饰器本身是方法"></a>1:装饰器本身是方法</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 装饰模式， 在执行类之前可以进行包装,只能修饰类的属性和类中的方法</span></span><br><span class="line"></span><br><span class="line">@type1</span><br><span class="line">@type2</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span></span>&#123;</span><br><span class="line">    <span class="comment">// 装饰器的执行顺序，按书写顺序的从近到远顺序执行，如上代码，先执行type2，再执行type1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 对类进行扩展</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">type1</span>(<span class="params">Constructor</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 装饰类的装饰器函数，参数为类的构造原型</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>)</span><br><span class="line">    Constructor.type1 = <span class="string">'哺乳类1'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">type2</span>(<span class="params">typeName</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">2</span>)</span><br><span class="line">    Constructor.type1 = <span class="string">'哺乳类2'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-装饰器方法返回function-装饰器传参"><a href="#2-装饰器方法返回function-装饰器传参" class="headerlink" title="2:装饰器方法返回function(装饰器传参)"></a>2:装饰器方法返回function(装饰器传参)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 装饰器必须是一个函数，所以这里type1，type2是方法里返回函数</span></span><br><span class="line">@type1(<span class="string">'哺乳类1'</span>)</span><br><span class="line">@type2(<span class="string">'哺乳类2'</span>)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span></span>&#123;</span><br><span class="line">    <span class="comment">// 装饰器的执行顺序，会先执行type1，再执行type2</span></span><br><span class="line">    <span class="comment">// 但是对Animal进行装饰的时候，还是会按从近到远的顺序执行</span></span><br><span class="line">    <span class="comment">// 也就是先执行type2返回的函数，再执行type1返回的函数——洋葱模型，如下图</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">type1</span>(<span class="params">typeName</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'type1'</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">Constructor</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'t1'</span>);</span><br><span class="line">        Constructor.type1 = typeName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">type2</span>(<span class="params">typeName</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'type2'</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">Constructor</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'t2'</span>);</span><br><span class="line">        Constructor.type2 = typeName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/images/2019-09-03-es6-yangcong.png" alt="执行顺序-洋葱"></p>
-<h2 id="3-装饰器-例子-装饰属性-amp-方法"><a href="#3-装饰器-例子-装饰属性-amp-方法" class="headerlink" title="3:装饰器-例子(装饰属性&amp;方法)"></a>3:装饰器-例子(装饰属性&amp;方法)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// PI属性不应该被修改</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Circle</span>() </span>&#123;</span><br><span class="line">    <span class="comment">// 装饰属性和方法 构造器中的参数为 类的原型，装饰的key 和 key对应的属性描述器</span></span><br><span class="line">    @readonly PI = <span class="number">3.14</span>;</span><br><span class="line">    <span class="comment">// 想在say之前执行一些别的方法，以前用before，现在用装饰器</span></span><br><span class="line">    @before</span><br><span class="line">    say() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'I can say'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">readonly</span>(<span class="params">circlePrototype, key, descriptor</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 设置PI只读</span></span><br><span class="line">    descriptor.writable = <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">// 设置PI不可枚举</span></span><br><span class="line">    descriptor.enumerable = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">before</span>(<span class="params">circlePrototype, key, descriptor</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 修饰方法，参数和修饰属性一样，但是descriptor的value变成了say方法</span></span><br><span class="line">    <span class="keyword">let</span> oldSay = descriptor.value;</span><br><span class="line">    descriptor.value = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; <span class="comment">// 函数劫持</span></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'我是另外增加的say'</span>);</span><br><span class="line">        oldSay();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> c = <span class="keyword">new</span> Circle();</span><br><span class="line">c.PI = <span class="number">31.5</span>;</span><br><span class="line"><span class="built_in">console</span>.log(c)</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-装饰器-例子-mixin-混合"><a href="#4-装饰器-例子-mixin-混合" class="headerlink" title="4:装饰器-例子(mixin-混合)"></a>4:装饰器-例子(mixin-混合)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;</span><br><span class="line">    name: <span class="string">'happy'</span>,</span><br><span class="line">    age: <span class="string">'18'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@mixin(obj)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">School</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mixin</span>(<span class="params">obj</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">Constructor</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">Object</span>.assign(Constructor.prototype, obj);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> school = <span class="keyword">new</span> School;</span><br><span class="line"><span class="built_in">console</span>.log(school.name, school.age);</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/09/05/es6+---类的修饰/" data-id="ck8pifm2g000fnople5rykx82" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/class/">class</a></li></ul>
 
     </footer>
   </div>
@@ -815,6 +830,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/04/14/node进程（process）/">Node 的 进程</a>
+          </li>
         
           <li>
             <a href="/2020/03/30/webpack源码编译流程/">webpack - 源码编译流程</a>
@@ -849,11 +868,11 @@
           </li>
         
           <li>
-            <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
+            <a href="/2019/11/01/Node中文件的读写模块---FS/">Node -文件读写模块--- fs</a>
           </li>
         
           <li>
-            <a href="/2019/11/01/Node中文件的读写模块---FS/">Node -文件读写模块--- fs</a>
+            <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
           </li>
         
           <li>
@@ -939,7 +958,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node/">Node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/buffer/">buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/core/">core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/event-loop/">event loop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fs/">fs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/happyChong/">happyChong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loader/">loader</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/module/">module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextTick/">nextTick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/path/">path</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/util/">util</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vm/">vm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单线程/">单线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node/">Node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/buffer/">buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/core/">core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/event-loop/">event loop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fs/">fs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/happyChong/">happyChong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loader/">loader</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/module/">module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextTick/">nextTick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/path/">path</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/process/">process</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/util/">util</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vm/">vm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单线程/">单线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
     </div>
   </div>
 
@@ -949,7 +968,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/EventLoop/" style="font-size: 13.33px;">EventLoop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/buffer/" style="font-size: 10px;">buffer</a> <a href="/tags/class/" style="font-size: 13.33px;">class</a> <a href="/tags/core/" style="font-size: 10px;">core</a> <a href="/tags/event-loop/" style="font-size: 13.33px;">event loop</a> <a href="/tags/events/" style="font-size: 10px;">events</a> <a href="/tags/fs/" style="font-size: 16.67px;">fs</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/happyChong/" style="font-size: 10px;">happyChong</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/loader/" style="font-size: 10px;">loader</a> <a href="/tags/module/" style="font-size: 10px;">module</a> <a href="/tags/nextTick/" style="font-size: 10px;">nextTick</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/path/" style="font-size: 10px;">path</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/util/" style="font-size: 10px;">util</a> <a href="/tags/vm/" style="font-size: 10px;">vm</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 20px;">webpack</a> <a href="/tags/单线程/" style="font-size: 10px;">单线程</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a>
+      <a href="/tags/EventLoop/" style="font-size: 13.33px;">EventLoop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/buffer/" style="font-size: 10px;">buffer</a> <a href="/tags/class/" style="font-size: 13.33px;">class</a> <a href="/tags/core/" style="font-size: 10px;">core</a> <a href="/tags/event-loop/" style="font-size: 13.33px;">event loop</a> <a href="/tags/events/" style="font-size: 10px;">events</a> <a href="/tags/fs/" style="font-size: 16.67px;">fs</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/happyChong/" style="font-size: 10px;">happyChong</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/loader/" style="font-size: 10px;">loader</a> <a href="/tags/module/" style="font-size: 10px;">module</a> <a href="/tags/nextTick/" style="font-size: 10px;">nextTick</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/path/" style="font-size: 10px;">path</a> <a href="/tags/process/" style="font-size: 10px;">process</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/util/" style="font-size: 10px;">util</a> <a href="/tags/vm/" style="font-size: 10px;">vm</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 20px;">webpack</a> <a href="/tags/单线程/" style="font-size: 10px;">单线程</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a>
     </div>
   </div>
 
@@ -958,7 +977,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li></ul>
     </div>
   </div>
 
