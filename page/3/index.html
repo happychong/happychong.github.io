@@ -65,6 +65,240 @@
       <div class="outer">
         <section id="main">
   
+    <article id="default-浏览器中js的事件循环（event loop）" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/12/浏览器中js的事件循环（event loop）/" class="article-date">
+  <time datetime="2019-10-11T16:00:00.000Z" itemprop="datePublished">2019-10-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我们都知道，javascript从诞生之日起就是一门单线程的非阻塞的脚本语言。这是由其最初的用途来决定的：与浏览器交互。</p>
+<p>单线程意味着，javascript代码在执行的任何时候，都只有一个主线程来处理所有的任务。</p>
+<p>而非阻塞则是当代码需要进行一项异步任务（无法立刻返回结果，需要花一定时间才能返回的任务，如I/O事件）的时候，主线程会挂起（pending）这个任务，然后在异步任务返回结果的时候再根据一定规则去执行相应的回调。</p>
+<p>单线程是必要的，也是javascript这门语言的基石，原因之一在其最初也是最主要的执行环境——浏览器中，我们需要进行各种各样的dom操作。试想一下 如果javascript是多线程的，那么当两个线程同时对dom进行一项操作，例如一个向其添加事件，而另一个删除了这个dom，此时该如何处理呢？因此，为了保证不会 发生类似于这个例子中的情景，javascript选择只用一个主线程来执行代码，这样就保证了程序执行的一致性。</p>
+<p>当然，现如今人们也意识到，单线程在保证了执行顺序的同时也限制了javascript的效率，因此开发出了web worker技术。这项技术号称让javascript成为一门多线程语言。</p>
+<p>然而，使用web worker技术开的多线程有着诸多限制，例如：所有新线程都受主线程的完全控制，不能独立执行。这意味着这些“线程” 实际上应属于主线程的子线程。另外，这些子线程并没有执行I/O操作的权限，只能为主线程分担一些诸如计算等任务。所以严格来讲这些线程并没有完整的功能，也因此这项技术并非改变了javascript语言的单线程本质。</p>
+<p>可以预见，未来的javascript也会一直是一门单线程的语言。</p>
+<p>话说回来，前面提到javascript的另一个特点是“非阻塞”，那么javascript引擎到底是如何实现的这一点呢？答案就是今天这篇文章的主角——event loop（事件循环）。</p>
+<h2 id="浏览器环境下js引擎的事件循环机制"><a href="#浏览器环境下js引擎的事件循环机制" class="headerlink" title="浏览器环境下js引擎的事件循环机制"></a>浏览器环境下js引擎的事件循环机制</h2><h3 id="1-执行栈与事件队列"><a href="#1-执行栈与事件队列" class="headerlink" title="1.执行栈与事件队列"></a>1.执行栈与事件队列</h3><p>当javascript代码执行的时候会将不同的变量存于内存中的不同位置：堆（heap）和栈（stack）中来加以区分。其中，堆里存放着一些对象。而栈中则存放着一些基础类型变量以及对象的指针。 但是我们这里说的执行栈和上面这个栈的意义却有些不同。</p>
+<p>我们知道，当我们调用一个方法的时候，js会生成一个与这个方法对应的执行环境（context），又叫执行上下文。这个执行环境中存在着这个方法的私有作用域，上层作用域的指向，方法的参数，这个作用域中定义的变量以及这个作用域的this对象。 而当一系列方法被依次调用的时候，因为js是单线程的，同一时间只能执行一个方法，于是这些方法被排队在一个单独的地方。这个地方被称为执行栈。</p>
+<p>当一个脚本第一次执行的时候，js引擎会解析这段代码，并将其中的同步代码按照执行顺序加入执行栈中，然后从头开始执行。如果当前执行的是一个方法，那么js会向执行栈中添加这个方法的执行环境，然后进入这个执行环境继续执行其中的代码。当这个执行环境中的代码 执行完毕并返回结果后，js会退出这个执行环境并把这个执行环境销毁，回到上一个方法的执行环境。。这个过程反复进行，直到执行栈中的代码全部执行完毕。</p>
+<p>一个方法执行会向执行栈中加入这个方法的执行环境，在这个执行环境中还可以调用其他方法，甚至是自己，其结果不过是在执行栈中再添加一个执行环境。这个过程可以是无限进行下去的，除非发生了栈溢出，即超过了所能使用内存的最大值。</p>
+<p>以上的过程说的都是同步代码的执行。那么当一个异步代码（如发送ajax请求数据）执行后会如何呢？前文提过，js的另一大特点是非阻塞，实现这一点的关键在于下面要说的这项机制——事件队列（Task Queue）。</p>
+<p>js引擎遇到一个异步事件后并不会一直等待其返回结果，而是会将这个事件挂起，继续执行执行栈中的其他任务。当一个异步事件返回结果后，js会将这个事件加入与当前执行栈不同的另一个队列，我们称之为事件队列。被放入事件队列不会立刻执行其回调，而是等待当前执行栈中的所有任务都执行完毕， 主线程处于闲置状态时，主线程会去查找事件队列是否有任务。如果有，那么主线程会从中取出排在第一位的事件，并把这个事件对应的回调放入执行栈中，然后执行其中的同步代码…，如此反复，这样就形成了一个无限的循环。这就是这个过程被称为“事件循环（Event Loop）”的原因。</p>
+<h3 id="2-macro-task（宏任务）与micro-task（微任务）"><a href="#2-macro-task（宏任务）与micro-task（微任务）" class="headerlink" title="2.macro task（宏任务）与micro task（微任务）"></a>2.macro task（宏任务）与micro task（微任务）</h3><p>以上的事件循环过程是一个宏观的表述，实际上因为异步任务之间并不相同，因此他们的执行优先级也有区别。不同的异步任务被分为两类：微任务（micro task）和宏任务（macro task）。</p>
+<p>以下事件属于宏任务：</p>
+<p>setInterval()<br>setTimeout()<br>以下事件属于微任务</p>
+<p>new Promise()<br>new MutaionObserver()<br>前面我们介绍过，在一个事件循环中，异步事件返回结果后会被放到一个任务队列中。然而，根据这个异步事件的类型，这个事件实际上会被对应的宏任务队列或者微任务队列中去。并且在当前执行栈为空的时候，主线程会 查看微任务队列是否有事件存在。如果不存在，那么再去宏任务队列中取出一个事件并把对应的回到加入当前执行栈；如果存在，则会依次执行队列中事件对应的回调，直到微任务队列为空，然后去宏任务队列中取出最前面的一个事件，把对应的回调加入当前执行栈…如此反复，进入循环。</p>
+<p>我们只需记住当当前执行栈执行完毕时会立刻先处理所有微任务队列中的事件，然后再去宏任务队列中取出一个事件。同一次事件循环中，微任务永远在宏任务之前执行。</p>
+<p>这样就能解释下面这段代码的结果：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve,reject</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">2</span>)</span><br><span class="line">    resolve(<span class="number">3</span>)</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">val</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(val);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>结果为：</p>
+<p>2<br>3<br>1</p>
+<h2 id="3-画图如下，帮助理解"><a href="#3-画图如下，帮助理解" class="headerlink" title="3.画图如下，帮助理解"></a>3.画图如下，帮助理解</h2><p><img src="/images/eventLoop.png" alt="浏览器-event loop"></p>
+<hr>
+<ul>
+<li>新版本Node中的事件环和浏览器中的基本一样</li>
+<li>本文说明性文字内容摘抄自<a href="https://www.cnblogs.com/cangqinglang/p/8967268.html" target="_blank" rel="noopener">https://www.cnblogs.com/cangqinglang/p/8967268.html</a>*</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2019/10/12/浏览器中js的事件循环（event loop）/" data-id="ck9zc0ve9000hq0pl7xo86z7p" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/event-loop/">event loop</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="default-node基本概念扫盲" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/12/node基本概念扫盲/" class="article-date">
+  <time datetime="2019-10-11T16:00:00.000Z" itemprop="datePublished">2019-10-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Node/">Node</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="1-Node是什么？"><a href="#1-Node是什么？" class="headerlink" title="1.Node是什么？"></a>1.Node是什么？</h2><p>Node是一个js的运行时（runtime）<br>js由BOM DOM ECMASCRIPT组成，但是Node由ECMASCRIPT和内部模块（http， fs等）组成</p>
+<h2 id="2-能用Node做什么？"><a href="#2-能用Node做什么？" class="headerlink" title="2.能用Node做什么？"></a>2.能用Node做什么？</h2><ul>
+<li>1.写脚本，比如webpack</li>
+<li>2.做中间层，服务端渲染（vue react），实现前后端分离，解决跨域问题，实现数据格式化，实现高性能的web服务</li>
+<li>3.用Node做纯后端服务</li>
+</ul>
+<h2 id="3-Node的基本架构"><a href="#3-Node的基本架构" class="headerlink" title="3.Node的基本架构"></a>3.Node的基本架构</h2><p>提到Node.js的时候，我们耳熟能详的是: Node.js是一个基于ChromeV8引擎的JavaScript运行时。Node.js 使用高效、轻量级的事件驱动、非阻塞 I/O 模型。那么这句话真正想要表达的是什么呢？请看下图：</p>
+<p><img src="/images/node%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84.jpg" alt="node基本架构"></p>
+<ul>
+<li>Node standard library: Node的标准库，也就是我们平时所用的fs, path, http, net, stream等模块。</li>
+<li>Node bindlings: 是C++与JavaScript沟通的桥梁, 封装了V8和Libuv的细节，向上层提供API。</li>
+<li>最后一层是支撑Node的关键。<ul>
+<li>Libuv是一个高性能的，事件驱动的I/O库，并且提供了 跨平台（如windows, *nix）的API。简单的来说，Node.js的异步、非阻塞I/O，底层实际上是Libuv实现的。</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-Node的全局对象"><a href="#4-Node的全局对象" class="headerlink" title="4.Node的全局对象"></a>4.Node的全局对象</h2><p>我们认为直接能访问的对象，就是全局的</p>
+<h3 id="1-global"><a href="#1-global" class="headerlink" title="1) global"></a>1) global</h3><p>Node中每次执行只有一个global</p>
+<p>global中的属性</p>
+<ul>
+<li><p>process 进程 当前我们应用的进程</p>
+<ul>
+<li>process中有platform属性，’darwin’: 代表mac  ‘win32’: 代表windows</li>
+</ul>
+</li>
+<li><p>Buffer 缓存区</p>
+</li>
+<li><p>clearInterval setInterval</p>
+</li>
+<li><p>clearTimeout setTimeout</p>
+</li>
+<li><p>clearImmediate setImmediate 宏任务</p>
+</li>
+<li><p>argv 代表用户传入的参数: []，第三个参数后面的参数，只能通过命令 + 文件名 + –参数的方式传参</p>
+<ul>
+<li>0 : node执行文件</li>
+<li>1 : 当前执行的文件</li>
+<li>＞= 2 之后的内容为用户传入的参数</li>
+</ul>
+</li>
+<li><p>chdir() - 手动改变目录</p>
+</li>
+<li><p>cwd() - 当前工作目录（在哪里执行这个文件，目录就是哪里）</p>
+</li>
+<li><p>kill 杀死</p>
+</li>
+<li><p>evn 环境变量 - 我们可以根据环境变量的不同 执行不同的结果</p>
+<ul>
+<li>实际多数都用临时变量，mac环境，执行命令行时候，用export设置， windows用set设置</li>
+</ul>
+</li>
+<li><p>nextTick 下一队列，node中的微任务，node中的nextTick，比promise.then快，</p>
+<ul>
+<li>了解node事件环，请看 <a href="http://happychong.github.io/2019/10/16/Node%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%EF%BC%88event%20loop%EF%BC%89/">这里</a></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 收集 argv 的方法</span></span><br><span class="line"><span class="comment">// 方法 1</span></span><br><span class="line"><span class="keyword">let</span> config = process.argv.slice(<span class="number">2</span>).reduce(<span class="function">(<span class="params">memo, cur, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (cur.includes(<span class="string">'--'</span>)) &#123;</span><br><span class="line">        memo[cur.slice(<span class="number">2</span>)] = arr[index + <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> memo;</span><br><span class="line">&#125;, &#123;&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(config); <span class="comment">// &#123;port: '3000', config: 'xxx'&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法 2 应用 commander</span></span><br><span class="line"><span class="comment">// commander - 命令行管家 帮你提供 --help,第三方模块，需要先安装</span></span><br><span class="line"><span class="keyword">const</span> program = <span class="built_in">require</span>(<span class="string">'commander'</span>);</span><br><span class="line"><span class="comment">// 也可以同时应用 chalk 包，增加输出行的颜色</span></span><br><span class="line"><span class="keyword">const</span> chalk = <span class="built_in">require</span>(<span class="string">'chalk'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 解析用户的参数 默认提供--help</span></span><br><span class="line">program <span class="comment">// 配置命令 我输入命令后 要执行一些内容</span></span><br><span class="line">    .command(<span class="string">'create'</span>)</span><br><span class="line">    .alias(<span class="string">'c'</span>)</span><br><span class="line">    .description(<span class="string">'create project'</span>)</span><br><span class="line">    .action(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'create project'</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">program <span class="comment">// 配置属性 给代码传递参数</span></span><br><span class="line">    .option(<span class="string">'-p'</span>, <span class="string">'--port &lt;val&gt;'</span>, <span class="string">'set port'</span>)</span><br><span class="line">    .version(<span class="string">'1.0.0.0'</span>)</span><br><span class="line">    .parse(process.argv)</span><br><span class="line">program.on(<span class="string">'--help'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'\r\nExamples'</span>);</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'想额外输出的内容'</span> + chalk.green(<span class="string">'我是chalk输出绿色'</span>))</span><br><span class="line">&#125;).parse(process.argv)</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-module-exports-require-dirname-filename"><a href="#2-module-exports-require-dirname-filename" class="headerlink" title="2) module, exports, require, __dirname, __filename"></a>2) module, exports, require, __dirname, __filename</h3><p>node中，每个文件都是一个模块，模块外面包了一层匿名函数,module, exports, require, __dirname, __filename这几个就是这个函数的参数，所以我们也认为是全局变量</p>
+<ul>
+<li>module ： 模块</li>
+<li>exports ： module.exports</li>
+<li>require ： 加载模块的方法</li>
+<li>__filename ： 当前执行文件的绝对路径</li>
+<li>__dirname ： 当前执行文件的所在文件夹</li>
+</ul>
+<p>默认声明的属性是不放在global上的</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 每个模块中的this指向module.exports,所以如下</span></span><br><span class="line"><span class="keyword">this</span> === global <span class="comment">// false</span></span><br><span class="line"><span class="keyword">this</span> === <span class="built_in">module</span>.exports <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 模块中 匿名函数执行中的this指向global</span></span><br><span class="line">    <span class="comment">// 因为匿名函数执行之前，没有XXX.，所以this指向全局</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// global</span></span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+
+<p><em>浏览器中无法直接访问global对象，所以用window来代理</em></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2019/10/12/node基本概念扫盲/" data-id="ck9zc0vf5000nq0plks8fi2s6" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Node/">Node</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="default-vue nextTick原理" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/05/vue nextTick原理/" class="article-date">
+  <time datetime="2019-10-04T16:00:00.000Z" itemprop="datePublished">2019-10-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/vue/">vue</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/05/vue nextTick原理/">vue nextTick原理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><p>vue中的视图更新有缓存机制，会把多次数据的修改集中在一次视图更新中来更新视图，我们想视图更新之后再获取数据，那么就可用vue的nextTick，nextTick中的代码可以在下一队列中执行，实现代码的延迟执行，多次调用nextTick，会将其中的方法放入一个队列中，视图更新的时候会调用flushCallbacks方法，这个方法会执行所有nextTick中的方法。至于下一队列的执行时机，会按以下列表优先级进行选择。</p>
+<ul>
+<li>prosise.then (微任务)</li>
+<li>MutationObserver (微任务，非IE，h5方法)</li>
+<li>setImmediate (宏任务，IE)</li>
+<li>setTimeout (宏任务)</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2019/10/05/vue nextTick原理/" data-id="ck9zc0ve5000fq0plhikov9pz" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nextTick/">nextTick</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="default-es6+---类的修饰" class="article article-type-default" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/09/05/es6+---类的修饰/" class="article-date">
@@ -102,7 +336,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/09/05/es6+---类的修饰/" data-id="ck8zo7xpo000660pl59372a8s" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/09/05/es6+---类的修饰/" data-id="ck9zc0vdy000aq0plm4saexas" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/class/">class</a></li></ul>
@@ -148,7 +382,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/09/03/es+---class用法笔记 /" data-id="ck8zo7xt2001060plws7yn0qt" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/09/03/es+---class用法笔记 /" data-id="ck9zc0ve0000bq0pl1iqp2x5z" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/class/">class</a></li></ul>
@@ -202,7 +436,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2018/08/08/vue 强制更新试图的方法/" data-id="ck8zo7xp4000060pl5onbh30k" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2018/08/08/vue 强制更新试图的方法/" data-id="ck9zc0vdn0004q0pl7yf63ucg" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue/">vue</a></li></ul>
@@ -350,7 +584,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2016/05/19/宋晓丹的个人简历/" data-id="ck8zo7xpu000a60pl99lef4p0" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2016/05/19/宋晓丹的个人简历/" data-id="ck9zc0vda0000q0pluzo92ev4" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/happyChong/">happyChong</a></li></ul>
@@ -441,7 +675,122 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2016/05/11/windows下，ATOM常用编辑器快捷键/" data-id="ck8zo7xpc000160plmd5c4c33" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2016/05/11/windows下，ATOM常用编辑器快捷键/" data-id="ck9zc0vdp0005q0plt44bwdzz" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="default-Git命令" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/05/05/Git命令/" class="article-date">
+  <time datetime="2016-05-04T16:00:00.000Z" itemprop="datePublished">2016-05-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/周边/">周边</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/05/Git命令/">Git常用命令</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="1-安装"><a href="#1-安装" class="headerlink" title="1.安装"></a>1.安装</h2><p>在使用Git前我们需要先安装 Git。Git 目前支持 Linux/Unix、Solaris、Mac和 Windows 平台上运行。 Git 各平台安装包下载地址为：<a href="http://git-scm.com/downloads" target="_blank" rel="noopener">http://git-scm.com/downloads</a></p>
+<p>当然，也有相应的图形化工具可供下载使用，比如sourcetree.</p>
+<h2 id="2-基本配置"><a href="#2-基本配置" class="headerlink" title="2.基本配置"></a>2.基本配置</h2><p>Git 提供了一个叫做 git config 的工具，专门用来配置或读取相应的工作环境变量。 这些环境变量，决定了 Git 在各个环节的具体工作方式和行为。这些变量可以存放在以下三个不同的地方：</p>
+<ul>
+<li>/etc/gitconfig 文件：系统中对所有用户都普遍适用的配置。若使用 git config 时用 –system 选项，读写的就是这个文件。</li>
+<li>~/.gitconfig 文件：用户目录下的配置文件只适用于该用户。若使用 git config 时用 –global 选项，读写的就是这个文件。</li>
+<li>当前项目的 Git 目录中的配置文件（也就是工作目录中的 .git/config 文件）：这里的配置仅仅针对当前项目有效。每一个级别的配置都会覆盖上层的相同配置，所以 .git/config 里的配置会覆盖 /etc/gitconfig 中的同名变量。</li>
+</ul>
+<h3 id="配置个人的用户名称和电子邮件地址："><a href="#配置个人的用户名称和电子邮件地址：" class="headerlink" title="配置个人的用户名称和电子邮件地址："></a>配置个人的用户名称和电子邮件地址：</h3><pre><code>$ git config --global user.name &quot;GuoYongfeng&quot;
+$ git config --global user.email &quot;296512521@qq.com&quot;</code></pre><h3 id="查看已有的配置信息"><a href="#查看已有的配置信息" class="headerlink" title="查看已有的配置信息"></a>查看已有的配置信息</h3><pre><code>$ git config --list</code></pre><h2 id="3-基本操作"><a href="#3-基本操作" class="headerlink" title="3.基本操作"></a>3.基本操作</h2><h3 id="git-init"><a href="#git-init" class="headerlink" title="git init"></a>git init</h3><pre><code>// 新建(初始化)一个仓库
+$ mkdir demo &amp;&amp; cd demo
+$ git init</code></pre><h3 id="git-clone"><a href="#git-clone" class="headerlink" title="git clone"></a>git clone</h3><pre><code>如果已经有了仓库，就可以直接clone到本地
+$ git clone git@github.com:GuoYongfeng/webpack-dev-boilerplate.git</code></pre><h3 id="git-add"><a href="#git-add" class="headerlink" title="git add"></a>git add</h3><pre><code>// git add 命令可将该文件添加到缓存，如我们添加以下两个文件：
+$ touch README.md
+$ git add README.md</code></pre><p>还可以</p>
+<pre><code>$ git add -A
+$ git add *
+$ git add .</code></pre><h3 id="git-status"><a href="#git-status" class="headerlink" title="git status"></a>git status</h3><p>git status 可以查看当前版本库各个文件的状态</p>
+<pre><code>$ git status</code></pre><h3 id="git-commit"><a href="#git-commit" class="headerlink" title="git commit"></a>git commit</h3><p>使用 git add 命令将想要快照的内容写入缓存区， 而执行 git commit 将缓存区内容添加到仓库中。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m <span class="string">'第一次版本提交'</span></span><br></pre></td></tr></table></figure>
+
+<p>Git撤销本地commit</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git reset HEAD~</span><br><span class="line"><span class="comment"># HEAD 代表：上一次提交</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="git-remote-add-origin—推动改动"><a href="#git-remote-add-origin—推动改动" class="headerlink" title="git remote add origin—推动改动"></a>git remote add origin—推动改动</h3><p>如果你还没有克隆现有仓库，并欲将你的仓库连接到某个远程服务器，你可以使用如下命令添加：</p>
+<pre><code># 为这个仓库添加一个远程地址
+$ git remote add origin 你的github上的仓库地址（比如： git@github.com:GuoYongfeng/webpack-dev-boilerplate.git）</code></pre><p>如此你就能够将你的改动推送到所添加的服务器上去了。<br>执行如下命令以将这些改动提交到远端仓库：</p>
+<pre><code># 将本地版本库的资源推送到远程服务器
+$ git push origin -u master</code></pre><p>可以把 master 换成你想要推送的任何分支。</p>
+<h3 id="push到服务器"><a href="#push到服务器" class="headerlink" title="push到服务器"></a>push到服务器</h3><p>把代码从本地push到服务器上，这意味着我们首先要有个服务器或是托管我们代码的第三方服务，公司有gitlab也可以直接push到那。</p>
+<pre><code># 将本地版本库的资源推送到远程服务器
+$ git push origin -u master</code></pre><p>可以把 master 换成你想要推送的任何分支。</p>
+<h3 id="git-checkout-—-撤销修改"><a href="#git-checkout-—-撤销修改" class="headerlink" title="git checkout — 撤销修改"></a>git checkout — 撤销修改</h3><p>假如你做错事（自然，这是不可能的），你可以使用如下命令替换掉本地改动：</p>
+<pre><code>$ git checkout -- README.md</code></pre><h3 id="git-reset"><a href="#git-reset" class="headerlink" title="git reset"></a>git reset</h3><p>git reset HEAD 命令用于取消已缓存的内容。</p>
+<pre><code>$ git reset HEAD -- hello.php</code></pre><p>如果粗暴一点</p>
+<pre><code>$ git reset --hard 版本号</code></pre><h3 id="git-rm"><a href="#git-rm" class="headerlink" title="git rm"></a>git rm</h3><pre><code>$ git rm README.md</code></pre><h3 id="git-rm-–cached-—-清除缓存"><a href="#git-rm-–cached-—-清除缓存" class="headerlink" title="git rm –cached — 清除缓存"></a>git rm –cached — 清除缓存</h3><pre><code>$ git rm -r --cached ignore_file</code></pre><h3 id="git-pull-—-拉取github上的资源-并自动合并（auto-merge"><a href="#git-pull-—-拉取github上的资源-并自动合并（auto-merge" class="headerlink" title="git pull — 拉取github上的资源,并自动合并（auto merge)"></a>git pull — 拉取github上的资源,并自动合并（auto merge)</h3><p>把origin仓库下的master分支下的内容拉取到本地</p>
+<pre><code>git pull origin master</code></pre><h3 id="git-fetch-—-待续"><a href="#git-fetch-—-待续" class="headerlink" title="git fetch — 待续"></a>git fetch — 待续</h3><pre><code>git fetch origin master</code></pre><h3 id="git-rebase-—-待续"><a href="#git-rebase-—-待续" class="headerlink" title="git rebase — 待续"></a>git rebase — 待续</h3><pre><code>git rebase origin/master</code></pre><h3 id="git-remote-v-—-查看本地文件夹与远程仓库的关联情况"><a href="#git-remote-v-—-查看本地文件夹与远程仓库的关联情况" class="headerlink" title="git remote -v — 查看本地文件夹与远程仓库的关联情况"></a>git remote -v — 查看本地文件夹与远程仓库的关联情况</h3><pre><code>git remote -v</code></pre><h3 id="git-remote-rm-origin-—-取消本地文件夹与远程仓库的关联"><a href="#git-remote-rm-origin-—-取消本地文件夹与远程仓库的关联" class="headerlink" title="git remote rm origin — 取消本地文件夹与远程仓库的关联"></a>git remote rm origin — 取消本地文件夹与远程仓库的关联</h3><p>与git remote add origin功能相反的作用</p>
+<pre><code>git remote rm origin</code></pre><h3 id="git-log-—-查看我们执行commit操作，在本地git文件夹生成的版本号"><a href="#git-log-—-查看我们执行commit操作，在本地git文件夹生成的版本号" class="headerlink" title="git log — 查看我们执行commit操作，在本地git文件夹生成的版本号"></a>git log — 查看我们执行commit操作，在本地git文件夹生成的版本号</h3><h3 id="git-show-—-查看某版本做了哪些操作"><a href="#git-show-—-查看某版本做了哪些操作" class="headerlink" title="git show — 查看某版本做了哪些操作"></a>git show — 查看某版本做了哪些操作</h3><pre><code>git show &lt;版本号&gt;</code></pre><h3 id="git-branch-—-查看分支情况"><a href="#git-branch-—-查看分支情况" class="headerlink" title="git branch — 查看分支情况"></a>git branch — 查看分支情况</h3><pre><code>// * 代表当前所在分支
+git branch</code></pre><h2 id="4-配置alias别名"><a href="#4-配置alias别名" class="headerlink" title="4.配置alias别名"></a>4.配置alias别名</h2><p>配置别名的好处是方便简写命令</p>
+<pre><code>$ git config --global alias.st status
+$ git config --global alias.ci commit
+$ git config --global alias.co checkout
+$ git config --global alias.br branch
+$ git config --global alias.lg &quot;log --color --graph --pretty=format:&apos;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset&apos; --abbrev-commit&quot;</code></pre><h2 id="5-设置public-key"><a href="#5-设置public-key" class="headerlink" title="5.设置public key"></a>5.设置public key</h2><p>首先需要在本地生成key，并且把key配置在github上</p>
+<pre><code>$ ssh-keygen -t rsa -C &quot;guoyff@yonyou.com&quot;</code></pre><p>复制ublic key</p>
+<pre><code>$ cat ~/ssh/id_rsa.pub</code></pre><p>当然，你也可以直接使用nodepad++等编辑器打开这个文件，复制出来。 （如果你是windows用户，这个文件一般会在这里：C:\Users\Administrator.ssh）</p>
+<p>将获得的public key添加在github账户上：</p>
+<blockquote>
+<p>右上角点击头像-&gt; 点击settings-&gt; 点击SSH KEYS-&gt; 点击ADD SSH KEYS-&gt; 将获取的public key粘贴于此</p>
+</blockquote>
+<h2 id="6-分支的管理"><a href="#6-分支的管理" class="headerlink" title="6.分支的管理"></a>6.分支的管理</h2><p>分支是用来将特性开发绝缘开来的。在你创建仓库的时候，master 是“默认的”。在其他分支上进行开发，完成后再将它们合并到主分支上。</p>
+<p><img src="/pics/br.png" alt="分支图片"></p>
+<blockquote>
+<p>分支的命名 <br><br>master 主干 <br><br>develop 开发分支 <br><br>        – feature 开发分支<br>        – bug 修改bug的分支<br>release 部署分支 <br></p>
+</blockquote>
+<h3 id="分支的基本操作"><a href="#分支的基本操作" class="headerlink" title="分支的基本操作"></a>分支的基本操作</h3><h4 id="git-branch-—-创建一个分支"><a href="#git-branch-—-创建一个分支" class="headerlink" title="git branch — 创建一个分支"></a>git branch — 创建一个分支</h4><pre><code>$ git branch mybranch</code></pre><h4 id="git-checkout-—-切换到这个分支"><a href="#git-checkout-—-切换到这个分支" class="headerlink" title="git checkout — 切换到这个分支"></a>git checkout — 切换到这个分支</h4><pre><code>$ git checkout mybranch</code></pre><h4 id="或者可以更快一点，创建一个分支并且切换过去"><a href="#或者可以更快一点，创建一个分支并且切换过去" class="headerlink" title="或者可以更快一点，创建一个分支并且切换过去"></a>或者可以更快一点，创建一个分支并且切换过去</h4><pre><code>$ git checkout -b mybranch</code></pre><h4 id="删除分支"><a href="#删除分支" class="headerlink" title="删除分支"></a>删除分支</h4><pre><code>$ git branch -d mybranch</code></pre><p>如果你和其他小伙伴基于这个分支协作，那么你需要把这个分支push到远端仓库，不然的话，这个分支是存在于你的本地的，其他的小伙伴就看不到了。</p>
+<pre><code>$ git push origin mybranch</code></pre><h3 id="分支的更新与合并"><a href="#分支的更新与合并" class="headerlink" title="分支的更新与合并"></a>分支的更新与合并</h3><h4 id="更新你的本地仓库至最新改动"><a href="#更新你的本地仓库至最新改动" class="headerlink" title="更新你的本地仓库至最新改动"></a>更新你的本地仓库至最新改动</h4><pre><code>git pull origin master</code></pre><p>这样就将本地的master分支和远程同步了<br>（新的分支，新的版本）</p>
+<pre><code>$ git fetch origin
+$ git rebase origin/master</code></pre><h4 id="git-merge-—-合并分支"><a href="#git-merge-—-合并分支" class="headerlink" title="git merge — 合并分支"></a>git merge — 合并分支</h4><p>以在你的工作目录中 获取（fetch） 并 合并（merge） 远端的改动。 要合并其他分支到你的当前分支（例如 master），执行：</p>
+<pre><code>$ git merge &lt;branch&gt;</code></pre><h3 id="解决冲突"><a href="#解决冲突" class="headerlink" title="解决冲突"></a>解决冲突</h3><p>无论是分支的更新还是合并，git 都会尝试去自动合并改动。不幸的是，自动合并并非次次都能成功，并可能导致 冲突（conflicts）。 这时候就需要你修改这些文件来人肉合并这些 冲突（conflicts） 了。改完之后，你需要执行如下命令以将它们标记为合并成功：</p>
+<pre><code>$ git add &lt;filename&gt;</code></pre><p>在合并改动之前，也可以使用如下命令查看：</p>
+<pre><code>$ git diff &lt;source_branch&gt; &lt;target_branch&gt;</code></pre><p>处理冲突之后就可以commit了</p>
+<pre><code>$ git commit -m &quot;fix conflict&quot;</code></pre><h2 id="7-打tag标签"><a href="#7-打tag标签" class="headerlink" title="7.打tag标签"></a>7.打tag标签</h2><p>在软件发布时创建标签，是被推荐的。</p>
+<p>使用如下命令获取版本号：</p>
+<pre><code>$ git log</code></pre><p>可以执行如下命令以创建一个叫做 1.0.0 的标签：</p>
+<pre><code>$ git tag 1.0.0 1b2e1d63ff</code></pre><p>1b2e1d63ff 是你想要标记的提交 ID 的前 10 位字符。</p>
+<h2 id="8-撤销修改和版本回退"><a href="#8-撤销修改和版本回退" class="headerlink" title="8.撤销修改和版本回退"></a>8.撤销修改和版本回退</h2><p>假如你做错事（自然，这是不可能的），你可以使用如下命令替换掉本地改动：</p>
+<pre><code>$ git checkout -- &lt;filename&gt;</code></pre><p>此命令会使用 HEAD 中的最新内容替换掉你的工作目录中的文件。已添加到缓存区的改动，以及新文件，都不受影响。</p>
+<p>假如你想要丢弃你所有的本地改动与提交，可以到服务器上获取最新的版本并将你本地主分支指向到它：</p>
+<pre><code># 获取的版本号可以使用git log拿到
+$ git reset --hard 希望回退的版本号</code></pre><blockquote>
+<p>此文摘抄自 <a href="http://guoyongfeng.github.io/idoc/html/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/Git%E5%92%8CGithub%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97.html" target="_blank" rel="noopener">http://guoyongfeng.github.io/</a></p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2016/05/05/Git命令/" data-id="ck9zc0vdg0001q0pld2696zhq" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
@@ -616,120 +965,10 @@ $ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2016/05/05/基本shell命令/" data-id="ck8zo7xpj000460pl2mm7tyed" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2016/05/05/基本shell命令/" data-id="ck9zc0vdt0006q0pli7p1emja" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="default-Git命令" class="article article-type-default" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/05/05/Git命令/" class="article-date">
-  <time datetime="2016-05-04T16:00:00.000Z" itemprop="datePublished">2016-05-05</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/周边/">周边</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/05/Git命令/">Git常用命令</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="1-安装"><a href="#1-安装" class="headerlink" title="1.安装"></a>1.安装</h2><p>在使用Git前我们需要先安装 Git。Git 目前支持 Linux/Unix、Solaris、Mac和 Windows 平台上运行。 Git 各平台安装包下载地址为：<a href="http://git-scm.com/downloads" target="_blank" rel="noopener">http://git-scm.com/downloads</a></p>
-<p>当然，也有相应的图形化工具可供下载使用，比如sourcetree.</p>
-<h2 id="2-基本配置"><a href="#2-基本配置" class="headerlink" title="2.基本配置"></a>2.基本配置</h2><p>Git 提供了一个叫做 git config 的工具，专门用来配置或读取相应的工作环境变量。 这些环境变量，决定了 Git 在各个环节的具体工作方式和行为。这些变量可以存放在以下三个不同的地方：</p>
-<ul>
-<li>/etc/gitconfig 文件：系统中对所有用户都普遍适用的配置。若使用 git config 时用 –system 选项，读写的就是这个文件。</li>
-<li>~/.gitconfig 文件：用户目录下的配置文件只适用于该用户。若使用 git config 时用 –global 选项，读写的就是这个文件。</li>
-<li>当前项目的 Git 目录中的配置文件（也就是工作目录中的 .git/config 文件）：这里的配置仅仅针对当前项目有效。每一个级别的配置都会覆盖上层的相同配置，所以 .git/config 里的配置会覆盖 /etc/gitconfig 中的同名变量。</li>
-</ul>
-<h3 id="配置个人的用户名称和电子邮件地址："><a href="#配置个人的用户名称和电子邮件地址：" class="headerlink" title="配置个人的用户名称和电子邮件地址："></a>配置个人的用户名称和电子邮件地址：</h3><pre><code>$ git config --global user.name &quot;GuoYongfeng&quot;
-$ git config --global user.email &quot;296512521@qq.com&quot;</code></pre><h3 id="查看已有的配置信息"><a href="#查看已有的配置信息" class="headerlink" title="查看已有的配置信息"></a>查看已有的配置信息</h3><pre><code>$ git config --list</code></pre><h2 id="3-基本操作"><a href="#3-基本操作" class="headerlink" title="3.基本操作"></a>3.基本操作</h2><h3 id="git-init"><a href="#git-init" class="headerlink" title="git init"></a>git init</h3><pre><code>// 新建(初始化)一个仓库
-$ mkdir demo &amp;&amp; cd demo
-$ git init</code></pre><h3 id="git-clone"><a href="#git-clone" class="headerlink" title="git clone"></a>git clone</h3><pre><code>如果已经有了仓库，就可以直接clone到本地
-$ git clone git@github.com:GuoYongfeng/webpack-dev-boilerplate.git</code></pre><h3 id="git-add"><a href="#git-add" class="headerlink" title="git add"></a>git add</h3><pre><code>// git add 命令可将该文件添加到缓存，如我们添加以下两个文件：
-$ touch README.md
-$ git add README.md</code></pre><p>还可以</p>
-<pre><code>$ git add -A
-$ git add *
-$ git add .</code></pre><h3 id="git-status"><a href="#git-status" class="headerlink" title="git status"></a>git status</h3><p>git status 可以查看当前版本库各个文件的状态</p>
-<pre><code>$ git status</code></pre><h3 id="git-commit"><a href="#git-commit" class="headerlink" title="git commit"></a>git commit</h3><p>使用 git add 命令将想要快照的内容写入缓存区， 而执行 git commit 将缓存区内容添加到仓库中。</p>
-<pre><code>$ git commit -m &apos;第一次版本提交&apos;</code></pre><h3 id="git-remote-add-origin—推动改动"><a href="#git-remote-add-origin—推动改动" class="headerlink" title="git remote add origin—推动改动"></a>git remote add origin—推动改动</h3><p>如果你还没有克隆现有仓库，并欲将你的仓库连接到某个远程服务器，你可以使用如下命令添加：</p>
-<pre><code># 为这个仓库添加一个远程地址
-$ git remote add origin 你的github上的仓库地址（比如： git@github.com:GuoYongfeng/webpack-dev-boilerplate.git）</code></pre><p>如此你就能够将你的改动推送到所添加的服务器上去了。<br>执行如下命令以将这些改动提交到远端仓库：</p>
-<pre><code># 将本地版本库的资源推送到远程服务器
-$ git push origin -u master</code></pre><p>可以把 master 换成你想要推送的任何分支。</p>
-<h3 id="push到服务器"><a href="#push到服务器" class="headerlink" title="push到服务器"></a>push到服务器</h3><p>把代码从本地push到服务器上，这意味着我们首先要有个服务器或是托管我们代码的第三方服务，公司有gitlab也可以直接push到那。</p>
-<pre><code># 将本地版本库的资源推送到远程服务器
-$ git push origin -u master</code></pre><p>可以把 master 换成你想要推送的任何分支。</p>
-<h3 id="git-checkout-—-撤销修改"><a href="#git-checkout-—-撤销修改" class="headerlink" title="git checkout — 撤销修改"></a>git checkout — 撤销修改</h3><p>假如你做错事（自然，这是不可能的），你可以使用如下命令替换掉本地改动：</p>
-<pre><code>$ git checkout -- README.md</code></pre><h3 id="git-reset"><a href="#git-reset" class="headerlink" title="git reset"></a>git reset</h3><p>git reset HEAD 命令用于取消已缓存的内容。</p>
-<pre><code>$ git reset HEAD -- hello.php</code></pre><p>如果粗暴一点</p>
-<pre><code>$ git reset --hard 版本号</code></pre><h3 id="git-rm"><a href="#git-rm" class="headerlink" title="git rm"></a>git rm</h3><pre><code>$ git rm README.md</code></pre><h3 id="git-rm-–cached-—-清除缓存"><a href="#git-rm-–cached-—-清除缓存" class="headerlink" title="git rm –cached — 清除缓存"></a>git rm –cached — 清除缓存</h3><pre><code>$ git rm -r --cached ignore_file</code></pre><h3 id="git-pull-—-拉取github上的资源-并自动合并（auto-merge"><a href="#git-pull-—-拉取github上的资源-并自动合并（auto-merge" class="headerlink" title="git pull — 拉取github上的资源,并自动合并（auto merge)"></a>git pull — 拉取github上的资源,并自动合并（auto merge)</h3><p>把origin仓库下的master分支下的内容拉取到本地</p>
-<pre><code>git pull origin master</code></pre><h3 id="git-fetch-—-待续"><a href="#git-fetch-—-待续" class="headerlink" title="git fetch — 待续"></a>git fetch — 待续</h3><pre><code>git fetch origin master</code></pre><h3 id="git-rebase-—-待续"><a href="#git-rebase-—-待续" class="headerlink" title="git rebase — 待续"></a>git rebase — 待续</h3><pre><code>git rebase origin/master</code></pre><h3 id="git-remote-v-—-查看本地文件夹与远程仓库的关联情况"><a href="#git-remote-v-—-查看本地文件夹与远程仓库的关联情况" class="headerlink" title="git remote -v — 查看本地文件夹与远程仓库的关联情况"></a>git remote -v — 查看本地文件夹与远程仓库的关联情况</h3><pre><code>git remote -v</code></pre><h3 id="git-remote-rm-origin-—-取消本地文件夹与远程仓库的关联"><a href="#git-remote-rm-origin-—-取消本地文件夹与远程仓库的关联" class="headerlink" title="git remote rm origin — 取消本地文件夹与远程仓库的关联"></a>git remote rm origin — 取消本地文件夹与远程仓库的关联</h3><p>与git remote add origin功能相反的作用</p>
-<pre><code>git remote rm origin</code></pre><h3 id="git-log-—-查看我们执行commit操作，在本地git文件夹生成的版本号"><a href="#git-log-—-查看我们执行commit操作，在本地git文件夹生成的版本号" class="headerlink" title="git log — 查看我们执行commit操作，在本地git文件夹生成的版本号"></a>git log — 查看我们执行commit操作，在本地git文件夹生成的版本号</h3><h3 id="git-show-—-查看某版本做了哪些操作"><a href="#git-show-—-查看某版本做了哪些操作" class="headerlink" title="git show — 查看某版本做了哪些操作"></a>git show — 查看某版本做了哪些操作</h3><pre><code>git show &lt;版本号&gt;</code></pre><h3 id="git-branch-—-查看分支情况"><a href="#git-branch-—-查看分支情况" class="headerlink" title="git branch — 查看分支情况"></a>git branch — 查看分支情况</h3><pre><code>// * 代表当前所在分支
-git branch</code></pre><h2 id="4-配置alias别名"><a href="#4-配置alias别名" class="headerlink" title="4.配置alias别名"></a>4.配置alias别名</h2><p>配置别名的好处是方便简写命令</p>
-<pre><code>$ git config --global alias.st status
-$ git config --global alias.ci commit
-$ git config --global alias.co checkout
-$ git config --global alias.br branch
-$ git config --global alias.lg &quot;log --color --graph --pretty=format:&apos;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset&apos; --abbrev-commit&quot;</code></pre><h2 id="5-设置public-key"><a href="#5-设置public-key" class="headerlink" title="5.设置public key"></a>5.设置public key</h2><p>首先需要在本地生成key，并且把key配置在github上</p>
-<pre><code>$ ssh-keygen -t rsa -C &quot;guoyff@yonyou.com&quot;</code></pre><p>复制ublic key</p>
-<pre><code>$ cat ~/ssh/id_rsa.pub</code></pre><p>当然，你也可以直接使用nodepad++等编辑器打开这个文件，复制出来。 （如果你是windows用户，这个文件一般会在这里：C:\Users\Administrator.ssh）</p>
-<p>将获得的public key添加在github账户上：</p>
-<blockquote>
-<p>右上角点击头像-&gt; 点击settings-&gt; 点击SSH KEYS-&gt; 点击ADD SSH KEYS-&gt; 将获取的public key粘贴于此</p>
-</blockquote>
-<h2 id="6-分支的管理"><a href="#6-分支的管理" class="headerlink" title="6.分支的管理"></a>6.分支的管理</h2><p>分支是用来将特性开发绝缘开来的。在你创建仓库的时候，master 是“默认的”。在其他分支上进行开发，完成后再将它们合并到主分支上。</p>
-<p><img src="/pics/br.png" alt="分支图片"></p>
-<blockquote>
-<p>分支的命名 <br><br>master 主干 <br><br>develop 开发分支 <br><br>        – feature 开发分支<br>        – bug 修改bug的分支<br>release 部署分支 <br></p>
-</blockquote>
-<h3 id="分支的基本操作"><a href="#分支的基本操作" class="headerlink" title="分支的基本操作"></a>分支的基本操作</h3><h4 id="git-branch-—-创建一个分支"><a href="#git-branch-—-创建一个分支" class="headerlink" title="git branch — 创建一个分支"></a>git branch — 创建一个分支</h4><pre><code>$ git branch mybranch</code></pre><h4 id="git-checkout-—-切换到这个分支"><a href="#git-checkout-—-切换到这个分支" class="headerlink" title="git checkout — 切换到这个分支"></a>git checkout — 切换到这个分支</h4><pre><code>$ git checkout mybranch</code></pre><h4 id="或者可以更快一点，创建一个分支并且切换过去"><a href="#或者可以更快一点，创建一个分支并且切换过去" class="headerlink" title="或者可以更快一点，创建一个分支并且切换过去"></a>或者可以更快一点，创建一个分支并且切换过去</h4><pre><code>$ git checkout -b mybranch</code></pre><h4 id="删除分支"><a href="#删除分支" class="headerlink" title="删除分支"></a>删除分支</h4><pre><code>$ git branch -d mybranch</code></pre><p>如果你和其他小伙伴基于这个分支协作，那么你需要把这个分支push到远端仓库，不然的话，这个分支是存在于你的本地的，其他的小伙伴就看不到了。</p>
-<pre><code>$ git push origin mybranch</code></pre><h3 id="分支的更新与合并"><a href="#分支的更新与合并" class="headerlink" title="分支的更新与合并"></a>分支的更新与合并</h3><h4 id="更新你的本地仓库至最新改动"><a href="#更新你的本地仓库至最新改动" class="headerlink" title="更新你的本地仓库至最新改动"></a>更新你的本地仓库至最新改动</h4><pre><code>git pull origin master</code></pre><p>这样就将本地的master分支和远程同步了<br>（新的分支，新的版本）</p>
-<pre><code>$ git fetch origin
-$ git rebase origin/master</code></pre><h4 id="git-merge-—-合并分支"><a href="#git-merge-—-合并分支" class="headerlink" title="git merge — 合并分支"></a>git merge — 合并分支</h4><p>以在你的工作目录中 获取（fetch） 并 合并（merge） 远端的改动。 要合并其他分支到你的当前分支（例如 master），执行：</p>
-<pre><code>$ git merge &lt;branch&gt;</code></pre><h3 id="解决冲突"><a href="#解决冲突" class="headerlink" title="解决冲突"></a>解决冲突</h3><p>无论是分支的更新还是合并，git 都会尝试去自动合并改动。不幸的是，自动合并并非次次都能成功，并可能导致 冲突（conflicts）。 这时候就需要你修改这些文件来人肉合并这些 冲突（conflicts） 了。改完之后，你需要执行如下命令以将它们标记为合并成功：</p>
-<pre><code>$ git add &lt;filename&gt;</code></pre><p>在合并改动之前，也可以使用如下命令查看：</p>
-<pre><code>$ git diff &lt;source_branch&gt; &lt;target_branch&gt;</code></pre><p>处理冲突之后就可以commit了</p>
-<pre><code>$ git commit -m &quot;fix conflict&quot;</code></pre><h2 id="7-打tag标签"><a href="#7-打tag标签" class="headerlink" title="7.打tag标签"></a>7.打tag标签</h2><p>在软件发布时创建标签，是被推荐的。</p>
-<p>使用如下命令获取版本号：</p>
-<pre><code>$ git log</code></pre><p>可以执行如下命令以创建一个叫做 1.0.0 的标签：</p>
-<pre><code>$ git tag 1.0.0 1b2e1d63ff</code></pre><p>1b2e1d63ff 是你想要标记的提交 ID 的前 10 位字符。</p>
-<h2 id="8-撤销修改和版本回退"><a href="#8-撤销修改和版本回退" class="headerlink" title="8.撤销修改和版本回退"></a>8.撤销修改和版本回退</h2><p>假如你做错事（自然，这是不可能的），你可以使用如下命令替换掉本地改动：</p>
-<pre><code>$ git checkout -- &lt;filename&gt;</code></pre><p>此命令会使用 HEAD 中的最新内容替换掉你的工作目录中的文件。已添加到缓存区的改动，以及新文件，都不受影响。</p>
-<p>假如你想要丢弃你所有的本地改动与提交，可以到服务器上获取最新的版本并将你本地主分支指向到它：</p>
-<pre><code># 获取的版本号可以使用git log拿到
-$ git reset --hard 希望回退的版本号</code></pre><blockquote>
-<p>此文摘抄自 <a href="http://guoyongfeng.github.io/idoc/html/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/Git%E5%92%8CGithub%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97.html" target="_blank" rel="noopener">http://guoyongfeng.github.io/</a></p>
-</blockquote>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2016/05/05/Git命令/" data-id="ck8zo7xyc003e60pl8sdjfzdp" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
 
     </footer>
   </div>
@@ -756,7 +995,19 @@ $ git reset --hard 希望回退的版本号</code></pre><blockquote>
       <ul>
         
           <li>
-            <a href="/2020/04/14/node进程（process）/">Node 的 进程</a>
+            <a href="/2020/04/27/dart/">Dart 入门</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/23/ast/">ast（语法树）</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/21/node进程（pm2）/">Node 的 进程(pm2)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/14/node进程（process）/">Node 的 进程 (process)</a>
           </li>
         
           <li>
@@ -792,11 +1043,11 @@ $ git reset --hard 希望回退的版本号</code></pre><blockquote>
           </li>
         
           <li>
-            <a href="/2019/11/01/Node中文件的读写模块---FS/">Node -文件读写模块--- fs</a>
+            <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
           </li>
         
           <li>
-            <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
+            <a href="/2019/11/01/Node中文件的读写模块---FS/">Node -文件读写模块--- fs</a>
           </li>
         
           <li>
@@ -812,11 +1063,11 @@ $ git reset --hard 希望回退的版本号</code></pre><blockquote>
           </li>
         
           <li>
-            <a href="/2019/10/14/node核心模块-简述/">Node核心模块 - 简述</a>
+            <a href="/2019/10/14/node模块加载原理/">Node模块加载原理</a>
           </li>
         
           <li>
-            <a href="/2019/10/14/node模块加载原理/">Node模块加载原理</a>
+            <a href="/2019/10/14/node核心模块-简述/">Node核心模块 - 简述</a>
           </li>
         
           <li>
@@ -824,11 +1075,11 @@ $ git reset --hard 希望回退的版本号</code></pre><blockquote>
           </li>
         
           <li>
-            <a href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
+            <a href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
           </li>
         
           <li>
-            <a href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
+            <a href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
           </li>
         
           <li>
@@ -856,11 +1107,11 @@ $ git reset --hard 希望回退的版本号</code></pre><blockquote>
           </li>
         
           <li>
-            <a href="/2016/05/05/基本shell命令/">基本SHELL命令使用</a>
+            <a href="/2016/05/05/Git命令/">Git常用命令</a>
           </li>
         
           <li>
-            <a href="/2016/05/05/Git命令/">Git常用命令</a>
+            <a href="/2016/05/05/基本shell命令/">基本SHELL命令使用</a>
           </li>
         
       </ul>
@@ -872,7 +1123,7 @@ $ git reset --hard 希望回退的版本号</code></pre><blockquote>
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Node/">Node</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/es6/">es6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/个人/">个人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/周边/">周边</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Dart/">Dart</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node/">Node</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/es6/">es6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/个人/">个人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/周边/">周边</a></li></ul>
     </div>
   </div>
 
@@ -882,7 +1133,7 @@ $ git reset --hard 希望回退的版本号</code></pre><blockquote>
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node/">Node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/buffer/">buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/core/">core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/event-loop/">event loop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fs/">fs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/happyChong/">happyChong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loader/">loader</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/module/">module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextTick/">nextTick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/path/">path</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/process/">process</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/util/">util</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vm/">vm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单线程/">单线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node/">Node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ast/">ast</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/buffer/">buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/core/">core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/event-loop/">event loop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fs/">fs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/happyChong/">happyChong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loader/">loader</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/module/">module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextTick/">nextTick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/path/">path</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pm2/">pm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/process/">process</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/util/">util</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vm/">vm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单线程/">单线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
     </div>
   </div>
 
@@ -892,7 +1143,7 @@ $ git reset --hard 希望回退的版本号</code></pre><blockquote>
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/EventLoop/" style="font-size: 13.33px;">EventLoop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/buffer/" style="font-size: 10px;">buffer</a> <a href="/tags/class/" style="font-size: 13.33px;">class</a> <a href="/tags/core/" style="font-size: 10px;">core</a> <a href="/tags/event-loop/" style="font-size: 13.33px;">event loop</a> <a href="/tags/events/" style="font-size: 10px;">events</a> <a href="/tags/fs/" style="font-size: 16.67px;">fs</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/happyChong/" style="font-size: 10px;">happyChong</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/loader/" style="font-size: 10px;">loader</a> <a href="/tags/module/" style="font-size: 10px;">module</a> <a href="/tags/nextTick/" style="font-size: 10px;">nextTick</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/path/" style="font-size: 10px;">path</a> <a href="/tags/process/" style="font-size: 10px;">process</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/util/" style="font-size: 10px;">util</a> <a href="/tags/vm/" style="font-size: 10px;">vm</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 20px;">webpack</a> <a href="/tags/单线程/" style="font-size: 10px;">单线程</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a>
+      <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventLoop/" style="font-size: 13.33px;">EventLoop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/ast/" style="font-size: 10px;">ast</a> <a href="/tags/buffer/" style="font-size: 10px;">buffer</a> <a href="/tags/class/" style="font-size: 13.33px;">class</a> <a href="/tags/core/" style="font-size: 10px;">core</a> <a href="/tags/event-loop/" style="font-size: 13.33px;">event loop</a> <a href="/tags/events/" style="font-size: 10px;">events</a> <a href="/tags/fs/" style="font-size: 16.67px;">fs</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/happyChong/" style="font-size: 10px;">happyChong</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/loader/" style="font-size: 10px;">loader</a> <a href="/tags/module/" style="font-size: 10px;">module</a> <a href="/tags/nextTick/" style="font-size: 10px;">nextTick</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/path/" style="font-size: 10px;">path</a> <a href="/tags/pm2/" style="font-size: 10px;">pm2</a> <a href="/tags/process/" style="font-size: 10px;">process</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/util/" style="font-size: 10px;">util</a> <a href="/tags/vm/" style="font-size: 10px;">vm</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 20px;">webpack</a> <a href="/tags/单线程/" style="font-size: 10px;">单线程</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a>
     </div>
   </div>
 
