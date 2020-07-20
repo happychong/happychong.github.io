@@ -65,6 +65,56 @@
       <div class="outer">
         <section id="main">
   
+    <article id="default-多线程与单线程服务" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/14/多线程与单线程服务/" class="article-date">
+  <time datetime="2019-10-13T16:00:00.000Z" itemprop="datePublished">2019-10-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Node/">Node</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/14/多线程与单线程服务/">单线程与多线程的基本概念</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="1-什么是进程？"><a href="#1-什么是进程？" class="headerlink" title="1 什么是进程？"></a>1 什么是进程？</h2><p>当一个程序开始运行时，它就是一个进程，进程包括运行中的程序和程序所使用到的内存和系统资源。<br>而一个进程又是由多个线程所组成的。比如渲染线程、JS、引擎线程、HTTP请求线程等等</p>
+<h2 id="2-什么是线程？"><a href="#2-什么是线程？" class="headerlink" title="2 什么是线程？"></a>2 什么是线程？</h2><p>线程是程序中的一个执行流，每个线程都有自己的专有寄存器(栈指针、程序计数器等)，但代码区是共享的，<br>即不同的线程可以执行同样的函数。</p>
+<p>进程表示一个程序，1个进程占用1核CPU，线程是进程中的单位  node的主线程只有一个</p>
+<h2 id="3-什么是多线程？"><a href="#3-什么是多线程？" class="headerlink" title="3 什么是多线程？"></a>3 什么是多线程？</h2><p>多线程是指程序中包含多个执行流，即在一个程序中可以同时运行多个不同的线程来执行不同的任务，<br>也就是说允许单个程序创建多个并行执行的线程来完成各自的任务。</p>
+<p><em>多线程的好处：可以提高CPU的利用率。在多线程程序中，一个线程必须等待的时候，CPU可以运行其它的线程而不是等待，这样就大大提高了程序的效率。</em></p>
+<h2 id="4-什么是单线程？"><a href="#4-什么是单线程？" class="headerlink" title="4 什么是单线程？"></a>4 什么是单线程？</h2><p>单线程程序中只有1个执行流（主线程一个），底层工作线程多个。</p>
+<p><em>单线程优点：解决切换上下文时间，锁的问题，节省内存</em></p>
+<h2 id="5-单线程、多线程服务图解"><a href="#5-单线程、多线程服务图解" class="headerlink" title="5 单线程、多线程服务图解"></a>5 单线程、多线程服务图解</h2><p><img src="/images/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E2%80%94%E2%80%94%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%9C%8D%E5%8A%A1.png" alt="浏览器-event loop"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2019/10/14/多线程与单线程服务/" data-id="ckcttnst90019dgplldjfa36g" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/单线程/">单线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="default-浏览器中js的事件循环（event loop）" class="article article-type-default" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/10/12/浏览器中js的事件循环（event loop）/" class="article-date">
@@ -125,7 +175,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/12/浏览器中js的事件循环（event loop）/" data-id="ck9zc0ve9000hq0pl7xo86z7p" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/10/12/浏览器中js的事件循环（event loop）/" data-id="ckcttnsrw000mdgplq6uz9ddm" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/event-loop/">event loop</a></li></ul>
@@ -238,7 +288,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/12/node基本概念扫盲/" data-id="ck9zc0vf5000nq0plks8fi2s6" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/10/12/node基本概念扫盲/" data-id="ckcttnssc000sdgpl0qjkknsi" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Node/">Node</a></li></ul>
@@ -287,7 +337,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/10/05/vue nextTick原理/" data-id="ck9zc0ve5000fq0plhikov9pz" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/10/05/vue nextTick原理/" data-id="ckcttnsri000gdgpl1c8z17uu" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nextTick/">nextTick</a></li></ul>
@@ -336,7 +386,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/09/05/es6+---类的修饰/" data-id="ck9zc0vdy000aq0plm4saexas" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/09/05/es6+---类的修饰/" data-id="ckcttnsr6000adgplwtl9551k" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/class/">class</a></li></ul>
@@ -382,7 +432,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/09/03/es+---class用法笔记 /" data-id="ck9zc0ve0000bq0pl1iqp2x5z" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2019/09/03/es+---class用法笔记 /" data-id="ckcttnsrc000bdgpl763h1tur" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/class/">class</a></li></ul>
@@ -436,7 +486,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2018/08/08/vue 强制更新试图的方法/" data-id="ck9zc0vdn0004q0pl7yf63ucg" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2018/08/08/vue 强制更新试图的方法/" data-id="ckcttnsrn000idgpllmrsh4uo" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue/">vue</a></li></ul>
@@ -584,7 +634,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2016/05/19/宋晓丹的个人简历/" data-id="ck9zc0vda0000q0pluzo92ev4" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2016/05/19/宋晓丹的个人简历/" data-id="ckcttnsqv0005dgplb01lu8o3" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/happyChong/">happyChong</a></li></ul>
@@ -675,7 +725,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2016/05/11/windows下，ATOM常用编辑器快捷键/" data-id="ck9zc0vdp0005q0plt44bwdzz" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2016/05/11/windows下，ATOM常用编辑器快捷键/" data-id="ckcttnsqj0001dgplzxj1hiq8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
@@ -790,185 +840,10 @@ $ git reset --hard 希望回退的版本号</code></pre><blockquote>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2016/05/05/Git命令/" data-id="ck9zc0vdg0001q0pld2696zhq" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2016/05/05/Git命令/" data-id="ckcttnsq90000dgplq3z7q1mr" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="default-基本shell命令" class="article article-type-default" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/05/05/基本shell命令/" class="article-date">
-  <time datetime="2016-05-04T16:00:00.000Z" itemprop="datePublished">2016-05-05</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/周边/">周边</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/05/基本shell命令/">基本SHELL命令使用</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><h3 id="Shell-是什么"><a href="#Shell-是什么" class="headerlink" title="Shell 是什么"></a>Shell 是什么</h3><p>关于 shell, 广义的解释是 —— shell 是介于用户与系统之间，帮助用户与系统进行沟通的工具。除了文字模式的 shell 外，GNOME 这类图形界面也属于 shell 的范畴。不过我们通常提到 shell 时都是指狭义的 shell，即文字模式的 shell。</p>
-<h3 id="为什么要学习-shell"><a href="#为什么要学习-shell" class="headerlink" title="为什么要学习 shell"></a>为什么要学习 shell</h3><ul>
-<li>尽管图形用户界面很强大，但它毕竟也只是一个程序套件，shell 的功能和能执行的任务则比图形界面要 <code>强得多</code></li>
-<li>shell 是文字模式，因此远程登录和传输的速度比图形界面 <code>更快</code></li>
-<li>shell 使用 <code>更方便</code> 。在图形界面需要打开许多窗口执行许多次点击的任务，使用 shell 也许只需要简单几个命令就能完成了</li>
-</ul>
-<h3 id="在哪里可以运行Shell命令"><a href="#在哪里可以运行Shell命令" class="headerlink" title="在哪里可以运行Shell命令"></a>在哪里可以运行Shell命令</h3><ul>
-<li>Linux 下支持的 shell 有许多种，但我们只要学习最应用最广泛的 <code>bash shell</code> 就行了。而且现在主要的 Linux 发行版都使用 bash 做为默认的管理 shell。所以不论使用哪种 Linux 发行版，都无可避免地要学习 bash。</li>
-<li><code>Windows用户</code> 需要下载相应的客户端才可以运行，比如Git bash、SecureCRT等，系统自带的CMD就算了，那也就能使用dir等几个简单的。</li>
-<li>有 Mac 的同学之间在 Bash 下就可以运行。</li>
-</ul>
-<h2 id="1-cd-目录切换"><a href="#1-cd-目录切换" class="headerlink" title="1.cd 目录切换"></a>1.cd 目录切换</h2><p>注意目录分隔符为“/”，与dos相反</p>
-<h3 id="格式：cd-dirname"><a href="#格式：cd-dirname" class="headerlink" title="格式：cd dirname"></a>格式：cd dirname</h3><pre><code># 比如我们要进入到g盘
-$ cd /g
-
-# 到当前目录的上一级
-$ cd ../
-
-# 到当前目录的上上级
-$ cd ../../
-
-# 到当前用户目录
-$ cd ~
-
-# 比如我们要进入到d盘的website目录
-$ cd /d/website</code></pre><blockquote>
-<p>快捷方式：打出we后按一下tab键，会自动补全目录，有相同we开头的多个目录的话，按2下tab键，会列出所有符合的目录</p>
-</blockquote>
-<h2 id="2-mkdir-新建文件夹"><a href="#2-mkdir-新建文件夹" class="headerlink" title="2.mkdir 新建文件夹"></a>2.mkdir 新建文件夹</h2><pre><code>$ mkdir dirname
-$ mkdir website</code></pre><h2 id="3-touch-创建文件"><a href="#3-touch-创建文件" class="headerlink" title="3.touch 创建文件"></a>3.touch 创建文件</h2><pre><code>$ touch .gitignore
-$ touch a.js b.html c.css</code></pre><h2 id="4-ls-显示文件"><a href="#4-ls-显示文件" class="headerlink" title="4.ls 显示文件"></a>4.ls 显示文件</h2><p>命令格式：ls [option] file</p>
-<pre><code># 显示详细列表
-$ ls -l
-
-# ls -l的简写
-$ ll
-
-# 显示所有文件，包含隐藏文件（以. 起头的文件名）
-$ ls -a
-
-# 显示所有文件，包含隐藏文件的详细列表
-$ ls -al
-
-# 显示文件及所有子目录
-$ ls -R
-
-$ 显示文件（后跟*）和目录（后跟/）
-$ ls -F
-
-# 与l选项合用，显示目录名而非其内容
-$ ls -d</code></pre><blockquote>
-<p>ll查看的文件详细列表详解 <br><br>ex1. <code>-rw-r--r--</code> 1 Administrator 197121   147 五月  5 15:09 _config.yml <br><br>ex2. <code>drwxr-xr-x</code> 1 Administrator 197121     0 五月  5 12:11 images/ <br><br>-rw-r–r–  &amp; drwxr-xr-x  标明当前文件是什么状态 <br><br>第一个字符： - or d ===&gt; - 标明是一个文件，d 表示是文件夹 <br><br>第二个字符： r ===&gt; read, 可读 <br><br>第三个字符： w ===&gt; write, 可写 <br><br>第四个字符： - or x ===&gt; x = exec, 可执行， - 不可执行 <br><br>2-4位是rwx的话，权限是111</p>
-</blockquote>
-<h2 id="5-pwd-显示当前路径"><a href="#5-pwd-显示当前路径" class="headerlink" title="5.pwd 显示当前路径"></a>5.pwd 显示当前路径</h2><pre><code>$ pwd</code></pre><h2 id="6-cat-显示文件内容"><a href="#6-cat-显示文件内容" class="headerlink" title="6.cat 显示文件内容"></a>6.cat 显示文件内容</h2><pre><code># 格式：cat filename
-$ cat a.js</code></pre><h2 id="7-rm-删除文件或目录"><a href="#7-rm-删除文件或目录" class="headerlink" title="7.rm 删除文件或目录"></a>7.rm 删除文件或目录</h2><p>命令格式： <code>rm [-r] filename (filename 可为档名，或档名缩写符号.)</code></p>
-<pre><code># 删除档名为 file1 之文档.
-$ rm file1
-
-# 删除档名中有五个字元，前四个字元为file 之所有文档.
-$ rm file?
-
-# 删除档名中，以 f 为字首之所有文档.
-$ rm f*
-
-# 删除当前目录下所有js文档
-$ rm *.js
-
-# 删除目录 dir1，及其下所有文档及子目录.
-$ rm -r dir1
-
-# 删除目录 dir1下所有js文件
-$ rm -rf dir1/*.js</code></pre><h2 id="8-cp-文档的复制"><a href="#8-cp-文档的复制" class="headerlink" title="8.cp 文档的复制"></a>8.cp 文档的复制</h2><p>命令格式: <code>cp [-r] source destination</code></p>
-<pre><code># 将文档 file1 复制成 file2
-$ cp file1 file2
-
-# 将文档 file1 复制到目录 dir1 下，文件名仍为 file1.
-$ cp file1 dir1
-
-# 将目录 /tmp 下的文档 file1复制到现行目录下，文件名仍为 file1.
-$ cp /tmp/file1 .
-
-# 将目录 /tmp 下的文档 file1现行目录下，档名为file2
-$ cp /tmp/file1 file2
-
-# (recursive copy) 复制整个目录.
-$ cp -r dir1 
-
-# 复制dir1整个目录下的文件到dir2
-$ cp -R dir1 dir2
-
-// -R复制文件夹的时候才需要，复制多个文件的话，以空格的方式，也可以用正则</code></pre><h2 id="9-mv-移动文件"><a href="#9-mv-移动文件" class="headerlink" title="9.mv 移动文件"></a>9.mv 移动文件</h2><p>命令格式： <code>mv source destination</code></p>
-<pre><code># 将文档 file1，更改档名为 file2.
-$ mv file1 file2
-
-# 将文档 file1，移到目录 dir1 下，档名仍为 file1.
-$ mv file1 dir1
-
-# 若目录 dir2 存在，则将目录 dir1及其所有档案和子目录移到目录 dir2 下，新目录名称为 dir1.若目录dir2 不存在，则将dir1，及其所有文档和子目录，更改为目录 dir2.
-$ mv dir1 dir2</code></pre><h2 id="10-history-—-查看刚刚输入的所有命令"><a href="#10-history-—-查看刚刚输入的所有命令" class="headerlink" title="10.history  —  查看刚刚输入的所有命令"></a>10.history  —  查看刚刚输入的所有命令</h2><pre><code>$ history</code></pre><h2 id="11-grep-搜索"><a href="#11-grep-搜索" class="headerlink" title="11.grep 搜索"></a>11.grep 搜索</h2><pre><code>$ grep string filename
-# 在a.js文件中查找===字符串，并且显示行号
-$ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="#12-vim-编辑器" class="headerlink" title="12.vim 编辑器"></a>12.vim 编辑器</h2><h3 id="命令状态："><a href="#命令状态：" class="headerlink" title="命令状态："></a>命令状态：</h3><ul>
-<li>j,k,h,l:上下左右</li>
-<li>0： 行首</li>
-<li>$: 行尾</li>
-<li>i,I :插入命令，i 在当前光标处插入 I 行首插入</li>
-<li>a,A:追加命令，a 在当前光标后追加，A 在行末追加</li>
-<li>o,O:打开命令，o 在当前行下打开一行，O在当前行上插入一行</li>
-<li>r,R :替换命令，r 替换当前光标处字符，R从光标处开始替换</li>
-<li>数字s: 替换指定数量字符</li>
-<li>x: 删除光标处字符</li>
-<li>dd: 删除当前行</li>
-<li>d0: 删除光标前半行</li>
-<li>d$: 删除光标后半行</li>
-<li>ctrl+f :后翻页</li>
-<li>ctrl+b:前翻页</li>
-<li>G : 文件尾</li>
-<li>数字G: 数字所指定行</li>
-<li>/string 查找字符串</li>
-<li>N 反向继续查找</li>
-<li>% 查找对应括号</li>
-<li>u 取消上次操作</li>
-<li>ex命令状态</li>
-<li>：0 文件首</li>
-<li>：1,5 copy 7 块拷贝</li>
-<li>：1，5 del 块删除</li>
-<li>：1，5 move 7 块移动</li>
-<li>：1，$s/string1/string2/g 全文件查找string1并替换为string2</li>
-<li>：wq! 存盘退出 w = write</li>
-<li>：q! 不存盘直接强制退出 q = quit</li>
-</ul>
-<h2 id="小技巧"><a href="#小技巧" class="headerlink" title="小技巧"></a>小技巧</h2><h3 id="设置options"><a href="#设置options" class="headerlink" title="设置options"></a>设置options</h3><p>鼠标右键点击git bash 菜单栏，选择options可以进行设置</p>
-<h4 id="设置-鼠标右键粘贴"><a href="#设置-鼠标右键粘贴" class="headerlink" title="设置 鼠标右键粘贴"></a>设置 鼠标右键粘贴</h4><p>mouse &gt; Right click action &gt; Paste &gt; ok</p>
-<p>设置好友，鼠标左键选择区域直接复制，点击右键直接粘贴</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2016/05/05/基本shell命令/" data-id="ck9zc0vdt0006q0pli7p1emja" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li></ul>
 
     </footer>
   </div>
@@ -981,7 +856,7 @@ $ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/2/">&laquo; 上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    <a class="extend prev" rel="prev" href="/page/2/">&laquo; 上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">下一页 &raquo;</a>
   </nav>
 
 </section>
@@ -993,6 +868,10 @@ $ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/05/11/mangoDB/">mongoDB</a>
+          </li>
         
           <li>
             <a href="/2020/04/27/dart/">Dart 入门</a>
@@ -1063,11 +942,11 @@ $ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="
           </li>
         
           <li>
-            <a href="/2019/10/14/node模块加载原理/">Node模块加载原理</a>
+            <a href="/2019/10/14/node核心模块-简述/">Node核心模块 - 简述</a>
           </li>
         
           <li>
-            <a href="/2019/10/14/node核心模块-简述/">Node核心模块 - 简述</a>
+            <a href="/2019/10/14/node模块加载原理/">Node模块加载原理</a>
           </li>
         
           <li>
@@ -1123,7 +1002,7 @@ $ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Dart/">Dart</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node/">Node</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/es6/">es6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/个人/">个人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/周边/">周边</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Dart/">Dart</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node/">Node</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/es6/">es6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongoDB/">mongoDB</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/个人/">个人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/周边/">周边</a></li></ul>
     </div>
   </div>
 
@@ -1133,7 +1012,7 @@ $ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node/">Node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ast/">ast</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/buffer/">buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/core/">core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/event-loop/">event loop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fs/">fs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/happyChong/">happyChong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loader/">loader</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/module/">module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextTick/">nextTick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/path/">path</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pm2/">pm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/process/">process</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/util/">util</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vm/">vm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单线程/">单线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node/">Node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ast/">ast</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/buffer/">buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/core/">core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/event-loop/">event loop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fs/">fs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/happyChong/">happyChong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loader/">loader</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/module/">module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongoDB/">mongoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextTick/">nextTick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/path/">path</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pm2/">pm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/process/">process</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/util/">util</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vm/">vm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单线程/">单线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
     </div>
   </div>
 
@@ -1143,7 +1022,7 @@ $ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventLoop/" style="font-size: 13.33px;">EventLoop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/ast/" style="font-size: 10px;">ast</a> <a href="/tags/buffer/" style="font-size: 10px;">buffer</a> <a href="/tags/class/" style="font-size: 13.33px;">class</a> <a href="/tags/core/" style="font-size: 10px;">core</a> <a href="/tags/event-loop/" style="font-size: 13.33px;">event loop</a> <a href="/tags/events/" style="font-size: 10px;">events</a> <a href="/tags/fs/" style="font-size: 16.67px;">fs</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/happyChong/" style="font-size: 10px;">happyChong</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/loader/" style="font-size: 10px;">loader</a> <a href="/tags/module/" style="font-size: 10px;">module</a> <a href="/tags/nextTick/" style="font-size: 10px;">nextTick</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/path/" style="font-size: 10px;">path</a> <a href="/tags/pm2/" style="font-size: 10px;">pm2</a> <a href="/tags/process/" style="font-size: 10px;">process</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/util/" style="font-size: 10px;">util</a> <a href="/tags/vm/" style="font-size: 10px;">vm</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 20px;">webpack</a> <a href="/tags/单线程/" style="font-size: 10px;">单线程</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a>
+      <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventLoop/" style="font-size: 13.33px;">EventLoop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/ast/" style="font-size: 10px;">ast</a> <a href="/tags/buffer/" style="font-size: 10px;">buffer</a> <a href="/tags/class/" style="font-size: 13.33px;">class</a> <a href="/tags/core/" style="font-size: 10px;">core</a> <a href="/tags/event-loop/" style="font-size: 13.33px;">event loop</a> <a href="/tags/events/" style="font-size: 10px;">events</a> <a href="/tags/fs/" style="font-size: 16.67px;">fs</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/happyChong/" style="font-size: 10px;">happyChong</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/loader/" style="font-size: 10px;">loader</a> <a href="/tags/module/" style="font-size: 10px;">module</a> <a href="/tags/mongoDB/" style="font-size: 10px;">mongoDB</a> <a href="/tags/nextTick/" style="font-size: 10px;">nextTick</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/path/" style="font-size: 10px;">path</a> <a href="/tags/pm2/" style="font-size: 10px;">pm2</a> <a href="/tags/process/" style="font-size: 10px;">process</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/util/" style="font-size: 10px;">util</a> <a href="/tags/vm/" style="font-size: 10px;">vm</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 20px;">webpack</a> <a href="/tags/单线程/" style="font-size: 10px;">单线程</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a>
     </div>
   </div>
 
@@ -1152,7 +1031,7 @@ $ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li></ul>
     </div>
   </div>
 
