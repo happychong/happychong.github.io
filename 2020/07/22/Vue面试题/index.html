@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="快乐虫の地带">
 <meta property="og:description" content="Vue 面试题">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-07-22T07:43:39.656Z">
+<meta property="og:updated_time" content="2022-03-30T12:48:03.619Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Vue 面试题">
 <meta name="twitter:description" content="Vue 面试题">
@@ -99,11 +99,40 @@
 <h2 id="5-v-if-和-v-show-的区别"><a href="#5-v-if-和-v-show-的区别" class="headerlink" title="5 v-if 和 v-show 的区别"></a>5 v-if 和 v-show 的区别</h2><p>v-if：dom是否创建</p>
 <p>v-show：dom是否在界面中可见 style</p>
 <h2 id="6-Vue-中-key-值的作用"><a href="#6-Vue-中-key-值的作用" class="headerlink" title="6 Vue 中 key 值的作用"></a>6 Vue 中 key 值的作用</h2><p>更新视图，key要保证唯一性</p>
-<h2 id="7-computed-和-watch-有什么区别？"><a href="#7-computed-和-watch-有什么区别？" class="headerlink" title="7 computed 和 watch 有什么区别？"></a>7 computed 和 watch 有什么区别？</h2><h2 id="8-Vue-的生命周期，每个生命周期具体适合哪些场景？"><a href="#8-Vue-的生命周期，每个生命周期具体适合哪些场景？" class="headerlink" title="8 Vue 的生命周期，每个生命周期具体适合哪些场景？"></a>8 Vue 的生命周期，每个生命周期具体适合哪些场景？</h2><h2 id="9-Vue-中-ref-是什么？"><a href="#9-Vue-中-ref-是什么？" class="headerlink" title="9 Vue 中 ref 是什么？"></a>9 Vue 中 ref 是什么？</h2><h2 id="10-Vue-动画的生命周期？"><a href="#10-Vue-动画的生命周期？" class="headerlink" title="10 Vue 动画的生命周期？"></a>10 Vue 动画的生命周期？</h2><h2 id="11-Vue-如何编写自定义指令？"><a href="#11-Vue-如何编写自定义指令？" class="headerlink" title="11 Vue 如何编写自定义指令？"></a>11 Vue 如何编写自定义指令？</h2><h2 id="12"><a href="#12" class="headerlink" title="12"></a>12</h2><h2 id="13"><a href="#13" class="headerlink" title="13"></a>13</h2>
+<h2 id="7-computed-和-watch-有什么区别？"><a href="#7-computed-和-watch-有什么区别？" class="headerlink" title="7 computed 和 watch 有什么区别？"></a>7 computed 和 watch 有什么区别？</h2><h2 id="8-Vue-的生命周期，每个生命周期具体适合哪些场景？"><a href="#8-Vue-的生命周期，每个生命周期具体适合哪些场景？" class="headerlink" title="8 Vue 的生命周期，每个生命周期具体适合哪些场景？"></a>8 Vue 的生命周期，每个生命周期具体适合哪些场景？</h2><p>create  beforeCreate：<br>          初始化好了基础属性，基础事件（$on $emit 等），<br>          不包含vm的数据(data)、方法、watch等，所以基本上业务逻辑不需要使用这个钩子，<br>          混合 - 如希望在每个组件中增加一些特定的属性，可以采用这个钩子<br>        created：<br>          创建完成 - 当前这个组件实例，已经实现了数据劫持（数据已经加了get，set），<br>          并把方法、计算属性都挂载到了实例上<br>          但是不能获取到真是的dom元素，不能操作dom<br>Mount   beforeMount：<br>          挂载之前，方法中会调用render方法<br>        mounted：<br>          当前组件挂载完成 - 有了真实的dom，<br>          这个过程中，如果有子组件，会走子组件的生命周期，洋葱模式，<br>          一般把ajax的操作，在这里完成，既能得到vm数据，又有$el方便操作。<br>Update  beforeUpdate：<br>          更新之前 - Vue的更新是diff更新，需要更新的数据在视图中显示，才会触发beforeUpdate<br>        updated：<br>          更新完成，这里不要再更新数据，可能会死循环。<br>Destroy beforeDestroy：<br>          销毁之前 - 可以做事件移除 清空定时器等。<br>        destroyed：<br>          销毁后</p>
+<p>触发销毁的方式：- 销毁后会默认移除所有观察者，移除监听事件（watcher.active = false），视图并不会刷新<br>  1-手动移除组件（vm.$destroy()）<br>  2-路由切换</p>
+<h2 id="9-Vue-中-ref-是什么？"><a href="#9-Vue-中-ref-是什么？" class="headerlink" title="9 Vue 中 ref 是什么？"></a>9 Vue 中 ref 是什么？</h2><p>组件上是vue组件，dom上指dom元素，for循环出来的是类数组</p>
+<h2 id="10-Vue-动画的生命周期？"><a href="#10-Vue-动画的生命周期？" class="headerlink" title="10 Vue 动画的生命周期？"></a>10 Vue 动画的生命周期？</h2><h2 id="11-Vue-如何编写自定义指令？"><a href="#11-Vue-如何编写自定义指令？" class="headerlink" title="11 Vue 如何编写自定义指令？"></a>11 Vue 如何编写自定义指令？</h2><h2 id="12-vuex数据持久化"><a href="#12-vuex数据持久化" class="headerlink" title="12 vuex数据持久化"></a>12 vuex数据持久化</h2><p>用插件（vuex-persists）解决</p>
+<p>plugins—plugins就是函数，参数会默认传当前的store实例</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> persists = <span class="function">(<span class="params">store</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// subscribe - 订阅 commit的时候会触发</span></span><br><span class="line">  store.subscribe(<span class="function">(<span class="params">mutation, state</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 这里可以把需要记录的值存到localStotage，然后页面初始化的时候再取值，初始化</span></span><br><span class="line">    <span class="built_in">console</span>.log(mutation);</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> Vuex.Store(&#123;</span><br><span class="line">  plugins: [ persists ],</span><br><span class="line">  modules: &#123;&#125;,</span><br><span class="line">  state: &#123;</span><br><span class="line">    a: <span class="number">1</span></span><br><span class="line">  &#125;,</span><br><span class="line">  getters: &#123;&#125;,</span><br><span class="line">  mutations: &#123;&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="13-移动端项目"><a href="#13-移动端项目" class="headerlink" title="13 移动端项目"></a>13 移动端项目</h2><h3 id="单位"><a href="#单位" class="headerlink" title="单位"></a>单位</h3><p>px (不能跟随屏幕大小而改变)<br>em (不好计算)<br>rem (主流)<br>vh vw (主流)</p>
+<p>淘宝解决方案：px2rem 插件解决（可以把px 转化成rem，开发中只写px就好）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm i lib-flexible --save </span><br><span class="line">npm install --save-dev px2rem-loader</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 main.js中引入</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">'lib-flexible/flexible'</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 配置 vue.config.js</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports= &#123;</span><br><span class="line">  chainWebpack: <span class="function"><span class="params">config</span> =&gt;</span> &#123;</span><br><span class="line">    config.module.rule(<span class="string">'stylus'</span>).test(<span class="regexp">/\.stylus/</span>).oneOf(<span class="string">'vue'</span>)</span><br><span class="line">    .resourceQuery(<span class="regexp">/\?vue/</span>).use(<span class="string">'px2rem'</span>).loader(<span class="string">'px2rem-loader'</span>).options(&#123;<span class="attr">remUnit</span>: <span class="number">75</span>&#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="布局-flex"><a href="#布局-flex" class="headerlink" title="布局 flex"></a>布局 flex</h3><ul>
+<li>flex-direction  :  row / row-reverse column / column-reverse</li>
+<li>flex-wrap : nowrap(默认) / wrap </li>
+<li>justify-content : 主轴对齐方式 flex-start flex-end center space-between space-around</li>
+<li>align-items : 设置交叉轴的对齐方式 flex-start flex-end center baseline stretch</li>
+<li>align-content : 轴线对齐方式 多行对齐方式 flex-start flex-end center stetch space-between space-around</li>
+<li>order : 控制元素顺序 默认0 可以设置元素的顺序</li>
+<li>flex-grow : 控制元素放大比例</li>
+<li>flex-shrink : 控制元素缩小比例</li>
+<li>flex-basis : 设置元素固定空间或自动空间的占比</li>
+<li>align-self : 重写align-items父属性</li>
+</ul>
+<h2 id="主流组件库"><a href="#主流组件库" class="headerlink" title="主流组件库"></a>主流组件库</h2><h3 id="pc"><a href="#pc" class="headerlink" title="pc"></a>pc</h3><p>elementUI iview</p>
+<h3 id="移动端"><a href="#移动端" class="headerlink" title="移动端"></a>移动端</h3><p>vant mint-ui(官方不维护了) and-vue vube-ui(滴滴出的)</p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2020/07/22/Vue面试题/" data-id="ckggbczvw0024gcplfli5jq9n" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2020/07/22/Vue面试题/" data-id="cl1dl9ze5002dccnumky0wcox" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/面试题/">面试题</a></li></ul>
@@ -114,10 +143,19 @@
     
 <nav id="article-nav">
   
+    <a href="/2020/07/22/Vue基础/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Vue 基础知识
+        
+      </div>
+    </a>
   
-    <a href="/2020/07/22/Vue基础/" id="article-nav-older" class="article-nav-link-wrap">
+  
+    <a href="/2020/05/11/mangoDB/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Vue 基础知识</div>
+      <div class="article-nav-title">mongoDB</div>
     </a>
   
 </nav>
@@ -136,11 +174,35 @@
       <ul>
         
           <li>
-            <a href="/2020/07/22/Vue面试题/">Vue 面试题</a>
+            <a href="/2022/03/29/2018-1-11-HEXO-hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-3-20-webpack原理/">webpack 原理与实现</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-3-25-webpack-loader原理/">webpack - loader 原理与实现</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/05/typescript/">typescript</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/05/面试题总结（非Vue）/">2021-08-05-面试题总结（非Vue）</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/22/git bash arrow 不能选择解决方案(windows)/">git bash arrow 不能选择解决方案(windows)</a>
           </li>
         
           <li>
             <a href="/2020/07/22/Vue基础/">Vue 基础知识</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/22/Vue面试题/">Vue 面试题</a>
           </li>
         
           <li>
@@ -165,18 +227,6 @@
         
           <li>
             <a href="/2020/03/30/webpack源码编译流程/">webpack - 源码编译流程</a>
-          </li>
-        
-          <li>
-            <a href="/2020/03/25/2020-3-25-webpack-loader原理/">webpack - loader 原理与实现</a>
-          </li>
-        
-          <li>
-            <a href="/2020/03/20/2020-3-20-webpack原理/">webpack 原理与实现</a>
-          </li>
-        
-          <li>
-            <a href="/2020/03/17/2018-1-11-hello-world/">Hello World</a>
           </li>
         
           <li>
@@ -228,11 +278,11 @@
           </li>
         
           <li>
-            <a href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
+            <a href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
           </li>
         
           <li>
-            <a href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
+            <a href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
           </li>
         
           <li>
@@ -286,7 +336,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node/">Node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/">Vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ast/">ast</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/buffer/">buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/core/">core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/event-loop/">event loop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fs/">fs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/happyChong/">happyChong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loader/">loader</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/module/">module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongoDB/">mongoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextTick/">nextTick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/path/">path</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pm2/">pm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/process/">process</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/util/">util</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vm/">vm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单线程/">单线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试题/">面试题</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node/">Node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/">Vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ast/">ast</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/buffer/">buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/core/">core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/event-loop/">event loop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fs/">fs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/happyChong/">happyChong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loader/">loader</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/module/">module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongoDB/">mongoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextTick/">nextTick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/path/">path</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pm2/">pm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/process/">process</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typescript/">typescript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/util/">util</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vm/">vm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单线程/">单线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试题/">面试题</a></li></ul>
     </div>
   </div>
 
@@ -296,7 +346,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventLoop/" style="font-size: 13.33px;">EventLoop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/ast/" style="font-size: 10px;">ast</a> <a href="/tags/buffer/" style="font-size: 10px;">buffer</a> <a href="/tags/class/" style="font-size: 13.33px;">class</a> <a href="/tags/core/" style="font-size: 10px;">core</a> <a href="/tags/event-loop/" style="font-size: 13.33px;">event loop</a> <a href="/tags/events/" style="font-size: 10px;">events</a> <a href="/tags/fs/" style="font-size: 16.67px;">fs</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/happyChong/" style="font-size: 10px;">happyChong</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/loader/" style="font-size: 10px;">loader</a> <a href="/tags/module/" style="font-size: 10px;">module</a> <a href="/tags/mongoDB/" style="font-size: 10px;">mongoDB</a> <a href="/tags/nextTick/" style="font-size: 10px;">nextTick</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/path/" style="font-size: 10px;">path</a> <a href="/tags/pm2/" style="font-size: 10px;">pm2</a> <a href="/tags/process/" style="font-size: 10px;">process</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/util/" style="font-size: 10px;">util</a> <a href="/tags/vm/" style="font-size: 10px;">vm</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 20px;">webpack</a> <a href="/tags/单线程/" style="font-size: 10px;">单线程</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a> <a href="/tags/面试题/" style="font-size: 10px;">面试题</a>
+      <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventLoop/" style="font-size: 13.33px;">EventLoop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/ast/" style="font-size: 10px;">ast</a> <a href="/tags/buffer/" style="font-size: 10px;">buffer</a> <a href="/tags/class/" style="font-size: 13.33px;">class</a> <a href="/tags/core/" style="font-size: 10px;">core</a> <a href="/tags/event-loop/" style="font-size: 13.33px;">event loop</a> <a href="/tags/events/" style="font-size: 10px;">events</a> <a href="/tags/fs/" style="font-size: 16.67px;">fs</a> <a href="/tags/git/" style="font-size: 16.67px;">git</a> <a href="/tags/happyChong/" style="font-size: 10px;">happyChong</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/loader/" style="font-size: 10px;">loader</a> <a href="/tags/module/" style="font-size: 10px;">module</a> <a href="/tags/mongoDB/" style="font-size: 10px;">mongoDB</a> <a href="/tags/nextTick/" style="font-size: 10px;">nextTick</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/path/" style="font-size: 10px;">path</a> <a href="/tags/pm2/" style="font-size: 10px;">pm2</a> <a href="/tags/process/" style="font-size: 10px;">process</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/util/" style="font-size: 10px;">util</a> <a href="/tags/vm/" style="font-size: 10px;">vm</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 20px;">webpack</a> <a href="/tags/单线程/" style="font-size: 10px;">单线程</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a> <a href="/tags/面试题/" style="font-size: 13.33px;">面试题</a>
     </div>
   </div>
 
@@ -305,7 +355,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li></ul>
     </div>
   </div>
 
@@ -318,7 +368,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2020 happyChong<br>
+      &copy; 2022 happyChong<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
