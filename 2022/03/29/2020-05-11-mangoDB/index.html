@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>mongoDB | 快乐虫の地带</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="mongoDB 基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mongoDB">
+<meta property="og:url" content="http://happychong.github.io/2022/03/29/2020-05-11-mangoDB/index.html">
+<meta property="og:site_name" content="快乐虫の地带">
+<meta property="og:description" content="mongoDB 基础">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-03-29T02:49:29.886Z">
+<meta property="article:modified_time" content="2022-03-29T02:11:18.902Z">
+<meta property="article:author" content="happyChong">
+<meta property="article:tag" content="mongoDB">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="快乐虫の地带" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">快乐虫の地带</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://happychong.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="default-2020-05-11-mangoDB" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/03/29/2020-05-11-mangoDB/" class="article-date">
+  <time datetime="2022-03-29T02:49:29.886Z" itemprop="datePublished">2022-03-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/mongoDB/">mongoDB</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      mongoDB
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1><h2 id="1-启动Mongodb服务"><a href="#1-启动Mongodb服务" class="headerlink" title="1 启动Mongodb服务"></a>1 启动Mongodb服务</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装后，进入安装目录的bin目录下，cmd窗口执行如下代码</span></span><br><span class="line"><span class="comment"># ../data/db 是你要存放数据的目录，要先创建出来</span></span><br><span class="line">mongod --dbpath=../data/db</span><br><span class="line"><span class="comment"># 正常的话，会打印出 MongoDB starting : pid=4548 port=27017 dbpath=../data/db 64-bit host=AFOGL-608301248</span></span><br><span class="line"><span class="comment"># pid=4548 : 是进程id， port=27017 ： 是监听的端口号</span></span><br><span class="line"><span class="comment"># 当看到 waiting for connections on port 27017 就代表启动成功了，这个窗口不要关闭哦，关闭了数据库就down掉了，之后就无法连接成功了</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="数据库客户端的基本操作"><a href="#数据库客户端的基本操作" class="headerlink" title="数据库客户端的基本操作"></a>数据库客户端的基本操作</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装目录的bin目录下，cmd窗口执行 mongo 命令就可以开启一个mongo客户端</span></span><br><span class="line">mongo</span><br><span class="line"><span class="comment"># 开启后，就可以在这里执行命令，对数据库进行增删改查了</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看当前数据库</span></span><br><span class="line">db </span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看所有数据库</span></span><br><span class="line">show dbs;</span><br><span class="line"></span><br><span class="line"><span class="comment"># use - 切换数据库</span></span><br><span class="line">use school;</span><br><span class="line"><span class="comment"># 切换到 school 数据库下，如果当前没有 school 库，需要真正的添加数据后，school 数据库才会创建成功</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># users集合（表）中，插入一个文档（一条数据），users集合没有的话，会自动创建</span></span><br><span class="line">db.users.insert(&#123;name:<span class="string">&#x27;zhangsan&#x27;</span>, age:10&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查找 users集合中的所有文档</span></span><br><span class="line">db.users.find();</span><br></pre></td></tr></table></figure>
+
+<p>可以看到以上命令行的方式操作数据库比较麻烦，下面介绍用node操作数据库</p>
+<h2 id="node-操作-mongoDB"><a href="#node-操作-mongoDB" class="headerlink" title="node 操作 mongoDB"></a>node 操作 mongoDB</h2><h3 id="安装依赖包-mongoose"><a href="#安装依赖包-mongoose" class="headerlink" title="安装依赖包 mongoose"></a>安装依赖包 mongoose</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在一个 npm 项目的目录下执行以下命令</span></span><br><span class="line">npm install mongoose -S</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用mongoose-连接数据库"><a href="#使用mongoose-连接数据库" class="headerlink" title="使用mongoose 连接数据库"></a>使用mongoose 连接数据库</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// npm 项目目录下 src/connection.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 引入 mongoose 模块</span></span><br><span class="line"><span class="keyword">let</span> mongoose = <span class="built_in">require</span>(<span class="string">&#x27;mongoose&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建数据库连接</span></span><br><span class="line"><span class="keyword">let</span> conn = mongoose.<span class="title function_">createConnection</span>(</span><br><span class="line">  <span class="string">&#x27;mongodb://127.0.0.1:27017/cms&#x27;</span> <span class="comment">// 默认端口就是27017</span></span><br><span class="line">);</span><br><span class="line">conn.<span class="title function_">on</span>(<span class="string">&#x27;open&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;成功连接到了数据库……………………恭喜你。&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line">conn.<span class="title function_">on</span>(<span class="string">&#x27;error&#x27;</span>, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;连接数据库失败：&#x27;</span>, err);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Schema"><a href="#Schema" class="headerlink" title="Schema"></a>Schema</h3><p>Schema 是数据库集合的模型骨架，定义了集合中的字段的名称和类型以及默认值等信息。</p>
+<h4 id="Schema-Type"><a href="#Schema-Type" class="headerlink" title="Schema.Type"></a>Schema.Type</h4><ul>
+<li>Node 中的基本数据类型都属于 Schema.Type</li>
+<li><ul>
+<li>String (字符串)</li>
+</ul>
+</li>
+<li><ul>
+<li>Date (日期)</li>
+</ul>
+</li>
+<li><ul>
+<li>Number(数值)</li>
+</ul>
+</li>
+<li><ul>
+<li>Boolean(布尔)</li>
+</ul>
+</li>
+<li><ul>
+<li>Buffer(二进制)</li>
+</ul>
+</li>
+<li><ul>
+<li>null</li>
+</ul>
+</li>
+<li><ul>
+<li>Array(数组)</li>
+</ul>
+</li>
+<li>Mongoose 定义的自己的类型</li>
+<li><ul>
+<li>ObjectId(主键)</li>
+</ul>
+</li>
+<li><ul>
+<li>arrOfString([String])</li>
+</ul>
+</li>
+<li><ul>
+<li>arrOfNumber([Number])</li>
+</ul>
+</li>
+<li><ul>
+<li>arrOfDate([Date])</li>
+</ul>
+</li>
+<li><ul>
+<li>arrOfBugger([Buffer])</li>
+</ul>
+</li>
+<li><ul>
+<li>arrOfBoolean([Boolean])</li>
+</ul>
+</li>
+<li><ul>
+<li>arrOfObjectId([Schema.types.ObjectId])</li>
+</ul>
+</li>
+<li><ul>
+<li>nested({name: String}) 内嵌文档</li>
+</ul>
+</li>
+</ul>
+<h4 id="定义-Schema"><a href="#定义-Schema" class="headerlink" title="定义 Schema"></a>定义 Schema</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// npm 项目目录下 src/schema.js</span></span><br><span class="line"><span class="keyword">let</span> mongoose = <span class="built_in">require</span>(<span class="string">&#x27;mongoose&#x27;</span>);</span><br><span class="line"><span class="keyword">let</span> connection = <span class="built_in">require</span>(<span class="string">&#x27;./connection&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Schema定义 (对应集合中的文档)</span></span><br><span class="line"><span class="comment">// Schema 与数据无关，不能直接操作数据库</span></span><br><span class="line"><span class="keyword">let</span> <span class="title class_">UserSchema</span> = <span class="keyword">new</span> mongoose.<span class="title class_">Schema</span>(&#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="title class_">String</span>,</span><br><span class="line">  <span class="attr">age</span>: <span class="title class_">Number</span></span><br><span class="line">&#125;, &#123; <span class="attr">collection</span>: <span class="string">&#x27;UUser&#x27;</span>&#125;); <span class="comment">// 固定集合名为 user，不会自动转小写后转复数</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Model-模型"><a href="#Model-模型" class="headerlink" title="Model 模型"></a>Model 模型</h3><p>模型是一个总的概念，它代表整个集合，操作对象是整个集合，可以插入文档，查询集合，删除某些数据，批量操作</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// npm 项目目录下 src/schema.js</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// User 是模型的名字，之后可以用这个名字引用模型</span></span><br><span class="line"><span class="keyword">let</span> <span class="title class_">UserModel</span> = connection.<span class="title function_">model</span>(<span class="string">&#x27;User&#x27;</span>, <span class="title class_">UserSchema</span>);</span><br><span class="line"><span class="comment">// let UserModel2 = connection.model(&#x27;User&#x27;);</span></span><br><span class="line"><span class="comment">// connection.model 方法 2个参数--&gt;定义模型   1个参数--&gt;获取模型</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Model创建数据</span></span><br><span class="line"><span class="title class_">UserModel</span>.<span class="title function_">create</span>(&#123;<span class="attr">name</span>: <span class="string">&#x27;zf&#x27;</span>, <span class="attr">age</span>: <span class="number">11</span>&#125;, <span class="function">(<span class="params">err, doc</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// doc 保存成功后的文档对象</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;err::&#x27;</span>, err);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;doc::&#x27;</span>, doc);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="title class_">UserModel</span>.<span class="title function_">create</span>(&#123;<span class="attr">name</span>: <span class="string">&#x27;zf&#x27;</span>, <span class="attr">age</span>: <span class="number">10</span>&#125;).<span class="title function_">then</span>(<span class="function">(<span class="params">doc</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// doc 保存成功后的文档对象</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;doc::&#x27;</span>, doc);</span><br><span class="line">&#125;, <span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;err::&#x27;</span>, err);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="实体"><a href="#实体" class="headerlink" title="实体"></a>实体</h3><p>实体代表一个文档对象，它是单个的概念，只能操作自己</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// npm 项目目录下 src/schema.js</span></span><br><span class="line"><span class="comment">// 。。。 以上代码不再重复写，以下是新增代码</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建实体</span></span><br><span class="line"><span class="keyword">let</span> user1 = <span class="keyword">new</span> <span class="title class_">UserModel</span>(&#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;zhf&#x27;</span>,</span><br><span class="line">  <span class="attr">age</span>: <span class="number">1</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 保存实体</span></span><br><span class="line">user1.<span class="title function_">save</span>().<span class="title function_">then</span>(<span class="function"><span class="params">doc</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(doc);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="基础操作-增删改查"><a href="#基础操作-增删改查" class="headerlink" title="基础操作-增删改查"></a>基础操作-增删改查</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// npm 项目目录下 src/baseUse.js</span></span><br><span class="line"><span class="comment">// 基础使用</span></span><br><span class="line"><span class="keyword">let</span> mongoose = <span class="built_in">require</span>(<span class="string">&#x27;mongoose&#x27;</span>);</span><br><span class="line"><span class="keyword">let</span> connection = <span class="built_in">require</span>(<span class="string">&#x27;./connection&#x27;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="title class_">UserSchema</span> = <span class="keyword">new</span> mongoose.<span class="title class_">Schema</span>(&#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="title class_">String</span>,</span><br><span class="line">  <span class="attr">age</span>: <span class="title class_">Number</span></span><br><span class="line">&#125;, &#123; <span class="attr">collection</span>: <span class="string">&#x27;user&#x27;</span>&#125;);</span><br><span class="line"><span class="keyword">let</span> <span class="title class_">UserModel</span> = connection.<span class="title function_">model</span>(<span class="string">&#x27;User&#x27;</span>, <span class="title class_">UserSchema</span>);</span><br><span class="line">(<span class="keyword">async</span> <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// 用自执行 async 函数，以便可以用 await 方式写方法</span></span><br><span class="line">  <span class="comment">// *** 下面的增删改查代码，全部写在这里执行</span></span><br><span class="line"></span><br><span class="line">  process.<span class="title function_">exit</span>(<span class="number">0</span>); <span class="comment">// 结束连接数据库进程</span></span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<h4 id="创建数据"><a href="#创建数据" class="headerlink" title="创建数据"></a>创建数据</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一条&#123;name: &#x27;zf1&#x27;, age: 2&#125;数据</span></span><br><span class="line"><span class="keyword">let</span> res = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">create</span>(&#123;<span class="attr">name</span>: <span class="string">&#x27;zf1&#x27;</span>, <span class="attr">age</span>: <span class="number">2</span>&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="查找数据"><a href="#查找数据" class="headerlink" title="查找数据"></a>查找数据</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 查找所有name为&#x27;zf2&#x27;的数据</span></span><br><span class="line"><span class="keyword">let</span> docs = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">find</span>(&#123;<span class="attr">name</span>: <span class="string">&#x27;zf2&#x27;</span>&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改数据"><a href="#修改数据" class="headerlink" title="修改数据"></a>修改数据</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 把name为zf1的数据的age变成20</span></span><br><span class="line"><span class="keyword">let</span> updateRes = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">update</span>(&#123;<span class="attr">name</span>: <span class="string">&#x27;zf1&#x27;</span>&#125;, &#123;<span class="attr">age</span>: <span class="number">20</span>&#125;);</span><br><span class="line"><span class="comment">// UserModel.update（已经被废弃的方法，但仍可以用） 第2个参数是条件，第2个参数是更新后的值</span></span><br><span class="line"><span class="comment">// console.log(updateRes); // &#123; n: 1, nModified: 0, ok: 1 &#125;   n---匹配的条数  nModified---实际发生更新的条数</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> updateOneRes = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">updateOne</span>(&#123;<span class="attr">name</span>: <span class="string">&#x27;zf1&#x27;</span>&#125;, &#123;<span class="attr">age</span>: <span class="number">20</span>&#125;);</span><br><span class="line"><span class="comment">// updateOne - 不管找到多少条数据，只更新第一条数据</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> updateManyRes = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">updateMany</span>(&#123;<span class="attr">name</span>: <span class="string">&#x27;zf1&#x27;</span>&#125;, &#123;<span class="attr">age</span>: <span class="number">3</span>&#125;);</span><br><span class="line"><span class="comment">// updateMany - 找到多条数据，更新所有数据</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 删除所有name为zf1的数据</span></span><br><span class="line"><span class="keyword">let</span> removeRes = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">remove</span>(&#123;<span class="attr">name</span>: <span class="string">&#x27;zf1&#x27;</span>&#125;);</span><br><span class="line"><span class="comment">// remove （已经被废弃的方法，但仍可以用）会删除所有的匹配记录</span></span><br><span class="line"><span class="comment">// console.log(removeRes); // &#123; n: 5, ok: 1, deletedCount: 5 &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> deleteOneRes = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">deleteOne</span>(&#123;<span class="attr">name</span>: <span class="string">&#x27;zf1&#x27;</span>&#125;);</span><br><span class="line"><span class="comment">// deleteOne 只删除匹配到的第一条数据</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> deleteManyRes = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">deleteMany</span>(&#123;<span class="attr">name</span>: <span class="string">&#x27;zf3&#x27;</span>&#125;);</span><br><span class="line"><span class="comment">// deleteMany 删除所有匹配到的数据</span></span><br><span class="line"><span class="comment">// console.log(deleteManyRes); // &#123; n: 2, ok: 1, deletedCount: 2 &#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="查询详解"><a href="#查询详解" class="headerlink" title="查询详解"></a>查询详解</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// npm 项目目录下 src/search.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 查询详解</span></span><br><span class="line"><span class="keyword">let</span> mongoose = <span class="built_in">require</span>(<span class="string">&#x27;mongoose&#x27;</span>);</span><br><span class="line"><span class="keyword">let</span> connection = <span class="built_in">require</span>(<span class="string">&#x27;./connection&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="title class_">UserSchema</span> = <span class="keyword">new</span> mongoose.<span class="title class_">Schema</span>(&#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="title class_">String</span>,</span><br><span class="line">  <span class="attr">age</span>: <span class="title class_">Number</span></span><br><span class="line">&#125;, &#123; <span class="attr">collection</span>: <span class="string">&#x27;user&#x27;</span>&#125;);</span><br><span class="line"><span class="keyword">let</span> <span class="title class_">UserModel</span> = connection.<span class="title function_">model</span>(<span class="string">&#x27;User&#x27;</span>, <span class="title class_">UserSchema</span>);</span><br><span class="line"></span><br><span class="line">(<span class="keyword">async</span> <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// 用自执行 async 函数</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 先准备数据库数据</span></span><br><span class="line">  <span class="comment">// let users = [];</span></span><br><span class="line">  <span class="comment">// for (let i = 1; i &lt;= 10; i++) &#123;</span></span><br><span class="line">  <span class="comment">//   users.push(&#123;</span></span><br><span class="line">  <span class="comment">//     name: `zf$&#123;i&#125;`,</span></span><br><span class="line">  <span class="comment">//     age: i</span></span><br><span class="line">  <span class="comment">//   &#125;)</span></span><br><span class="line">  <span class="comment">// &#125;</span></span><br><span class="line">  <span class="comment">// await UserModel.create(users);</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 按属性过滤</span></span><br><span class="line">  <span class="keyword">let</span> findRes = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">find</span>(&#123;<span class="attr">name</span>: <span class="string">&#x27;zf1&#x27;</span>&#125;);</span><br><span class="line">  <span class="comment">// 查找1条</span></span><br><span class="line">  <span class="keyword">let</span> findOneRes = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">findOne</span>(&#123;&#125;);</span><br><span class="line">  <span class="comment">// 通过Id查找</span></span><br><span class="line">  <span class="keyword">let</span> findByIdRes = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">findById</span>(<span class="string">&#x27;5f115ecc38c3e0609c1da4a5&#x27;</span>);</span><br><span class="line">  <span class="comment">// 大于:      gt           great than</span></span><br><span class="line">  <span class="keyword">let</span> gtRes = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">find</span>(&#123;<span class="attr">age</span>: &#123;<span class="attr">$gt</span>: <span class="number">5</span>&#125;&#125;);</span><br><span class="line">  <span class="comment">// 小于:      lt           less than</span></span><br><span class="line">  <span class="keyword">let</span> ltRes = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">find</span>(&#123;<span class="attr">age</span>: &#123;<span class="attr">$lt</span>: <span class="number">5</span>&#125;&#125;);</span><br><span class="line">  <span class="comment">// 大于等于:   gte          great than or equal</span></span><br><span class="line">  <span class="keyword">let</span> geRes = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">find</span>(&#123;<span class="attr">age</span>: &#123;<span class="attr">$gte</span>: <span class="number">5</span>&#125;&#125;);</span><br><span class="line">  <span class="comment">// 小于等于:   le          less  than or equal</span></span><br><span class="line">  <span class="keyword">let</span> leRes = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">find</span>(&#123;<span class="attr">age</span>: &#123;<span class="attr">$lte</span>: <span class="number">5</span>&#125;&#125;);</span><br><span class="line">  <span class="comment">// 不等于:     ne          not equal</span></span><br><span class="line">  <span class="keyword">let</span> neRes = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">find</span>(&#123;<span class="attr">age</span>: &#123;<span class="attr">$ne</span>: <span class="number">5</span>&#125;&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 包含 in</span></span><br><span class="line">  <span class="keyword">let</span> inStrRes = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">find</span>(&#123;<span class="attr">age</span>: &#123;<span class="attr">$in</span>: <span class="number">6</span>&#125;&#125;);</span><br><span class="line">  <span class="comment">// 返回 age === 6 的数据</span></span><br><span class="line">  <span class="keyword">let</span> inArrRes = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">find</span>(&#123;<span class="attr">age</span>: &#123;<span class="attr">$in</span>: [<span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>]&#125;&#125;);</span><br><span class="line">  <span class="comment">// 返回 age === 5 || age === 6 || age === 7 的数据</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// or 或</span></span><br><span class="line">  <span class="keyword">let</span> orArrRes1 = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">find</span>(&#123;<span class="attr">$or</span>: [&#123;<span class="attr">name</span>: <span class="string">&#x27;zf1&#x27;</span>&#125;, &#123;<span class="attr">age</span>: <span class="number">7</span>&#125;]&#125;);</span><br><span class="line">  <span class="comment">// name === zf1 || age === 7 的数据</span></span><br><span class="line">  <span class="keyword">let</span> orArrRes2 = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">find</span>(&#123;<span class="attr">$or</span>: [</span><br><span class="line">    &#123;<span class="attr">age</span>: &#123;<span class="attr">$lt</span>: <span class="number">3</span>&#125;&#125;,</span><br><span class="line">    &#123;<span class="attr">age</span>: &#123;<span class="attr">$gt</span>: <span class="number">7</span>&#125;&#125;</span><br><span class="line">  ]&#125;);</span><br><span class="line">  <span class="comment">// age &lt; 3 || age &gt; 7 的数据</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 分页查询</span></span><br><span class="line">  <span class="keyword">let</span> pageSize = <span class="number">3</span>; <span class="comment">// 每页3条</span></span><br><span class="line">  <span class="keyword">let</span> pageNum = <span class="number">2</span>; <span class="comment">// 查询第2页</span></span><br><span class="line">  <span class="keyword">let</span> pageRes = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">find</span>(&#123;&#125;).<span class="title function_">sort</span>(&#123;<span class="attr">age</span>: <span class="number">1</span>&#125;).<span class="title function_">skip</span>((pageNum - <span class="number">1</span>) * pageSize).<span class="title function_">limit</span>(pageSize);</span><br><span class="line">  <span class="comment">// sort(&#123;age: 1&#125;) --&gt; 1：升序   -1：降序</span></span><br><span class="line">  <span class="comment">// skip(3) ---&gt; 跳过3</span></span><br><span class="line">  <span class="comment">// limit() ---&gt; 限定返回的最大数据数</span></span><br><span class="line"></span><br><span class="line">  process.<span class="title function_">exit</span>(<span class="number">0</span>); <span class="comment">// 结束连接数据库进程</span></span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<h3 id="populate-主表-amp-附表"><a href="#populate-主表-amp-附表" class="headerlink" title="populate 主表 &amp; 附表"></a>populate 主表 &amp; 附表</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// npm 项目目录下 src/populate.js</span></span><br><span class="line"><span class="comment">// 主键 &amp; 外键</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> mongoose = <span class="built_in">require</span>(<span class="string">&#x27;mongoose&#x27;</span>);</span><br><span class="line"><span class="keyword">let</span> connection = <span class="built_in">require</span>(<span class="string">&#x27;./connection&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// User&#x27;s Schema and Model</span></span><br><span class="line"><span class="keyword">let</span> <span class="title class_">UserSchema</span> = <span class="keyword">new</span> mongoose.<span class="title class_">Schema</span>(&#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="title class_">String</span>,</span><br><span class="line">  <span class="attr">age</span>: <span class="title class_">Number</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">let</span> <span class="title class_">UserModel</span> = connection.<span class="title function_">model</span>(<span class="string">&#x27;User&#x27;</span>, <span class="title class_">UserSchema</span>);</span><br><span class="line"><span class="comment">// Score&#x27;s Schema and Model</span></span><br><span class="line"><span class="keyword">let</span> <span class="title class_">ScoreSchema</span> = <span class="keyword">new</span> mongoose.<span class="title class_">Schema</span>(&#123;</span><br><span class="line">  <span class="comment">// uid 是一个外键 类型是ObjectId，引用的是User模型</span></span><br><span class="line">  <span class="attr">uid</span>: &#123;<span class="attr">type</span>: mongoose.<span class="property">Schema</span>.<span class="property">Types</span>.<span class="property">ObjectId</span>, <span class="attr">ref</span>: <span class="string">&#x27;User&#x27;</span>&#125;,</span><br><span class="line">  <span class="attr">grade</span>: <span class="title class_">Number</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">let</span> <span class="title class_">ScoreModel</span> = connection.<span class="title function_">model</span>(<span class="string">&#x27;Score&#x27;</span>, <span class="title class_">ScoreSchema</span>);</span><br><span class="line"></span><br><span class="line">(<span class="keyword">async</span> <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// 用自执行 async 函数</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 保存数据 - 先写主表，再把主表的主键赋值给附表的外键</span></span><br><span class="line">  <span class="comment">// let name = await UserModel.create(&#123;name: &#x27;Tom&#x27;&#125;);</span></span><br><span class="line">  <span class="comment">// let score = await ScoreModel.create(&#123;uid: name._id, grade: 88&#125;);</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 通过附表的uid查主表的数据</span></span><br><span class="line">  <span class="comment">// 方法1：查2次，麻烦</span></span><br><span class="line">  <span class="keyword">let</span> scoreId = <span class="string">&#x27;5f117511c587c05dbc2971fa&#x27;</span>;</span><br><span class="line">  <span class="keyword">let</span> scoreRes = <span class="keyword">await</span> <span class="title class_">ScoreModel</span>.<span class="title function_">findById</span>(scoreId);</span><br><span class="line">  <span class="keyword">let</span> userRes = <span class="keyword">await</span> <span class="title class_">UserModel</span>.<span class="title function_">findById</span>(scoreRes.<span class="property">uid</span>);</span><br><span class="line">  <span class="comment">// 方法2：</span></span><br><span class="line">  <span class="keyword">let</span> userRes2 = <span class="keyword">await</span> <span class="title class_">ScoreModel</span>.<span class="title function_">findById</span>(scoreId).<span class="title function_">populate</span>(<span class="string">&#x27;uid&#x27;</span>);</span><br><span class="line">  <span class="comment">// populate 把外键id变成一个对象，得到以下数据</span></span><br><span class="line">  <span class="comment">// &#123;</span></span><br><span class="line">  <span class="comment">//   _id: 5f117511c587c05dbc2971fa,</span></span><br><span class="line">  <span class="comment">//   uid: &#123; _id: 5f117511c587c05dbc2971f9, name: &#x27;Tom&#x27;, __v: 0 &#125;,</span></span><br><span class="line">  <span class="comment">//   grade: 88,</span></span><br><span class="line">  <span class="comment">//   __v: 0</span></span><br><span class="line">  <span class="comment">// &#125;</span></span><br><span class="line">  process.<span class="title function_">exit</span>(<span class="number">0</span>); <span class="comment">// 结束连接数据库进程</span></span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/happychong/my_first_flutter_app">my_first_flutter_app</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/happychong/film_flutter_app">film_flutter_app</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2022/03/29/2020-05-11-mangoDB/" data-id="cl1fzqfwa000rvgnufw7oau9c" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mongoDB/" rel="tag">mongoDB</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/03/29/2020-07-22-Vue%E9%9D%A2%E8%AF%95%E9%A2%98/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Vue 面试题
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/03/29/2020-07-22-Vue%E5%9F%BA%E7%A1%80/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Vue 基础知识</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/03/31/2022-03-31-github%20password%20authentication%20was%20removed%20on%20August%2013,%202021.%20Please%20use%20a%20personal%20access%20token%20instead/">2022-03-31-password authentication was removed on August 13, 2021. Please use a personal access token instead.</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2021-08-05-%E9%9D%A2%E8%AF%95%E9%A2%98%E6%80%BB%E7%BB%93%EF%BC%88%E9%9D%9EVue%EF%BC%89/">2021-08-05-面试题总结（非Vue）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2021-08-05-typescript/">typescript</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2018-1-11-HEXO-hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2021-03-22-git%20bash%20arrow%20%E4%B8%8D%E8%83%BD%E9%80%89%E6%8B%A9%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88(windows)/">git bash arrow 不能选择解决方案(windows)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-3-20-webpack%E5%8E%9F%E7%90%86/">webpack 原理与实现</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-3-25-webpack-loader%E5%8E%9F%E7%90%86/">webpack - loader 原理与实现</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-07-22-Vue%E9%9D%A2%E8%AF%95%E9%A2%98/">Vue 面试题</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-05-11-mangoDB/">mongoDB</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-07-22-Vue%E5%9F%BA%E7%A1%80/">Vue 基础知识</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-04-23-ast/">ast（语法树）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-04-27-dart/">Dart 入门</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-04-14-node%E8%BF%9B%E7%A8%8B%EF%BC%88process%EF%BC%89/">Node 的 进程 (process)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-04-21-node%E8%BF%9B%E7%A8%8B%EF%BC%88pm2%EF%BC%89/">Node 的 进程(pm2)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-03-30-webpack%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E6%B5%81%E7%A8%8B/">webpack - 源码编译流程</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-12-20-webpack%E4%BC%98%E5%8C%96/">webpack 4.0 + 笔记(优化)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-11-19-HTTP%E5%9F%BA%E7%A1%80/">HTTP基础扫盲</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-12-16-webpack%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE/">webpack 4.0+ 笔记(基础配置)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-11-01-JS%E4%B8%AD%EF%BC%8C0.1+0.2%EF%BC%9E0.3%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F/">0.1+0.2 &gt; 0.3 Why???</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-11-01-Node%E4%B8%AD%E6%96%87%E4%BB%B6%E7%9A%84%E8%AF%BB%E5%86%99%E6%A8%A1%E5%9D%97---FS/">Node -文件读写模块--- fs</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-11-07-node%E6%B7%B1%E5%BA%A6%E5%88%A0%E9%99%A4%E7%9B%AE%E5%BD%95%E5%8F%8A%E7%9B%AE%E5%BD%95%E9%87%8C%E7%9A%84%E5%86%85%E5%AE%B9-fs%E5%88%A0%E9%99%A4%E6%89%A9%E5%B1%95/">Node - 深度（完全）删除目录及目录里的内容 - 扩展</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-24-npm%E5%91%BD%E4%BB%A4%E4%B8%8E%E9%85%8D%E7%BD%AE%E8%A7%A3%E6%9E%90/">npm 命令与配置解析</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-30-Node---buffer/">Node --- buffer</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-14-node%E6%A8%A1%E5%9D%97%E5%8A%A0%E8%BD%BD%E5%8E%9F%E7%90%86/">Node模块加载原理</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-14-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%9C%8D%E5%8A%A1/">单线程与多线程的基本概念</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-16-Node%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%EF%BC%88event%20loop%EF%BC%89/">Node中的事件轮询（event loop）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-14-node%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97-%E7%AE%80%E8%BF%B0/">Node核心模块 - 简述</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-12-node%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E6%89%AB%E7%9B%B2/">Node基本概念扫盲</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-12-%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%ADjs%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%EF%BC%88event%20loop%EF%BC%89/">浏览器中javascript的事件循环（event loop）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-09-05-es6+---%E7%B1%BB%E7%9A%84%E4%BF%AE%E9%A5%B0/">es6+---类的修饰</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-05-vue%20nextTick%E5%8E%9F%E7%90%86/">vue nextTick原理</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2018-08-08-vue%20%E5%BC%BA%E5%88%B6%E6%9B%B4%E6%96%B0%E8%AF%95%E5%9B%BE%E7%9A%84%E6%96%B9%E6%B3%95/">vue 强制更新试图 的方法</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-09-03-es+---class%E7%94%A8%E6%B3%95%E7%AC%94%E8%AE%B0%20/">es6、7-类的定义</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2016-05-19-%E5%AE%8B%E6%99%93%E4%B8%B9%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%AE%80%E5%8E%86/">宋晓丹的个人简历</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2016-05-11-windows%E4%B8%8B%EF%BC%8CATOM%E5%B8%B8%E7%94%A8%E7%BC%96%E8%BE%91%E5%99%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/">ATOM常用快捷键</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2016-05-05-Git%E5%91%BD%E4%BB%A4/">Git常用命令</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2016-05-05-%E5%9F%BA%E6%9C%ACshell%E5%91%BD%E4%BB%A4/">基本SHELL命令使用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Dart/">Dart</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node/">Node</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Vue/">Vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/es6/">es6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongoDB/">mongoDB</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%B8%AA%E4%BA%BA/">个人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%91%A8%E8%BE%B9/">周边</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/" rel="tag">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/EventLoop/" rel="tag">EventLoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node/" rel="tag">Node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/" rel="tag">Vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ast/" rel="tag">ast</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/buffer/" rel="tag">buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/" rel="tag">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/core/" rel="tag">core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/event-loop/" rel="tag">event loop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/" rel="tag">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fs/" rel="tag">fs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/happyChong/" rel="tag">happyChong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loader/" rel="tag">loader</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/module/" rel="tag">module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongoDB/" rel="tag">mongoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextTick/" rel="tag">nextTick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/" rel="tag">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/path/" rel="tag">path</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pm2/" rel="tag">pm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/process/" rel="tag">process</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/" rel="tag">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typescript/" rel="tag">typescript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/util/" rel="tag">util</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vm/" rel="tag">vm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/" rel="tag">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E7%BA%BF%E7%A8%8B/" rel="tag">单线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="tag">面试题</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventLoop/" style="font-size: 12.5px;">EventLoop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/ast/" style="font-size: 10px;">ast</a> <a href="/tags/buffer/" style="font-size: 10px;">buffer</a> <a href="/tags/class/" style="font-size: 12.5px;">class</a> <a href="/tags/core/" style="font-size: 10px;">core</a> <a href="/tags/event-loop/" style="font-size: 12.5px;">event loop</a> <a href="/tags/events/" style="font-size: 10px;">events</a> <a href="/tags/fs/" style="font-size: 15px;">fs</a> <a href="/tags/git/" style="font-size: 17.5px;">git</a> <a href="/tags/happyChong/" style="font-size: 10px;">happyChong</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/loader/" style="font-size: 10px;">loader</a> <a href="/tags/module/" style="font-size: 10px;">module</a> <a href="/tags/mongoDB/" style="font-size: 10px;">mongoDB</a> <a href="/tags/nextTick/" style="font-size: 10px;">nextTick</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/path/" style="font-size: 10px;">path</a> <a href="/tags/pm2/" style="font-size: 10px;">pm2</a> <a href="/tags/process/" style="font-size: 10px;">process</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/util/" style="font-size: 10px;">util</a> <a href="/tags/vm/" style="font-size: 10px;">vm</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 20px;">webpack</a> <a href="/tags/%E5%8D%95%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">单线程</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">多线程</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E9%A2%98/" style="font-size: 12.5px;">面试题</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 happyChong<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

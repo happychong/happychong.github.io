@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Vue 面试题 | 快乐虫の地带</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Vue 面试题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue 面试题">
+<meta property="og:url" content="http://happychong.github.io/2022/03/29/2020-07-22-Vue%E9%9D%A2%E8%AF%95%E9%A2%98/index.html">
+<meta property="og:site_name" content="快乐虫の地带">
+<meta property="og:description" content="Vue 面试题">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-03-29T02:49:29.887Z">
+<meta property="article:modified_time" content="2022-03-30T15:01:41.422Z">
+<meta property="article:author" content="happyChong">
+<meta property="article:tag" content="面试题">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="快乐虫の地带" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">快乐虫の地带</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://happychong.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="default-2020-07-22-Vue面试题" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/03/29/2020-07-22-Vue%E9%9D%A2%E8%AF%95%E9%A2%98/" class="article-date">
+  <time datetime="2022-03-29T02:49:29.887Z" itemprop="datePublished">2022-03-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Vue/">Vue</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Vue 面试题
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1><h2 id="1-请说下对MVVM的理解"><a href="#1-请说下对MVVM的理解" class="headerlink" title="1 请说下对MVVM的理解"></a>1 请说下对MVVM的理解</h2><p>MVVM：model + view + viewModel</p>
+<p>MVC：model + view + control</p>
+<h2 id="2-Vue-实现数据双向绑定的原理"><a href="#2-Vue-实现数据双向绑定的原理" class="headerlink" title="2 Vue 实现数据双向绑定的原理"></a>2 Vue 实现数据双向绑定的原理</h2><p>Object.defineProperty <a href="">点击查看更多代码</a></p>
+<h2 id="3-Vue-常用的指令有哪些？"><a href="#3-Vue-常用的指令有哪些？" class="headerlink" title="3 Vue 常用的指令有哪些？"></a>3 Vue 常用的指令有哪些？</h2><p>v-once 、 v-html 、 v-bind 、 v-for 、 key 、 v-if &#x2F; else 、 v-if 、 v-show 、 v-on 、 v-model </p>
+<h2 id="4-v-model-的原理"><a href="#4-v-model-的原理" class="headerlink" title="4 v-model 的原理"></a>4 v-model 的原理</h2><p>:value + @input</p>
+<h2 id="5-v-if-和-v-show-的区别"><a href="#5-v-if-和-v-show-的区别" class="headerlink" title="5 v-if 和 v-show 的区别"></a>5 v-if 和 v-show 的区别</h2><p>v-if：dom是否创建</p>
+<p>v-show：dom是否在界面中可见 style</p>
+<h2 id="6-Vue-中-key-值的作用"><a href="#6-Vue-中-key-值的作用" class="headerlink" title="6 Vue 中 key 值的作用"></a>6 Vue 中 key 值的作用</h2><p>更新视图，key要保证唯一性</p>
+<h2 id="7-computed-和-watch-有什么区别？"><a href="#7-computed-和-watch-有什么区别？" class="headerlink" title="7 computed 和 watch 有什么区别？"></a>7 computed 和 watch 有什么区别？</h2><h2 id="8-Vue-的生命周期，每个生命周期具体适合哪些场景？"><a href="#8-Vue-的生命周期，每个生命周期具体适合哪些场景？" class="headerlink" title="8 Vue 的生命周期，每个生命周期具体适合哪些场景？"></a>8 Vue 的生命周期，每个生命周期具体适合哪些场景？</h2><p>create  beforeCreate：<br>          初始化好了基础属性，基础事件（$on $emit 等），<br>          不包含vm的数据(data)、方法、watch等，所以基本上业务逻辑不需要使用这个钩子，<br>          混合 - 如希望在每个组件中增加一些特定的属性，可以采用这个钩子<br>        created：<br>          创建完成 - 当前这个组件实例，已经实现了数据劫持（数据已经加了get，set），<br>          并把方法、计算属性都挂载到了实例上<br>          但是不能获取到真是的dom元素，不能操作dom<br>Mount   beforeMount：<br>          挂载之前，方法中会调用render方法<br>        mounted：<br>          当前组件挂载完成 - 有了真实的dom，<br>          这个过程中，如果有子组件，会走子组件的生命周期，洋葱模式，<br>          一般把ajax的操作，在这里完成，既能得到vm数据，又有$el方便操作。<br>Update  beforeUpdate：<br>          更新之前 - Vue的更新是diff更新，需要更新的数据在视图中显示，才会触发beforeUpdate<br>        updated：<br>          更新完成，这里不要再更新数据，可能会死循环。<br>Destroy beforeDestroy：<br>          销毁之前 - 可以做事件移除 清空定时器等。<br>        destroyed：<br>          销毁后</p>
+<p>触发销毁的方式：- 销毁后会默认移除所有观察者，移除监听事件（watcher.active &#x3D; false），视图并不会刷新<br>  1-手动移除组件（vm.$destroy()）<br>  2-路由切换</p>
+<h2 id="9-Vue-中-ref-是什么？"><a href="#9-Vue-中-ref-是什么？" class="headerlink" title="9 Vue 中 ref 是什么？"></a>9 Vue 中 ref 是什么？</h2><p>组件上是vue组件，dom上指dom元素，for循环出来的是类数组</p>
+<h2 id="10-Vue-动画的生命周期？"><a href="#10-Vue-动画的生命周期？" class="headerlink" title="10 Vue 动画的生命周期？"></a>10 Vue 动画的生命周期？</h2><p>.v-enter  &#x2F;* 进入前 <em>&#x2F;<br>.v-enter-active &#x2F;</em> 进入中 这里写颜色会立刻替换掉v-leave中的颜色*&#x2F;<br>.v-enter-to &#x2F;* 进入后 <em>&#x2F;<br>.v-leave &#x2F;</em> 要离开的时候，会立刻替换掉之前的颜色 <em>&#x2F;<br>.v-leave-active &#x2F;</em> 离开时 这里写颜色会立刻替换掉v-leave中的颜色 <em>&#x2F;<br>.v-leave-to &#x2F;</em> 离开后 *&#x2F;</p>
+<h2 id="11-Vue-如何编写自定义指令？"><a href="#11-Vue-如何编写自定义指令？" class="headerlink" title="11 Vue 如何编写自定义指令？"></a>11 Vue 如何编写自定义指令？</h2><h2 id="12-vuex数据持久化"><a href="#12-vuex数据持久化" class="headerlink" title="12 vuex数据持久化"></a>12 vuex数据持久化</h2><p>用插件（vuex-persists）解决</p>
+<p>plugins—plugins就是函数，参数会默认传当前的store实例</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">persists</span> = (<span class="params">store</span>) =&gt; &#123;</span><br><span class="line">  <span class="comment">// subscribe - 订阅 commit的时候会触发</span></span><br><span class="line">  store.<span class="title function_">subscribe</span>(<span class="function">(<span class="params">mutation, state</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 这里可以把需要记录的值存到localStotage，然后页面初始化的时候再取值，初始化</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(mutation);</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="title class_">Vuex</span>.<span class="title class_">Store</span>(&#123;</span><br><span class="line">  <span class="attr">plugins</span>: [ persists ],</span><br><span class="line">  <span class="attr">modules</span>: &#123;&#125;,</span><br><span class="line">  <span class="attr">state</span>: &#123;</span><br><span class="line">    <span class="attr">a</span>: <span class="number">1</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">getters</span>: &#123;&#125;,</span><br><span class="line">  <span class="attr">mutations</span>: &#123;&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="13-移动端项目"><a href="#13-移动端项目" class="headerlink" title="13 移动端项目"></a>13 移动端项目</h2><h3 id="单位"><a href="#单位" class="headerlink" title="单位"></a>单位</h3><p>px (不能跟随屏幕大小而改变)<br>em (不好计算)<br>rem (主流)<br>vh vw (主流)</p>
+<p>淘宝解决方案：px2rem 插件解决（可以把px 转化成rem，开发中只写px就好）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm i lib-flexible --save </span><br><span class="line">npm install --save-dev px2rem-loader</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 main.js中引入</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;lib-flexible/flexible&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 配置 vue.config.js</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span>= &#123;</span><br><span class="line">  <span class="attr">chainWebpack</span>: <span class="function"><span class="params">config</span> =&gt;</span> &#123;</span><br><span class="line">    config.<span class="property">module</span>.<span class="title function_">rule</span>(<span class="string">&#x27;stylus&#x27;</span>).<span class="title function_">test</span>(<span class="regexp">/\.stylus/</span>).<span class="title function_">oneOf</span>(<span class="string">&#x27;vue&#x27;</span>)</span><br><span class="line">    .<span class="title function_">resourceQuery</span>(<span class="regexp">/\?vue/</span>).<span class="title function_">use</span>(<span class="string">&#x27;px2rem&#x27;</span>).<span class="title function_">loader</span>(<span class="string">&#x27;px2rem-loader&#x27;</span>).<span class="title function_">options</span>(&#123;<span class="attr">remUnit</span>: <span class="number">75</span>&#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="布局-flex"><a href="#布局-flex" class="headerlink" title="布局 flex"></a>布局 flex</h3><ul>
+<li>flex-direction  :  row &#x2F; row-reverse column &#x2F; column-reverse</li>
+<li>flex-wrap : nowrap(默认) &#x2F; wrap </li>
+<li>justify-content : 主轴对齐方式 flex-start flex-end center space-between space-around</li>
+<li>align-items : 设置交叉轴的对齐方式 flex-start flex-end center baseline stretch</li>
+<li>align-content : 轴线对齐方式 多行对齐方式 flex-start flex-end center stetch space-between space-around</li>
+<li>order : 控制元素顺序 默认0 可以设置元素的顺序</li>
+<li>flex-grow : 控制元素放大比例</li>
+<li>flex-shrink : 控制元素缩小比例</li>
+<li>flex-basis : 设置元素固定空间或自动空间的占比</li>
+<li>align-self : 重写align-items父属性</li>
+</ul>
+<h2 id="主流组件库"><a href="#主流组件库" class="headerlink" title="主流组件库"></a>主流组件库</h2><h3 id="pc"><a href="#pc" class="headerlink" title="pc"></a>pc</h3><p>elementUI iview</p>
+<h3 id="移动端"><a href="#移动端" class="headerlink" title="移动端"></a>移动端</h3><p>vant mint-ui(官方不维护了) and-vue vube-ui(滴滴出的)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2022/03/29/2020-07-22-Vue%E9%9D%A2%E8%AF%95%E9%A2%98/" data-id="cl1fzqfwb000svgnuchtjagkq" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="tag">面试题</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/03/29/2020-3-25-webpack-loader%E5%8E%9F%E7%90%86/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          webpack - loader 原理与实现
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/03/29/2020-05-11-mangoDB/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">mongoDB</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/03/31/2022-03-31-github%20password%20authentication%20was%20removed%20on%20August%2013,%202021.%20Please%20use%20a%20personal%20access%20token%20instead/">2022-03-31-password authentication was removed on August 13, 2021. Please use a personal access token instead.</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2021-08-05-%E9%9D%A2%E8%AF%95%E9%A2%98%E6%80%BB%E7%BB%93%EF%BC%88%E9%9D%9EVue%EF%BC%89/">2021-08-05-面试题总结（非Vue）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2021-08-05-typescript/">typescript</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2018-1-11-HEXO-hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2021-03-22-git%20bash%20arrow%20%E4%B8%8D%E8%83%BD%E9%80%89%E6%8B%A9%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88(windows)/">git bash arrow 不能选择解决方案(windows)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-3-20-webpack%E5%8E%9F%E7%90%86/">webpack 原理与实现</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-3-25-webpack-loader%E5%8E%9F%E7%90%86/">webpack - loader 原理与实现</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-07-22-Vue%E9%9D%A2%E8%AF%95%E9%A2%98/">Vue 面试题</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-05-11-mangoDB/">mongoDB</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-07-22-Vue%E5%9F%BA%E7%A1%80/">Vue 基础知识</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-04-23-ast/">ast（语法树）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-04-27-dart/">Dart 入门</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-04-14-node%E8%BF%9B%E7%A8%8B%EF%BC%88process%EF%BC%89/">Node 的 进程 (process)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-04-21-node%E8%BF%9B%E7%A8%8B%EF%BC%88pm2%EF%BC%89/">Node 的 进程(pm2)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-03-30-webpack%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E6%B5%81%E7%A8%8B/">webpack - 源码编译流程</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-12-20-webpack%E4%BC%98%E5%8C%96/">webpack 4.0 + 笔记(优化)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-11-19-HTTP%E5%9F%BA%E7%A1%80/">HTTP基础扫盲</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-12-16-webpack%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE/">webpack 4.0+ 笔记(基础配置)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-11-01-JS%E4%B8%AD%EF%BC%8C0.1+0.2%EF%BC%9E0.3%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F/">0.1+0.2 &gt; 0.3 Why???</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-11-01-Node%E4%B8%AD%E6%96%87%E4%BB%B6%E7%9A%84%E8%AF%BB%E5%86%99%E6%A8%A1%E5%9D%97---FS/">Node -文件读写模块--- fs</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-11-07-node%E6%B7%B1%E5%BA%A6%E5%88%A0%E9%99%A4%E7%9B%AE%E5%BD%95%E5%8F%8A%E7%9B%AE%E5%BD%95%E9%87%8C%E7%9A%84%E5%86%85%E5%AE%B9-fs%E5%88%A0%E9%99%A4%E6%89%A9%E5%B1%95/">Node - 深度（完全）删除目录及目录里的内容 - 扩展</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-24-npm%E5%91%BD%E4%BB%A4%E4%B8%8E%E9%85%8D%E7%BD%AE%E8%A7%A3%E6%9E%90/">npm 命令与配置解析</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-30-Node---buffer/">Node --- buffer</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-14-node%E6%A8%A1%E5%9D%97%E5%8A%A0%E8%BD%BD%E5%8E%9F%E7%90%86/">Node模块加载原理</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-14-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%9C%8D%E5%8A%A1/">单线程与多线程的基本概念</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-16-Node%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%EF%BC%88event%20loop%EF%BC%89/">Node中的事件轮询（event loop）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-14-node%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97-%E7%AE%80%E8%BF%B0/">Node核心模块 - 简述</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-12-node%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E6%89%AB%E7%9B%B2/">Node基本概念扫盲</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-12-%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%ADjs%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%EF%BC%88event%20loop%EF%BC%89/">浏览器中javascript的事件循环（event loop）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-09-05-es6+---%E7%B1%BB%E7%9A%84%E4%BF%AE%E9%A5%B0/">es6+---类的修饰</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-05-vue%20nextTick%E5%8E%9F%E7%90%86/">vue nextTick原理</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2018-08-08-vue%20%E5%BC%BA%E5%88%B6%E6%9B%B4%E6%96%B0%E8%AF%95%E5%9B%BE%E7%9A%84%E6%96%B9%E6%B3%95/">vue 强制更新试图 的方法</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-09-03-es+---class%E7%94%A8%E6%B3%95%E7%AC%94%E8%AE%B0%20/">es6、7-类的定义</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2016-05-19-%E5%AE%8B%E6%99%93%E4%B8%B9%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%AE%80%E5%8E%86/">宋晓丹的个人简历</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2016-05-11-windows%E4%B8%8B%EF%BC%8CATOM%E5%B8%B8%E7%94%A8%E7%BC%96%E8%BE%91%E5%99%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/">ATOM常用快捷键</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2016-05-05-Git%E5%91%BD%E4%BB%A4/">Git常用命令</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2016-05-05-%E5%9F%BA%E6%9C%ACshell%E5%91%BD%E4%BB%A4/">基本SHELL命令使用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Dart/">Dart</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node/">Node</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Vue/">Vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/es6/">es6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongoDB/">mongoDB</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%B8%AA%E4%BA%BA/">个人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%91%A8%E8%BE%B9/">周边</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/" rel="tag">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/EventLoop/" rel="tag">EventLoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node/" rel="tag">Node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/" rel="tag">Vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ast/" rel="tag">ast</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/buffer/" rel="tag">buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/" rel="tag">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/core/" rel="tag">core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/event-loop/" rel="tag">event loop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/" rel="tag">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fs/" rel="tag">fs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/happyChong/" rel="tag">happyChong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loader/" rel="tag">loader</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/module/" rel="tag">module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongoDB/" rel="tag">mongoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextTick/" rel="tag">nextTick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/" rel="tag">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/path/" rel="tag">path</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pm2/" rel="tag">pm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/process/" rel="tag">process</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/" rel="tag">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typescript/" rel="tag">typescript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/util/" rel="tag">util</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vm/" rel="tag">vm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/" rel="tag">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E7%BA%BF%E7%A8%8B/" rel="tag">单线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="tag">面试题</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventLoop/" style="font-size: 12.5px;">EventLoop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/ast/" style="font-size: 10px;">ast</a> <a href="/tags/buffer/" style="font-size: 10px;">buffer</a> <a href="/tags/class/" style="font-size: 12.5px;">class</a> <a href="/tags/core/" style="font-size: 10px;">core</a> <a href="/tags/event-loop/" style="font-size: 12.5px;">event loop</a> <a href="/tags/events/" style="font-size: 10px;">events</a> <a href="/tags/fs/" style="font-size: 15px;">fs</a> <a href="/tags/git/" style="font-size: 17.5px;">git</a> <a href="/tags/happyChong/" style="font-size: 10px;">happyChong</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/loader/" style="font-size: 10px;">loader</a> <a href="/tags/module/" style="font-size: 10px;">module</a> <a href="/tags/mongoDB/" style="font-size: 10px;">mongoDB</a> <a href="/tags/nextTick/" style="font-size: 10px;">nextTick</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/path/" style="font-size: 10px;">path</a> <a href="/tags/pm2/" style="font-size: 10px;">pm2</a> <a href="/tags/process/" style="font-size: 10px;">process</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/util/" style="font-size: 10px;">util</a> <a href="/tags/vm/" style="font-size: 10px;">vm</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 20px;">webpack</a> <a href="/tags/%E5%8D%95%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">单线程</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">多线程</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E9%A2%98/" style="font-size: 12.5px;">面试题</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 happyChong<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Git常用命令 | 快乐虫の地带</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="git常用命令使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git常用命令">
+<meta property="og:url" content="http://happychong.github.io/2022/03/29/2016-05-05-Git%E5%91%BD%E4%BB%A4/index.html">
+<meta property="og:site_name" content="快乐虫の地带">
+<meta property="og:description" content="git常用命令使用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://happychong.github.io/pics/br.png">
+<meta property="article:published_time" content="2022-03-29T02:49:29.868Z">
+<meta property="article:modified_time" content="2022-03-29T02:13:17.605Z">
+<meta property="article:author" content="happyChong">
+<meta property="article:tag" content="git">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://happychong.github.io/pics/br.png">
+  
+    <link rel="alternate" href="/atom.xml" title="快乐虫の地带" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">快乐虫の地带</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://happychong.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="default-2016-05-05-Git命令" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/03/29/2016-05-05-Git%E5%91%BD%E4%BB%A4/" class="article-date">
+  <time datetime="2022-03-29T02:49:29.868Z" itemprop="datePublished">2022-03-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%91%A8%E8%BE%B9/">周边</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Git常用命令
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1><h2 id="1-安装"><a href="#1-安装" class="headerlink" title="1.安装"></a>1.安装</h2><p>在使用Git前我们需要先安装 Git。Git 目前支持 Linux&#x2F;Unix、Solaris、Mac和 Windows 平台上运行。 Git 各平台安装包下载地址为：<a target="_blank" rel="noopener" href="http://git-scm.com/downloads">http://git-scm.com/downloads</a></p>
+<p>当然，也有相应的图形化工具可供下载使用，比如sourcetree.</p>
+<h2 id="2-基本配置"><a href="#2-基本配置" class="headerlink" title="2.基本配置"></a>2.基本配置</h2><p>Git 提供了一个叫做 git config 的工具，专门用来配置或读取相应的工作环境变量。 这些环境变量，决定了 Git 在各个环节的具体工作方式和行为。这些变量可以存放在以下三个不同的地方：</p>
+<ul>
+<li>&#x2F;etc&#x2F;gitconfig 文件：系统中对所有用户都普遍适用的配置。若使用 git config 时用 –system 选项，读写的就是这个文件。</li>
+<li>~&#x2F;.gitconfig 文件：用户目录下的配置文件只适用于该用户。若使用 git config 时用 –global 选项，读写的就是这个文件。</li>
+<li>当前项目的 Git 目录中的配置文件（也就是工作目录中的 .git&#x2F;config 文件）：这里的配置仅仅针对当前项目有效。每一个级别的配置都会覆盖上层的相同配置，所以 .git&#x2F;config 里的配置会覆盖 &#x2F;etc&#x2F;gitconfig 中的同名变量。</li>
+</ul>
+<h3 id="配置个人的用户名称和电子邮件地址："><a href="#配置个人的用户名称和电子邮件地址：" class="headerlink" title="配置个人的用户名称和电子邮件地址："></a>配置个人的用户名称和电子邮件地址：</h3><pre><code>$ git config --global user.name &quot;GuoYongfeng&quot;
+$ git config --global user.email &quot;296512521@qq.com&quot;
+</code></pre>
+<h3 id="查看已有的配置信息"><a href="#查看已有的配置信息" class="headerlink" title="查看已有的配置信息"></a>查看已有的配置信息</h3><pre><code>$ git config --list
+</code></pre>
+<h2 id="3-基本操作"><a href="#3-基本操作" class="headerlink" title="3.基本操作"></a>3.基本操作</h2><h3 id="git-init"><a href="#git-init" class="headerlink" title="git init"></a>git init</h3><pre><code>// 新建(初始化)一个仓库
+$ mkdir demo &amp;&amp; cd demo
+$ git init
+</code></pre>
+<h3 id="git-clone"><a href="#git-clone" class="headerlink" title="git clone"></a>git clone</h3><pre><code>如果已经有了仓库，就可以直接clone到本地
+$ git clone git@github.com:GuoYongfeng/webpack-dev-boilerplate.git
+</code></pre>
+<h3 id="git-add"><a href="#git-add" class="headerlink" title="git add"></a>git add</h3><pre><code>// git add 命令可将该文件添加到缓存，如我们添加以下两个文件：
+$ touch README.md
+$ git add README.md
+</code></pre>
+<p>还可以</p>
+<pre><code>$ git add -A
+$ git add *
+$ git add .
+</code></pre>
+<h3 id="git-status"><a href="#git-status" class="headerlink" title="git status"></a>git status</h3><p>git status 可以查看当前版本库各个文件的状态</p>
+<pre><code>$ git status
+</code></pre>
+<h3 id="git-commit"><a href="#git-commit" class="headerlink" title="git commit"></a>git commit</h3><p>使用 git add 命令将想要快照的内容写入缓存区， 而执行 git commit 将缓存区内容添加到仓库中。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m <span class="string">&#x27;第一次版本提交&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>Git撤销本地commit</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git reset HEAD~</span><br><span class="line"><span class="comment"># HEAD 代表：上一次提交</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="git-remote-add-origin—推动改动"><a href="#git-remote-add-origin—推动改动" class="headerlink" title="git remote add origin—推动改动"></a>git remote add origin—推动改动</h3><p>如果你还没有克隆现有仓库，并欲将你的仓库连接到某个远程服务器，你可以使用如下命令添加：</p>
+<pre><code># 为这个仓库添加一个远程地址
+$ git remote add origin 你的github上的仓库地址（比如： git@github.com:GuoYongfeng/webpack-dev-boilerplate.git）
+</code></pre>
+<p>如此你就能够将你的改动推送到所添加的服务器上去了。<br>执行如下命令以将这些改动提交到远端仓库：</p>
+<pre><code># 将本地版本库的资源推送到远程服务器
+$ git push origin -u master
+</code></pre>
+<p>可以把 master 换成你想要推送的任何分支。</p>
+<h3 id="push到服务器"><a href="#push到服务器" class="headerlink" title="push到服务器"></a>push到服务器</h3><p>把代码从本地push到服务器上，这意味着我们首先要有个服务器或是托管我们代码的第三方服务，公司有gitlab也可以直接push到那。</p>
+<pre><code># 将本地版本库的资源推送到远程服务器
+$ git push origin -u master
+</code></pre>
+<p>可以把 master 换成你想要推送的任何分支。</p>
+<h3 id="git-checkout-—-撤销修改"><a href="#git-checkout-—-撤销修改" class="headerlink" title="git checkout — 撤销修改"></a>git checkout — 撤销修改</h3><p>假如你做错事（自然，这是不可能的），你可以使用如下命令替换掉本地改动：</p>
+<pre><code>$ git checkout -- README.md
+</code></pre>
+<h3 id="git-reset"><a href="#git-reset" class="headerlink" title="git reset"></a>git reset</h3><p>git reset HEAD 命令用于取消已缓存的内容。</p>
+<pre><code>$ git reset HEAD -- hello.php
+</code></pre>
+<p>如果粗暴一点</p>
+<pre><code>$ git reset --hard 版本号
+</code></pre>
+<h3 id="git-rm"><a href="#git-rm" class="headerlink" title="git rm"></a>git rm</h3><pre><code>$ git rm README.md
+</code></pre>
+<h3 id="git-rm-–cached-—-清除缓存"><a href="#git-rm-–cached-—-清除缓存" class="headerlink" title="git rm –cached — 清除缓存"></a>git rm –cached — 清除缓存</h3><pre><code>$ git rm -r --cached ignore_file
+</code></pre>
+<h3 id="git-pull-—-拉取github上的资源-并自动合并（auto-merge"><a href="#git-pull-—-拉取github上的资源-并自动合并（auto-merge" class="headerlink" title="git pull — 拉取github上的资源,并自动合并（auto merge)"></a>git pull — 拉取github上的资源,并自动合并（auto merge)</h3><p>把origin仓库下的master分支下的内容拉取到本地</p>
+<pre><code>git pull origin master
+</code></pre>
+<h3 id="git-fetch-—-待续"><a href="#git-fetch-—-待续" class="headerlink" title="git fetch — 待续"></a>git fetch — 待续</h3><pre><code>git fetch origin master
+</code></pre>
+<h3 id="git-rebase-—-待续"><a href="#git-rebase-—-待续" class="headerlink" title="git rebase — 待续"></a>git rebase — 待续</h3><pre><code>git rebase origin/master
+</code></pre>
+<h3 id="git-remote-v-—-查看本地文件夹与远程仓库的关联情况"><a href="#git-remote-v-—-查看本地文件夹与远程仓库的关联情况" class="headerlink" title="git remote -v — 查看本地文件夹与远程仓库的关联情况"></a>git remote -v — 查看本地文件夹与远程仓库的关联情况</h3><pre><code>git remote -v
+</code></pre>
+<h3 id="git-remote-rm-origin-—-取消本地文件夹与远程仓库的关联"><a href="#git-remote-rm-origin-—-取消本地文件夹与远程仓库的关联" class="headerlink" title="git remote rm origin — 取消本地文件夹与远程仓库的关联"></a>git remote rm origin — 取消本地文件夹与远程仓库的关联</h3><p>与git remote add origin功能相反的作用</p>
+<pre><code>git remote rm origin
+</code></pre>
+<h3 id="git-log-—-查看我们执行commit操作，在本地git文件夹生成的版本号"><a href="#git-log-—-查看我们执行commit操作，在本地git文件夹生成的版本号" class="headerlink" title="git log — 查看我们执行commit操作，在本地git文件夹生成的版本号"></a>git log — 查看我们执行commit操作，在本地git文件夹生成的版本号</h3><h3 id="git-show-—-查看某版本做了哪些操作"><a href="#git-show-—-查看某版本做了哪些操作" class="headerlink" title="git show — 查看某版本做了哪些操作"></a>git show — 查看某版本做了哪些操作</h3><pre><code>git show &lt;版本号&gt;
+</code></pre>
+<h3 id="git-branch-—-查看分支情况"><a href="#git-branch-—-查看分支情况" class="headerlink" title="git branch — 查看分支情况"></a>git branch — 查看分支情况</h3><pre><code>// * 代表当前所在分支
+git branch
+</code></pre>
+<h2 id="4-配置alias别名"><a href="#4-配置alias别名" class="headerlink" title="4.配置alias别名"></a>4.配置alias别名</h2><p>配置别名的好处是方便简写命令</p>
+<pre><code>$ git config --global alias.st status
+$ git config --global alias.ci commit
+$ git config --global alias.co checkout
+$ git config --global alias.br branch
+$ git config --global alias.lg &quot;log --color --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset&#39; --abbrev-commit&quot;
+</code></pre>
+<h2 id="5-设置public-key"><a href="#5-设置public-key" class="headerlink" title="5.设置public key"></a>5.设置public key</h2><p>首先需要在本地生成key，并且把key配置在github上</p>
+<pre><code>$ ssh-keygen -t rsa -C &quot;guoyff@yonyou.com&quot;
+</code></pre>
+<p>复制ublic key</p>
+<pre><code>$ cat ~/ssh/id_rsa.pub
+</code></pre>
+<p>当然，你也可以直接使用nodepad++等编辑器打开这个文件，复制出来。 （如果你是windows用户，这个文件一般会在这里：C:\Users\Administrator.ssh）</p>
+<p>将获得的public key添加在github账户上：</p>
+<blockquote>
+<p>右上角点击头像-&gt; 点击settings-&gt; 点击SSH KEYS-&gt; 点击ADD SSH KEYS-&gt; 将获取的public key粘贴于此</p>
+</blockquote>
+<h2 id="6-分支的管理"><a href="#6-分支的管理" class="headerlink" title="6.分支的管理"></a>6.分支的管理</h2><p>分支是用来将特性开发绝缘开来的。在你创建仓库的时候，master 是“默认的”。在其他分支上进行开发，完成后再将它们合并到主分支上。</p>
+<p><img src="/pics/br.png" alt="分支图片"></p>
+<blockquote>
+<p>分支的命名 <br><br>master 主干 <br><br>develop 开发分支 <br><br>        – feature 开发分支<br>        – bug 修改bug的分支<br>release 部署分支 <br></p>
+</blockquote>
+<h3 id="分支的基本操作"><a href="#分支的基本操作" class="headerlink" title="分支的基本操作"></a>分支的基本操作</h3><h4 id="git-branch-—-创建一个分支"><a href="#git-branch-—-创建一个分支" class="headerlink" title="git branch — 创建一个分支"></a>git branch — 创建一个分支</h4><pre><code>$ git branch mybranch
+</code></pre>
+<h4 id="git-checkout-—-切换到这个分支"><a href="#git-checkout-—-切换到这个分支" class="headerlink" title="git checkout — 切换到这个分支"></a>git checkout — 切换到这个分支</h4><pre><code>$ git checkout mybranch
+</code></pre>
+<h4 id="或者可以更快一点，创建一个分支并且切换过去"><a href="#或者可以更快一点，创建一个分支并且切换过去" class="headerlink" title="或者可以更快一点，创建一个分支并且切换过去"></a>或者可以更快一点，创建一个分支并且切换过去</h4><pre><code>$ git checkout -b mybranch
+</code></pre>
+<h4 id="删除分支"><a href="#删除分支" class="headerlink" title="删除分支"></a>删除分支</h4><pre><code>$ git branch -d mybranch
+</code></pre>
+<p>如果你和其他小伙伴基于这个分支协作，那么你需要把这个分支push到远端仓库，不然的话，这个分支是存在于你的本地的，其他的小伙伴就看不到了。</p>
+<pre><code>$ git push origin mybranch
+</code></pre>
+<h3 id="分支的更新与合并"><a href="#分支的更新与合并" class="headerlink" title="分支的更新与合并"></a>分支的更新与合并</h3><h4 id="更新你的本地仓库至最新改动"><a href="#更新你的本地仓库至最新改动" class="headerlink" title="更新你的本地仓库至最新改动"></a>更新你的本地仓库至最新改动</h4><pre><code>git pull origin master
+</code></pre>
+<p>这样就将本地的master分支和远程同步了<br>（新的分支，新的版本）</p>
+<pre><code>$ git fetch origin
+$ git rebase origin/master
+</code></pre>
+<h4 id="git-merge-—-合并分支"><a href="#git-merge-—-合并分支" class="headerlink" title="git merge — 合并分支"></a>git merge — 合并分支</h4><p>以在你的工作目录中 获取（fetch） 并 合并（merge） 远端的改动。 要合并其他分支到你的当前分支（例如 master），执行：</p>
+<pre><code>$ git merge &lt;branch&gt;
+</code></pre>
+<h3 id="解决冲突"><a href="#解决冲突" class="headerlink" title="解决冲突"></a>解决冲突</h3><p>无论是分支的更新还是合并，git 都会尝试去自动合并改动。不幸的是，自动合并并非次次都能成功，并可能导致 冲突（conflicts）。 这时候就需要你修改这些文件来人肉合并这些 冲突（conflicts） 了。改完之后，你需要执行如下命令以将它们标记为合并成功：</p>
+<pre><code>$ git add &lt;filename&gt;
+</code></pre>
+<p>在合并改动之前，也可以使用如下命令查看：</p>
+<pre><code>$ git diff &lt;source_branch&gt; &lt;target_branch&gt;
+</code></pre>
+<p>处理冲突之后就可以commit了</p>
+<pre><code>$ git commit -m &quot;fix conflict&quot;
+</code></pre>
+<h2 id="7-打tag标签"><a href="#7-打tag标签" class="headerlink" title="7.打tag标签"></a>7.打tag标签</h2><p>在软件发布时创建标签，是被推荐的。</p>
+<p>使用如下命令获取版本号：</p>
+<pre><code>$ git log
+</code></pre>
+<p>可以执行如下命令以创建一个叫做 1.0.0 的标签：</p>
+<pre><code>$ git tag 1.0.0 1b2e1d63ff
+</code></pre>
+<p>1b2e1d63ff 是你想要标记的提交 ID 的前 10 位字符。</p>
+<h2 id="8-撤销修改和版本回退"><a href="#8-撤销修改和版本回退" class="headerlink" title="8.撤销修改和版本回退"></a>8.撤销修改和版本回退</h2><p>假如你做错事（自然，这是不可能的），你可以使用如下命令替换掉本地改动：</p>
+<pre><code>$ git checkout -- &lt;filename&gt;
+</code></pre>
+<p>此命令会使用 HEAD 中的最新内容替换掉你的工作目录中的文件。已添加到缓存区的改动，以及新文件，都不受影响。</p>
+<p>假如你想要丢弃你所有的本地改动与提交，可以到服务器上获取最新的版本并将你本地主分支指向到它：</p>
+<pre><code># 获取的版本号可以使用git log拿到
+$ git reset --hard 希望回退的版本号
+</code></pre>
+<blockquote>
+<p>此文摘抄自 <a target="_blank" rel="noopener" href="http://guoyongfeng.github.io/idoc/html/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/Git%E5%92%8CGithub%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97.html">http://guoyongfeng.github.io/</a></p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2022/03/29/2016-05-05-Git%E5%91%BD%E4%BB%A4/" data-id="cl1fzqfur0000vgnu0dsd0gqh" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/" rel="tag">git</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/03/29/2016-05-11-windows%E4%B8%8B%EF%BC%8CATOM%E5%B8%B8%E7%94%A8%E7%BC%96%E8%BE%91%E5%99%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          ATOM常用快捷键
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/03/29/2016-05-05-%E5%9F%BA%E6%9C%ACshell%E5%91%BD%E4%BB%A4/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">基本SHELL命令使用</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/03/31/2022-03-31-github%20password%20authentication%20was%20removed%20on%20August%2013,%202021.%20Please%20use%20a%20personal%20access%20token%20instead/">2022-03-31-password authentication was removed on August 13, 2021. Please use a personal access token instead.</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2021-08-05-%E9%9D%A2%E8%AF%95%E9%A2%98%E6%80%BB%E7%BB%93%EF%BC%88%E9%9D%9EVue%EF%BC%89/">2021-08-05-面试题总结（非Vue）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2021-08-05-typescript/">typescript</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2018-1-11-HEXO-hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2021-03-22-git%20bash%20arrow%20%E4%B8%8D%E8%83%BD%E9%80%89%E6%8B%A9%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88(windows)/">git bash arrow 不能选择解决方案(windows)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-3-20-webpack%E5%8E%9F%E7%90%86/">webpack 原理与实现</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-3-25-webpack-loader%E5%8E%9F%E7%90%86/">webpack - loader 原理与实现</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-07-22-Vue%E9%9D%A2%E8%AF%95%E9%A2%98/">Vue 面试题</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-05-11-mangoDB/">mongoDB</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-07-22-Vue%E5%9F%BA%E7%A1%80/">Vue 基础知识</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-04-23-ast/">ast（语法树）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-04-27-dart/">Dart 入门</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-04-14-node%E8%BF%9B%E7%A8%8B%EF%BC%88process%EF%BC%89/">Node 的 进程 (process)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-04-21-node%E8%BF%9B%E7%A8%8B%EF%BC%88pm2%EF%BC%89/">Node 的 进程(pm2)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-03-30-webpack%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E6%B5%81%E7%A8%8B/">webpack - 源码编译流程</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-12-20-webpack%E4%BC%98%E5%8C%96/">webpack 4.0 + 笔记(优化)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-11-19-HTTP%E5%9F%BA%E7%A1%80/">HTTP基础扫盲</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-12-16-webpack%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE/">webpack 4.0+ 笔记(基础配置)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-11-01-JS%E4%B8%AD%EF%BC%8C0.1+0.2%EF%BC%9E0.3%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F/">0.1+0.2 &gt; 0.3 Why???</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-11-01-Node%E4%B8%AD%E6%96%87%E4%BB%B6%E7%9A%84%E8%AF%BB%E5%86%99%E6%A8%A1%E5%9D%97---FS/">Node -文件读写模块--- fs</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-11-07-node%E6%B7%B1%E5%BA%A6%E5%88%A0%E9%99%A4%E7%9B%AE%E5%BD%95%E5%8F%8A%E7%9B%AE%E5%BD%95%E9%87%8C%E7%9A%84%E5%86%85%E5%AE%B9-fs%E5%88%A0%E9%99%A4%E6%89%A9%E5%B1%95/">Node - 深度（完全）删除目录及目录里的内容 - 扩展</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-24-npm%E5%91%BD%E4%BB%A4%E4%B8%8E%E9%85%8D%E7%BD%AE%E8%A7%A3%E6%9E%90/">npm 命令与配置解析</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-30-Node---buffer/">Node --- buffer</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-14-node%E6%A8%A1%E5%9D%97%E5%8A%A0%E8%BD%BD%E5%8E%9F%E7%90%86/">Node模块加载原理</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-14-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%9C%8D%E5%8A%A1/">单线程与多线程的基本概念</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-16-Node%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%EF%BC%88event%20loop%EF%BC%89/">Node中的事件轮询（event loop）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-14-node%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97-%E7%AE%80%E8%BF%B0/">Node核心模块 - 简述</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-12-node%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E6%89%AB%E7%9B%B2/">Node基本概念扫盲</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-12-%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%ADjs%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%EF%BC%88event%20loop%EF%BC%89/">浏览器中javascript的事件循环（event loop）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-09-05-es6+---%E7%B1%BB%E7%9A%84%E4%BF%AE%E9%A5%B0/">es6+---类的修饰</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-05-vue%20nextTick%E5%8E%9F%E7%90%86/">vue nextTick原理</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2018-08-08-vue%20%E5%BC%BA%E5%88%B6%E6%9B%B4%E6%96%B0%E8%AF%95%E5%9B%BE%E7%9A%84%E6%96%B9%E6%B3%95/">vue 强制更新试图 的方法</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-09-03-es+---class%E7%94%A8%E6%B3%95%E7%AC%94%E8%AE%B0%20/">es6、7-类的定义</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2016-05-19-%E5%AE%8B%E6%99%93%E4%B8%B9%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%AE%80%E5%8E%86/">宋晓丹的个人简历</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2016-05-11-windows%E4%B8%8B%EF%BC%8CATOM%E5%B8%B8%E7%94%A8%E7%BC%96%E8%BE%91%E5%99%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/">ATOM常用快捷键</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2016-05-05-Git%E5%91%BD%E4%BB%A4/">Git常用命令</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2016-05-05-%E5%9F%BA%E6%9C%ACshell%E5%91%BD%E4%BB%A4/">基本SHELL命令使用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Dart/">Dart</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node/">Node</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Vue/">Vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/es6/">es6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongoDB/">mongoDB</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%B8%AA%E4%BA%BA/">个人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%91%A8%E8%BE%B9/">周边</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/" rel="tag">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/EventLoop/" rel="tag">EventLoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node/" rel="tag">Node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/" rel="tag">Vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ast/" rel="tag">ast</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/buffer/" rel="tag">buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/" rel="tag">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/core/" rel="tag">core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/event-loop/" rel="tag">event loop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/" rel="tag">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fs/" rel="tag">fs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/happyChong/" rel="tag">happyChong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loader/" rel="tag">loader</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/module/" rel="tag">module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongoDB/" rel="tag">mongoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextTick/" rel="tag">nextTick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/" rel="tag">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/path/" rel="tag">path</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pm2/" rel="tag">pm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/process/" rel="tag">process</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/" rel="tag">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typescript/" rel="tag">typescript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/util/" rel="tag">util</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vm/" rel="tag">vm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/" rel="tag">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E7%BA%BF%E7%A8%8B/" rel="tag">单线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="tag">面试题</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventLoop/" style="font-size: 12.5px;">EventLoop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/ast/" style="font-size: 10px;">ast</a> <a href="/tags/buffer/" style="font-size: 10px;">buffer</a> <a href="/tags/class/" style="font-size: 12.5px;">class</a> <a href="/tags/core/" style="font-size: 10px;">core</a> <a href="/tags/event-loop/" style="font-size: 12.5px;">event loop</a> <a href="/tags/events/" style="font-size: 10px;">events</a> <a href="/tags/fs/" style="font-size: 15px;">fs</a> <a href="/tags/git/" style="font-size: 17.5px;">git</a> <a href="/tags/happyChong/" style="font-size: 10px;">happyChong</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/loader/" style="font-size: 10px;">loader</a> <a href="/tags/module/" style="font-size: 10px;">module</a> <a href="/tags/mongoDB/" style="font-size: 10px;">mongoDB</a> <a href="/tags/nextTick/" style="font-size: 10px;">nextTick</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/path/" style="font-size: 10px;">path</a> <a href="/tags/pm2/" style="font-size: 10px;">pm2</a> <a href="/tags/process/" style="font-size: 10px;">process</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/util/" style="font-size: 10px;">util</a> <a href="/tags/vm/" style="font-size: 10px;">vm</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 20px;">webpack</a> <a href="/tags/%E5%8D%95%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">单线程</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">多线程</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E9%A2%98/" style="font-size: 12.5px;">面试题</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 happyChong<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

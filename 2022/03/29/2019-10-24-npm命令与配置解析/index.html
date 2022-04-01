@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>npm 命令与配置解析 | 快乐虫の地带</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="npm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="npm 命令与配置解析">
+<meta property="og:url" content="http://happychong.github.io/2022/03/29/2019-10-24-npm%E5%91%BD%E4%BB%A4%E4%B8%8E%E9%85%8D%E7%BD%AE%E8%A7%A3%E6%9E%90/index.html">
+<meta property="og:site_name" content="快乐虫の地带">
+<meta property="og:description" content="npm">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.ruanyifeng.com/blogimg/asset/201105/free_software_licenses.png">
+<meta property="article:published_time" content="2022-03-29T02:49:29.877Z">
+<meta property="article:modified_time" content="2022-03-29T02:12:16.018Z">
+<meta property="article:author" content="happyChong">
+<meta property="article:tag" content="npm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.ruanyifeng.com/blogimg/asset/201105/free_software_licenses.png">
+  
+    <link rel="alternate" href="/atom.xml" title="快乐虫の地带" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">快乐虫の地带</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://happychong.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="default-2019-10-24-npm命令与配置解析" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/03/29/2019-10-24-npm%E5%91%BD%E4%BB%A4%E4%B8%8E%E9%85%8D%E7%BD%AE%E8%A7%A3%E6%9E%90/" class="article-date">
+  <time datetime="2022-03-29T02:49:29.877Z" itemprop="datePublished">2022-03-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%91%A8%E8%BE%B9/">周边</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      npm 命令与配置解析
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1><h2 id="一：初始化包"><a href="#一：初始化包" class="headerlink" title="一：初始化包"></a>一：初始化包</h2><p>初始化package.json</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 自动生成</span></span><br><span class="line">npm install -y</span><br><span class="line"></span><br><span class="line"><span class="comment"># 询问模式</span></span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+
+<h2 id="二：下载包"><a href="#二：下载包" class="headerlink" title="二：下载包"></a>二：下载包</h2><h3 id="1-全局下载安装包"><a href="#1-全局下载安装包" class="headerlink" title="1.全局下载安装包"></a>1.全局下载安装包</h3><p>安装命令如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 全局安装 i=install -g 表示全局安装</span></span><br><span class="line">npm i http-server -g</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-假如我们自己写个全局包"><a href="#1-1-假如我们自己写个全局包" class="headerlink" title="1.1 假如我们自己写个全局包"></a>1.1 假如我们自己写个全局包</h4><ol>
+<li>创建一个bin文件夹</li>
+<li>bin里面创建一个叫www的文件</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// www文件内容</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 指定当前文件的执行环境为node</span></span><br><span class="line">#! <span class="regexp">/usr/</span>bin/env node</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;我自己的包的代码&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 当我们在命令行工具执行某个命令(lesson-my201910)的时候，我们希望找到这个www文件运行</span></span><br><span class="line"><span class="comment">// 那么需要在package.json文件中设置属性如下</span></span><br><span class="line"><span class="comment">// &quot;bin&quot;:&#123;</span></span><br><span class="line"><span class="comment">//     &quot;lesson-my201910&quot;:&quot;./bin/www&quot;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 开发过程中，可以使用 npm link 命令创建快捷方式链接，指向当前目录的文件</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-本地安装包-在当前项目下，要使用的包"><a href="#2-本地安装包-在当前项目下，要使用的包" class="headerlink" title="2.本地安装包(在当前项目下，要使用的包)"></a>2.本地安装包(在当前项目下，要使用的包)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">npm install jquery --save</span><br><span class="line"><span class="comment"># --save 默认就指定为--save 可以简写为 -S</span></span><br><span class="line"><span class="comment"># 表示安装到当前的dependencies，是上线和开发的时候都需要</span></span><br><span class="line"></span><br><span class="line">npm install webpack --save-dev</span><br><span class="line"><span class="comment"># --save-dev 可简写为 -D 安装到当前的devDependencies 开发依赖 上线的时候不需要</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 有一天把包发布了，别人会安装你发布的包，如果你的模块被别人安装，你的模块中的dependencies会默认一起被下载，devDependencies不会被下载</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果安装包过程中出现错误，可以执行 npm cache clean --force 来清空缓存后，重新安装</span></span><br><span class="line"></span><br><span class="line">npm install</span><br><span class="line"><span class="comment"># 安装dependencies和devDependencies设置的全部依赖包</span></span><br><span class="line"></span><br><span class="line">npm install --production </span><br><span class="line"><span class="comment"># 这个命令可以只安装dependencies（生产）环境的包</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="三：常见的依赖项"><a href="#三：常见的依赖项" class="headerlink" title="三：常见的依赖项"></a>三：常见的依赖项</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package.json</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;dependencies&quot;</span>: &#123;&#125;,</span><br><span class="line">    <span class="comment">// 上线和开发的时候都需要dependencies的依赖</span></span><br><span class="line">    <span class="string">&quot;devDependencies&quot;</span>: &#123;&#125;,</span><br><span class="line">    <span class="comment">// 开发的时候需要的依赖</span></span><br><span class="line">    <span class="string">&quot;peerDependencies&quot;</span>: &#123;&#125;,</span><br><span class="line">    <span class="comment">// 在 npm install 的时候并不会自动安装，但是会打印出需要安装相关包的警告信息</span></span><br><span class="line">    <span class="string">&quot;bundleDependencies&quot;</span>: [<span class="string">&quot;包名&quot;</span>],</span><br><span class="line">    <span class="comment">// 当执行 npm pack 命令打包的时候，会把bundleDependencies依赖的包打在当前包里</span></span><br><span class="line">    <span class="comment">// 其中依赖包的版本信息在dependencies依赖里设置</span></span><br><span class="line">    <span class="string">&quot;optionalDependencies&quot;</span>: &#123;&#125;</span><br><span class="line">    <span class="comment">// 可选依赖包 就算其中设置的包没安装上也没关系（不会报错），可以判断一下，有这个包就用，没有这个包用别的包</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四：版本相关"><a href="#四：版本相关" class="headerlink" title="四：版本相关"></a>四：版本相关</h2><h3 id="1-版本解析"><a href="#1-版本解析" class="headerlink" title="1 版本解析"></a>1 版本解析</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;version&quot;</span>: <span class="string">&quot;1.2.3&quot;</span>,</span><br><span class="line">    <span class="comment">// 1变了，表示不兼容老代码，大规模的更新</span></span><br><span class="line">    <span class="comment">// npm version major    第一位+1，第二位变0，第三位变0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2变了，表示增加了一些功能</span></span><br><span class="line">    <span class="comment">// npm version minor    第二位+1，第三位变0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3变了，表示小的补丁</span></span><br><span class="line">    <span class="comment">// npm version patch    第三位+1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 以上 npm version 的命令，可以增加版本，并且同步 git tag</span></span><br><span class="line">    <span class="string">&quot;dependencies&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;xxx&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="string">&quot;yyy&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="string">&quot;zzz&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="2-版本依赖设置"><a href="#2-版本依赖设置" class="headerlink" title="2 版本依赖设置"></a>2 版本依赖设置</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;dependencies&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;xxx&quot;</span>: <span class="string">&quot;^2.0.0&quot;</span>,</span><br><span class="line">        <span class="comment">// ^ 不超过第一位</span></span><br><span class="line">        <span class="comment">//   只要不到3都可以，不能小于2  2.0.0 &lt; version &lt; 3.0.0</span></span><br><span class="line">        <span class="string">&quot;yyy&quot;</span>: <span class="string">&quot;~2.1.0&quot;</span>,</span><br><span class="line">        <span class="comment">// ~ 不超过第二位</span></span><br><span class="line">        <span class="comment">//   第二位不超过1就可以   2.1.X  X等于多少都行</span></span><br><span class="line">        <span class="string">&quot;zzz&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-项目发版规范"><a href="#3-项目发版规范" class="headerlink" title="3 项目发版规范"></a>3 项目发版规范</h3><p>一般我们会先发测试版本，测试通过后，再发正式版本，以下为测试版本的3个阶段</p>
+<ol>
+<li>α（Alpha） - 一般只供内部测试使用</li>
+<li>β（Beta） - 已经消除了大部分不完善之处，可能还存在缺陷和漏洞，一般提供给特定的用户群来测试使用</li>
+<li>γ（RC） - 产品已经相当成熟，只需在个别地方再做进一步优化即可上市发布</li>
+</ol>
+<p>用户正常安装包的时候，只会安装包的正式版本，不会安装到以上的测试包版本</p>
+<h2 id="五：协议-license"><a href="#五：协议-license" class="headerlink" title="五：协议 - license"></a>五：协议 - license</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;license&quot;</span>: <span class="string">&quot;MIT&quot;</span></span><br><span class="line">    <span class="comment">// license - 设置代码开源许可证</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>借用阮一峰老师的图来查看开源许可证的解析吧</p>
+<p><img src="http://www.ruanyifeng.com/blogimg/asset/201105/free_software_licenses.png" alt="license"></p>
+<h2 id="六：脚本-scripts"><a href="#六：脚本-scripts" class="headerlink" title="六：脚本 - scripts"></a>六：脚本 - scripts</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;dev&quot;</span>: <span class="string">&quot;node build/dev-server.js&quot;</span>,</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// scripts - 配置执行的脚本</span></span><br><span class="line">    <span class="comment">// npm run dev  - 可以把scripts中dev设置的代码放到bash命令中执行</span></span><br><span class="line">    <span class="comment">//     当执行npm run 的时候，会把当前目录node_modules.bin也拷贝到当前的系统的path找那个，所以 npm run 可以执行.bin下的文件</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="七：npx-执行"><a href="#七：npx-执行" class="headerlink" title="七：npx - 执行"></a>七：npx - 执行</h2><p>npx 可以直接执行node_modules&#x2F;.bin文件 不需要再配置scripts，如果模块不存在自动安装，安装完使用后还会自动销毁，这样就避免全局安装模块</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx mime 1.jpg</span><br></pre></td></tr></table></figure>
+
+<h2 id="八：发布"><a href="#八：发布" class="headerlink" title="八：发布"></a>八：发布</h2><h3 id="1-准备："><a href="#1-准备：" class="headerlink" title="1.准备："></a>1.准备：</h3><ul>
+<li>首先要保证包名不重名，其次包的版本是最新的，才可以发布成功</li>
+<li>其次当前计算机的npm源要是官方源，不能是taobao之类<ul>
+<li>nrm（node源管理工具）可以切换源，用 nrm use npm 命令切换</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在当前包的项目目录下执行命令</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 发布测试版本命令</span></span><br><span class="line">npm publish --tag=beta</span><br><span class="line"></span><br><span class="line"><span class="comment"># 发布正式版本命令</span></span><br><span class="line">npm publish</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="2-三源工具："><a href="#2-三源工具：" class="headerlink" title="2.三源工具："></a>2.三源工具：</h3><ul>
+<li>nrm node源管理工具</li>
+<li>nvm node版本管理工具</li>
+<li>npm node包管理工具</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2022/03/29/2019-10-24-npm%E5%91%BD%E4%BB%A4%E4%B8%8E%E9%85%8D%E7%BD%AE%E8%A7%A3%E6%9E%90/" data-id="cl1fzqfvq000fvgnuaikr9w4d" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/npm/" rel="tag">npm</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/03/29/2019-11-07-node%E6%B7%B1%E5%BA%A6%E5%88%A0%E9%99%A4%E7%9B%AE%E5%BD%95%E5%8F%8A%E7%9B%AE%E5%BD%95%E9%87%8C%E7%9A%84%E5%86%85%E5%AE%B9-fs%E5%88%A0%E9%99%A4%E6%89%A9%E5%B1%95/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Node - 深度（完全）删除目录及目录里的内容 - 扩展
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/03/29/2019-10-30-Node---buffer/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Node --- buffer</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/03/31/2022-03-31-github%20password%20authentication%20was%20removed%20on%20August%2013,%202021.%20Please%20use%20a%20personal%20access%20token%20instead/">2022-03-31-password authentication was removed on August 13, 2021. Please use a personal access token instead.</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2021-08-05-%E9%9D%A2%E8%AF%95%E9%A2%98%E6%80%BB%E7%BB%93%EF%BC%88%E9%9D%9EVue%EF%BC%89/">2021-08-05-面试题总结（非Vue）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2021-08-05-typescript/">typescript</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2018-1-11-HEXO-hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2021-03-22-git%20bash%20arrow%20%E4%B8%8D%E8%83%BD%E9%80%89%E6%8B%A9%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88(windows)/">git bash arrow 不能选择解决方案(windows)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-3-20-webpack%E5%8E%9F%E7%90%86/">webpack 原理与实现</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-3-25-webpack-loader%E5%8E%9F%E7%90%86/">webpack - loader 原理与实现</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-07-22-Vue%E9%9D%A2%E8%AF%95%E9%A2%98/">Vue 面试题</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-05-11-mangoDB/">mongoDB</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-07-22-Vue%E5%9F%BA%E7%A1%80/">Vue 基础知识</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-04-23-ast/">ast（语法树）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-04-27-dart/">Dart 入门</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-04-14-node%E8%BF%9B%E7%A8%8B%EF%BC%88process%EF%BC%89/">Node 的 进程 (process)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-04-21-node%E8%BF%9B%E7%A8%8B%EF%BC%88pm2%EF%BC%89/">Node 的 进程(pm2)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2020-03-30-webpack%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E6%B5%81%E7%A8%8B/">webpack - 源码编译流程</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-12-20-webpack%E4%BC%98%E5%8C%96/">webpack 4.0 + 笔记(优化)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-11-19-HTTP%E5%9F%BA%E7%A1%80/">HTTP基础扫盲</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-12-16-webpack%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE/">webpack 4.0+ 笔记(基础配置)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-11-01-JS%E4%B8%AD%EF%BC%8C0.1+0.2%EF%BC%9E0.3%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F/">0.1+0.2 &gt; 0.3 Why???</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-11-01-Node%E4%B8%AD%E6%96%87%E4%BB%B6%E7%9A%84%E8%AF%BB%E5%86%99%E6%A8%A1%E5%9D%97---FS/">Node -文件读写模块--- fs</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-11-07-node%E6%B7%B1%E5%BA%A6%E5%88%A0%E9%99%A4%E7%9B%AE%E5%BD%95%E5%8F%8A%E7%9B%AE%E5%BD%95%E9%87%8C%E7%9A%84%E5%86%85%E5%AE%B9-fs%E5%88%A0%E9%99%A4%E6%89%A9%E5%B1%95/">Node - 深度（完全）删除目录及目录里的内容 - 扩展</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-24-npm%E5%91%BD%E4%BB%A4%E4%B8%8E%E9%85%8D%E7%BD%AE%E8%A7%A3%E6%9E%90/">npm 命令与配置解析</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-30-Node---buffer/">Node --- buffer</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-14-node%E6%A8%A1%E5%9D%97%E5%8A%A0%E8%BD%BD%E5%8E%9F%E7%90%86/">Node模块加载原理</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-14-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%9C%8D%E5%8A%A1/">单线程与多线程的基本概念</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-16-Node%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%EF%BC%88event%20loop%EF%BC%89/">Node中的事件轮询（event loop）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-14-node%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97-%E7%AE%80%E8%BF%B0/">Node核心模块 - 简述</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-12-node%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E6%89%AB%E7%9B%B2/">Node基本概念扫盲</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-12-%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%ADjs%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%EF%BC%88event%20loop%EF%BC%89/">浏览器中javascript的事件循环（event loop）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-09-05-es6+---%E7%B1%BB%E7%9A%84%E4%BF%AE%E9%A5%B0/">es6+---类的修饰</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-10-05-vue%20nextTick%E5%8E%9F%E7%90%86/">vue nextTick原理</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2018-08-08-vue%20%E5%BC%BA%E5%88%B6%E6%9B%B4%E6%96%B0%E8%AF%95%E5%9B%BE%E7%9A%84%E6%96%B9%E6%B3%95/">vue 强制更新试图 的方法</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2019-09-03-es+---class%E7%94%A8%E6%B3%95%E7%AC%94%E8%AE%B0%20/">es6、7-类的定义</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2016-05-19-%E5%AE%8B%E6%99%93%E4%B8%B9%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%AE%80%E5%8E%86/">宋晓丹的个人简历</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2016-05-11-windows%E4%B8%8B%EF%BC%8CATOM%E5%B8%B8%E7%94%A8%E7%BC%96%E8%BE%91%E5%99%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/">ATOM常用快捷键</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2016-05-05-Git%E5%91%BD%E4%BB%A4/">Git常用命令</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2016-05-05-%E5%9F%BA%E6%9C%ACshell%E5%91%BD%E4%BB%A4/">基本SHELL命令使用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Dart/">Dart</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node/">Node</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Vue/">Vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/es6/">es6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongoDB/">mongoDB</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%B8%AA%E4%BA%BA/">个人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%91%A8%E8%BE%B9/">周边</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/" rel="tag">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/EventLoop/" rel="tag">EventLoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node/" rel="tag">Node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/" rel="tag">Vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ast/" rel="tag">ast</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/buffer/" rel="tag">buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/" rel="tag">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/core/" rel="tag">core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/event-loop/" rel="tag">event loop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/" rel="tag">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fs/" rel="tag">fs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/happyChong/" rel="tag">happyChong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loader/" rel="tag">loader</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/module/" rel="tag">module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongoDB/" rel="tag">mongoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextTick/" rel="tag">nextTick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/" rel="tag">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/path/" rel="tag">path</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pm2/" rel="tag">pm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/process/" rel="tag">process</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/" rel="tag">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typescript/" rel="tag">typescript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/util/" rel="tag">util</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vm/" rel="tag">vm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/" rel="tag">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E7%BA%BF%E7%A8%8B/" rel="tag">单线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="tag">面试题</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventLoop/" style="font-size: 12.5px;">EventLoop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/ast/" style="font-size: 10px;">ast</a> <a href="/tags/buffer/" style="font-size: 10px;">buffer</a> <a href="/tags/class/" style="font-size: 12.5px;">class</a> <a href="/tags/core/" style="font-size: 10px;">core</a> <a href="/tags/event-loop/" style="font-size: 12.5px;">event loop</a> <a href="/tags/events/" style="font-size: 10px;">events</a> <a href="/tags/fs/" style="font-size: 15px;">fs</a> <a href="/tags/git/" style="font-size: 17.5px;">git</a> <a href="/tags/happyChong/" style="font-size: 10px;">happyChong</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/loader/" style="font-size: 10px;">loader</a> <a href="/tags/module/" style="font-size: 10px;">module</a> <a href="/tags/mongoDB/" style="font-size: 10px;">mongoDB</a> <a href="/tags/nextTick/" style="font-size: 10px;">nextTick</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/path/" style="font-size: 10px;">path</a> <a href="/tags/pm2/" style="font-size: 10px;">pm2</a> <a href="/tags/process/" style="font-size: 10px;">process</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/util/" style="font-size: 10px;">util</a> <a href="/tags/vm/" style="font-size: 10px;">vm</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 20px;">webpack</a> <a href="/tags/%E5%8D%95%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">单线程</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">多线程</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E9%A2%98/" style="font-size: 12.5px;">面试题</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 happyChong<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

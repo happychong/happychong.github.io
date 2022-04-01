@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head><meta name="generator" content="Hexo 3.9.0">
+<head>
   <meta charset="utf-8">
   
 
@@ -13,10 +13,9 @@
 <meta property="og:url" content="http://happychong.github.io/page/4/index.html">
 <meta property="og:site_name" content="快乐虫の地带">
 <meta property="og:description" content="我的笔记">
-<meta property="og:locale" content="zh-CN">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="happyChong">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="快乐虫の地带">
-<meta name="twitter:description" content="我的笔记">
   
     <link rel="alternate" href="/atom.xml" title="快乐虫の地带" type="application/atom+xml">
   
@@ -26,9 +25,11 @@
   
     <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
   
-  <link rel="stylesheet" href="/css/style.css">
-</head>
-</html>
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
 <body>
   <div id="container">
     <div id="wrap">
@@ -65,56 +66,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="default-es+---class用法笔记 " class="article article-type-default" itemscope itemprop="blogPost">
+    <article id="default-2019-10-05-vue nextTick原理" class="article article-type-default" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/09/03/es+---class用法笔记 /" class="article-date">
-  <time datetime="2019-09-02T16:00:00.000Z" itemprop="datePublished">2019-09-03</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/es6/">es6</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/09/03/es+---class用法笔记 /">es6、7-类的定义</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="基础语法"><a href="#基础语法" class="headerlink" title="基础语法"></a>基础语法</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">    <span class="comment">// type声明到实例上的，同下面的constructor写法一样的效果</span></span><br><span class="line">    type = <span class="string">'哺乳类'</span>;</span><br><span class="line">    <span class="comment">// constructor() &#123;</span></span><br><span class="line">    <span class="comment">//    // constructor同es5定义类的方法体类似含义</span></span><br><span class="line">    <span class="comment">//     this.type = '哺乳类'</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 原型上设置a属性</span></span><br><span class="line">    <span class="keyword">get</span> a() &#123;</span><br><span class="line">        <span class="comment">// 原理：Object.defineProperty(Animal.prototype, a)</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 声明到了原型上 // Animal.prototype.say</span></span><br><span class="line">    say() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 静态属性就是定义到类上的属性</span></span><br><span class="line">    <span class="keyword">static</span> flag = <span class="string">'动物'</span> <span class="comment">// es7写法</span></span><br><span class="line">    <span class="comment">// es6中只有静态方法,代码如下</span></span><br><span class="line">    <span class="comment">// static flag() &#123; // es6语法 1）</span></span><br><span class="line">    <span class="comment">//     return '动物'</span></span><br><span class="line">    <span class="comment">//     // 获取的时候 Animal.flag()</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="comment">// static get flag() &#123; // es6语法 1）</span></span><br><span class="line">    <span class="comment">//     return '动物'</span></span><br><span class="line">    <span class="comment">//     // 获取的时候 Animal.flag</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 注意如下代码，es6中把原型上的方法拿出来用，this是undefined</span></span><br><span class="line"><span class="keyword">let</span> animal= <span class="keyword">new</span> Animal();</span><br><span class="line"><span class="keyword">let</span> say = animal.say;</span><br><span class="line">say();  <span class="comment">//   打印的this是undefined</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 需要bind，this才能有所指向，代码如下</span></span><br><span class="line"><span class="comment">// 如果将类中的方法拿出来用必须绑定this 否则默认指向undefined</span></span><br><span class="line"><span class="keyword">let</span> aniamlOk = <span class="keyword">new</span> Animal();</span><br><span class="line"><span class="keyword">let</span> sayOk = animal.say.bind(animal);</span><br><span class="line">sayOk();</span><br></pre></td></tr></table></figure>
-
-<h2 id="类的继承"><a href="#类的继承" class="headerlink" title="类的继承"></a>类的继承</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>(name) &#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.type = <span class="string">'哺乳类'</span></span><br><span class="line">    &#125;</span><br><span class="line">    say() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'say'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> flag = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 继承实例和原型上的属性 extends = call + Object.create() +  Object.setPrototypeOf</span></span><br><span class="line"><span class="comment">// 原理：通过Object.defineProperty实现了 原型 + 静态方法属性的定义</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Tiger</span> <span class="keyword">extends</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>(name) &#123;</span><br><span class="line">        <span class="keyword">super</span>(name); <span class="comment">// 调用supper = Animal.call(tiger, name)</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> getAnimal() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">super</span>.flag, <span class="string">'-----'</span>); <span class="comment">// 在静态方法的定义中，super 指向的是 父类</span></span><br><span class="line">    &#125;</span><br><span class="line">    say() &#123;</span><br><span class="line">        <span class="keyword">super</span>.say(); <span class="comment">// 在原型方法中，super 指向的是 父类的原型</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> tiger = <span class="keyword">new</span> Tiger(<span class="string">'老虎'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(Tiger.flag); <span class="comment">// 1</span></span><br><span class="line"><span class="built_in">console</span>.log(tiger.name); <span class="comment">// 老虎</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="new的原理"><a href="#new的原理" class="headerlink" title="new的原理"></a>new的原理</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">this</span>.age = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// new 一个类</span></span><br><span class="line">        <span class="comment">// 1：得到一个对象，这个对象上的方法的this指向这个对象---代码如上</span></span><br><span class="line">        <span class="comment">// 2：如果一个类返回的是一个引用空间，那个实例将指向这个空间---代码如下</span></span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="attr">c</span>: <span class="number">1</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line">A.prototype.say = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'say'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 模拟new一个类</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mockNew</span>(<span class="params">mockClass</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 1) 创建一个对象，并且将对象传入到函数中作为this</span></span><br><span class="line">    <span class="keyword">let</span> obj = &#123;&#125;;</span><br><span class="line">    <span class="keyword">let</span> returnVal = mockClass.call(obj);</span><br><span class="line">    <span class="keyword">if</span> (returnVal !==<span class="literal">null</span> &amp;&amp; (<span class="keyword">typeof</span> returnVal === <span class="string">'object'</span> || <span class="keyword">typeof</span> returnVal === <span class="string">'function'</span>)) &#123;</span><br><span class="line">        <span class="comment">// 如果一个类返回的是一个引用空间，那个实例将指向这个空间</span></span><br><span class="line">        <span class="keyword">return</span> returnVal</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 2) 继承原型上的方法</span></span><br><span class="line">    obj.__proto__ = mockClass.prototype;</span><br><span class="line">    <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> o = mockNew(A);</span><br><span class="line">o.say();</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2019/09/03/es+---class用法笔记 /" data-id="cl1dl9zbl000bccnuvwvdv0fg" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/class/">class</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="default-vue 强制更新试图的方法" class="article article-type-default" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/08/08/vue 强制更新试图的方法/" class="article-date">
-  <time datetime="2018-08-07T16:00:00.000Z" itemprop="datePublished">2018-08-08</time>
+    <a href="/2022/03/29/2019-10-05-vue%20nextTick%E5%8E%9F%E7%90%86/" class="article-date">
+  <time datetime="2022-03-29T02:49:29.873Z" itemprop="datePublished">2022-03-29</time>
 </a>
     
   <div class="article-category">
@@ -129,7 +84,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/08/vue 强制更新试图的方法/">vue 强制更新试图 的方法</a>
+      <a class="article-title" href="/2022/03/29/2019-10-05-vue%20nextTick%E5%8E%9F%E7%90%86/">vue nextTick原理</a>
     </h1>
   
 
@@ -137,26 +92,21 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="1-情况说明"><a href="#1-情况说明" class="headerlink" title="1.情况说明"></a>1.情况说明</h2><p>vue应用中，偶尔会出现数据已经更新，但是视图不更新的情况，这里总结了4种方法</p>
-<h2 id="2-前三种方法"><a href="#2-前三种方法" class="headerlink" title="2.前三种方法"></a>2.前三种方法</h2><p>前三种方法网上一搜一大堆，只做简单文字描述</p>
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1><p>vue中的视图更新有缓存机制，会把多次数据的修改集中在一次视图更新中来更新视图，我们想视图更新之后再获取数据，那么就可用vue的nextTick，nextTick中的代码可以在下一队列中执行，实现代码的延迟执行，多次调用nextTick，会将其中的方法放入一个队列中，视图更新的时候会调用flushCallbacks方法，这个方法会执行所有nextTick中的方法。至于下一队列的执行时机，会按以下列表优先级进行选择。</p>
 <ul>
-<li><p>1.通过索引直接设置数组的某个值，this.objArr[index] = newValue;</p>
-</li>
-<li><p>2.通过索引直接设置数组中对象的某个属性，this.objArr[index].pro = newValue;</p>
-</li>
-<li><p>3.通过修改数组的长度，this.objArr.length = newLength;</p>
-</li>
+<li>prosise.then (微任务)</li>
+<li>MutationObserver (微任务，非IE，h5方法)</li>
+<li>setImmediate (宏任务，IE)</li>
+<li>setTimeout (宏任务)</li>
 </ul>
-<h2 id="3-第四种方法-vue提供的强制刷新dom的方法"><a href="#3-第四种方法-vue提供的强制刷新dom的方法" class="headerlink" title="3.第四种方法 - vue提供的强制刷新dom的方法"></a>3.第四种方法 - vue提供的强制刷新dom的方法</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vue 强制更新dom</span></span><br><span class="line">vm.$forceUpdate();</span><br></pre></td></tr></table></figure>
-
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2018/08/08/vue 强制更新试图的方法/" data-id="cl1dl9zb80006ccnu3playzww" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2022/03/29/2019-10-05-vue%20nextTick%E5%8E%9F%E7%90%86/" data-id="cl1fzqfvd0008vgnu1idgdvsf" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue/">vue</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nextTick/" rel="tag">nextTick</a></li></ul>
 
     </footer>
   </div>
@@ -165,14 +115,14 @@
 
 
   
-    <article id="default-宋晓丹的个人简历" class="article article-type-default" itemscope itemprop="blogPost">
+    <article id="default-2018-08-08-vue 强制更新试图的方法" class="article article-type-default" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2016/05/19/宋晓丹的个人简历/" class="article-date">
-  <time datetime="2016-05-18T16:00:00.000Z" itemprop="datePublished">2016-05-19</time>
+    <a href="/2022/03/29/2018-08-08-vue%20%E5%BC%BA%E5%88%B6%E6%9B%B4%E6%96%B0%E8%AF%95%E5%9B%BE%E7%9A%84%E6%96%B9%E6%B3%95/" class="article-date">
+  <time datetime="2022-03-29T02:49:29.871Z" itemprop="datePublished">2022-03-29</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/个人/">个人</a>
+    <a class="article-category-link" href="/categories/vue/">vue</a>
   </div>
 
   </div>
@@ -183,7 +133,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/19/宋晓丹的个人简历/">宋晓丹的个人简历</a>
+      <a class="article-title" href="/2022/03/29/2018-08-08-vue%20%E5%BC%BA%E5%88%B6%E6%9B%B4%E6%96%B0%E8%AF%95%E5%9B%BE%E7%9A%84%E6%96%B9%E6%B3%95/">vue 强制更新试图 的方法</a>
     </h1>
   
 
@@ -191,22 +141,120 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="1-基本信息"><a href="#1-基本信息" class="headerlink" title="1.基本信息"></a>1.基本信息</h2><ul>
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1><h2 id="1-情况说明"><a href="#1-情况说明" class="headerlink" title="1.情况说明"></a>1.情况说明</h2><p>vue应用中，偶尔会出现数据已经更新，但是视图不更新的情况，这里总结了4种方法</p>
+<h2 id="2-前三种方法"><a href="#2-前三种方法" class="headerlink" title="2.前三种方法"></a>2.前三种方法</h2><p>前三种方法网上一搜一大堆，只做简单文字描述</p>
+<ul>
+<li><p>1.通过索引直接设置数组的某个值，this.objArr[index] &#x3D; newValue;</p>
+</li>
+<li><p>2.通过索引直接设置数组中对象的某个属性，this.objArr[index].pro &#x3D; newValue;</p>
+</li>
+<li><p>3.通过修改数组的长度，this.objArr.length &#x3D; newLength;</p>
+</li>
+</ul>
+<h2 id="3-第四种方法-vue提供的强制刷新dom的方法"><a href="#3-第四种方法-vue提供的强制刷新dom的方法" class="headerlink" title="3.第四种方法 - vue提供的强制刷新dom的方法"></a>3.第四种方法 - vue提供的强制刷新dom的方法</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vue 强制更新dom</span></span><br><span class="line">vm.$forceUpdate();</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2022/03/29/2018-08-08-vue%20%E5%BC%BA%E5%88%B6%E6%9B%B4%E6%96%B0%E8%AF%95%E5%9B%BE%E7%9A%84%E6%96%B9%E6%B3%95/" data-id="cl1fzqfv80004vgnu70lb5z15" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue/" rel="tag">vue</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="default-2019-09-03-es+---class用法笔记 " class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/03/29/2019-09-03-es+---class%E7%94%A8%E6%B3%95%E7%AC%94%E8%AE%B0%20/" class="article-date">
+  <time datetime="2022-03-29T02:49:29.871Z" itemprop="datePublished">2022-03-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/es6/">es6</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/03/29/2019-09-03-es+---class%E7%94%A8%E6%B3%95%E7%AC%94%E8%AE%B0%20/">es6、7-类的定义</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1><h2 id="基础语法"><a href="#基础语法" class="headerlink" title="基础语法"></a>基础语法</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Animal</span> &#123;</span><br><span class="line">    <span class="comment">// type声明到实例上的，同下面的constructor写法一样的效果</span></span><br><span class="line">    type = <span class="string">&#x27;哺乳类&#x27;</span>;</span><br><span class="line">    <span class="comment">// constructor() &#123;</span></span><br><span class="line">    <span class="comment">//    // constructor同es5定义类的方法体类似含义</span></span><br><span class="line">    <span class="comment">//     this.type = &#x27;哺乳类&#x27;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 原型上设置a属性</span></span><br><span class="line">    <span class="keyword">get</span> <span class="title function_">a</span>() &#123;</span><br><span class="line">        <span class="comment">// 原理：Object.defineProperty(Animal.prototype, a)</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 声明到了原型上 // Animal.prototype.say</span></span><br><span class="line">    <span class="title function_">say</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 静态属性就是定义到类上的属性</span></span><br><span class="line">    <span class="keyword">static</span> flag = <span class="string">&#x27;动物&#x27;</span> <span class="comment">// es7写法</span></span><br><span class="line">    <span class="comment">// es6中只有静态方法,代码如下</span></span><br><span class="line">    <span class="comment">// static flag() &#123; // es6语法 1）</span></span><br><span class="line">    <span class="comment">//     return &#x27;动物&#x27;</span></span><br><span class="line">    <span class="comment">//     // 获取的时候 Animal.flag()</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="comment">// static get flag() &#123; // es6语法 1）</span></span><br><span class="line">    <span class="comment">//     return &#x27;动物&#x27;</span></span><br><span class="line">    <span class="comment">//     // 获取的时候 Animal.flag</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 注意如下代码，es6中把原型上的方法拿出来用，this是undefined</span></span><br><span class="line"><span class="keyword">let</span> animal= <span class="keyword">new</span> <span class="title class_">Animal</span>();</span><br><span class="line"><span class="keyword">let</span> say = animal.<span class="property">say</span>;</span><br><span class="line"><span class="title function_">say</span>();  <span class="comment">//   打印的this是undefined</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 需要bind，this才能有所指向，代码如下</span></span><br><span class="line"><span class="comment">// 如果将类中的方法拿出来用必须绑定this 否则默认指向undefined</span></span><br><span class="line"><span class="keyword">let</span> aniamlOk = <span class="keyword">new</span> <span class="title class_">Animal</span>();</span><br><span class="line"><span class="keyword">let</span> sayOk = animal.<span class="property">say</span>.<span class="title function_">bind</span>(animal);</span><br><span class="line"><span class="title function_">sayOk</span>();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="类的继承"><a href="#类的继承" class="headerlink" title="类的继承"></a>类的继承</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Animal</span> &#123;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params">name</span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">type</span> = <span class="string">&#x27;哺乳类&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">say</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;say&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> flag = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 继承实例和原型上的属性 extends = call + Object.create() +  Object.setPrototypeOf</span></span><br><span class="line"><span class="comment">// 原理：通过Object.defineProperty实现了 原型 + 静态方法属性的定义</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Tiger</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Animal</span> &#123;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params">name</span>) &#123;</span><br><span class="line">        <span class="variable language_">super</span>(name); <span class="comment">// 调用supper = Animal.call(tiger, name)</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> <span class="title function_">getAnimal</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">super</span>.<span class="property">flag</span>, <span class="string">&#x27;-----&#x27;</span>); <span class="comment">// 在静态方法的定义中，super 指向的是 父类</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">say</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">super</span>.<span class="title function_">say</span>(); <span class="comment">// 在原型方法中，super 指向的是 父类的原型</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> tiger = <span class="keyword">new</span> <span class="title class_">Tiger</span>(<span class="string">&#x27;老虎&#x27;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Tiger</span>.<span class="property">flag</span>); <span class="comment">// 1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tiger.<span class="property">name</span>); <span class="comment">// 老虎</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="new的原理"><a href="#new的原理" class="headerlink" title="new的原理"></a>new的原理</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">A</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = <span class="number">1</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">age</span> = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// new 一个类</span></span><br><span class="line">        <span class="comment">// 1：得到一个对象，这个对象上的方法的this指向这个对象---代码如上</span></span><br><span class="line">        <span class="comment">// 2：如果一个类返回的是一个引用空间，那个实例将指向这个空间---代码如下</span></span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="attr">c</span>: <span class="number">1</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line">A.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">say</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;say&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 模拟new一个类</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">mockNew</span>(<span class="params">mockClass</span>) &#123;</span><br><span class="line">    <span class="comment">// 1) 创建一个对象，并且将对象传入到函数中作为this</span></span><br><span class="line">    <span class="keyword">let</span> obj = &#123;&#125;;</span><br><span class="line">    <span class="keyword">let</span> returnVal = mockClass.<span class="title function_">call</span>(obj);</span><br><span class="line">    <span class="keyword">if</span> (returnVal !==<span class="literal">null</span> &amp;&amp; (<span class="keyword">typeof</span> returnVal === <span class="string">&#x27;object&#x27;</span> || <span class="keyword">typeof</span> returnVal === <span class="string">&#x27;function&#x27;</span>)) &#123;</span><br><span class="line">        <span class="comment">// 如果一个类返回的是一个引用空间，那个实例将指向这个空间</span></span><br><span class="line">        <span class="keyword">return</span> returnVal</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 2) 继承原型上的方法</span></span><br><span class="line">    obj.<span class="property">__proto__</span> = mockClass.<span class="property"><span class="keyword">prototype</span></span>;</span><br><span class="line">    <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> o = <span class="title function_">mockNew</span>(A);</span><br><span class="line">o.<span class="title function_">say</span>();</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2022/03/29/2019-09-03-es+---class%E7%94%A8%E6%B3%95%E7%AC%94%E8%AE%B0%20/" data-id="cl1fzqfva0006vgnud67h9wp1" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/class/" rel="tag">class</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="default-2016-05-19-宋晓丹的个人简历" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/03/29/2016-05-19-%E5%AE%8B%E6%99%93%E4%B8%B9%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%AE%80%E5%8E%86/" class="article-date">
+  <time datetime="2022-03-29T02:49:29.870Z" itemprop="datePublished">2022-03-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E4%B8%AA%E4%BA%BA/">个人</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/03/29/2016-05-19-%E5%AE%8B%E6%99%93%E4%B8%B9%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%AE%80%E5%8E%86/">宋晓丹的个人简历</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1><h2 id="1-基本信息"><a href="#1-基本信息" class="headerlink" title="1.基本信息"></a>1.基本信息</h2><ul>
 <li>性别：女</li>
 <li>婚姻状况：已婚已育</li>
 <li>出生年份：1984</li>
 <li>户口所在地：北京</li>
 <li>现居住地：北京房山</li>
 <li>手机号码：15901298780</li>
-<li>邮箱：<a href="mailto:1173290465@qq.com" target="_blank" rel="noopener">1173290465@qq.com</a></li>
+<li>邮箱：<a href="mailto:&#49;&#x31;&#x37;&#51;&#x32;&#57;&#x30;&#52;&#x36;&#x35;&#x40;&#113;&#x71;&#46;&#99;&#x6f;&#x6d;">&#49;&#x31;&#x37;&#51;&#x32;&#57;&#x30;&#52;&#x36;&#x35;&#x40;&#113;&#x71;&#46;&#99;&#x6f;&#x6d;</a></li>
 <li>前端工作年限：10年</li>
-<li>当前薪资：21.5K/月</li>
+<li>当前薪资：21.5K&#x2F;月</li>
 <li>最高学历：本科</li>
 </ul>
 <h2 id="2-求职意向"><a href="#2-求职意向" class="headerlink" title="2.求职意向"></a>2.求职意向</h2><ul>
 <li>期望职位：web前端开发</li>
 <li>工作地区：北京-房山，丰台，石景山，海淀</li>
-<li>期望月薪：27K/月</li>
+<li>期望月薪：27K&#x2F;月</li>
 <li>目前状况：在职，正考虑换个新环境（可以比较快进入新环境）</li>
 </ul>
 <h2 id="3-专业技能"><a href="#3-专业技能" class="headerlink" title="3.专业技能"></a>3.专业技能</h2><ul>
@@ -215,9 +263,9 @@
 <li>项目中已经本着渐进渐强的原则应用css3，H5等新技术</li>
 <li>熟练掌握JavaScript前端脚本语言及其运行原理，Ajax技术进行异步操作，精通开发调试工具，如Firebug、chrome console等</li>
 </ul>
-<h2 id="4-工作经历"><a href="#4-工作经历" class="headerlink" title="4.工作经历"></a>4.工作经历</h2><h3 id="北京汇商融通信息技术有限公司（小笨鸟）-WEB前端开发-（2016-12-—-至今）"><a href="#北京汇商融通信息技术有限公司（小笨鸟）-WEB前端开发-（2016-12-—-至今）" class="headerlink" title="北京汇商融通信息技术有限公司（小笨鸟） | WEB前端开发 （2016/12 — 至今）"></a>北京汇商融通信息技术有限公司（小笨鸟） | WEB前端开发 （2016/12 — 至今）</h3><ul>
-<li>行业类别：互联网/电子商务</li>
-<li>职位月薪：15000-25000元/月</li>
+<h2 id="4-工作经历"><a href="#4-工作经历" class="headerlink" title="4.工作经历"></a>4.工作经历</h2><h3 id="北京汇商融通信息技术有限公司（小笨鸟）-WEB前端开发-（2016-x2F-12-—-至今）"><a href="#北京汇商融通信息技术有限公司（小笨鸟）-WEB前端开发-（2016-x2F-12-—-至今）" class="headerlink" title="北京汇商融通信息技术有限公司（小笨鸟） | WEB前端开发 （2016&#x2F;12 — 至今）"></a>北京汇商融通信息技术有限公司（小笨鸟） | WEB前端开发 （2016&#x2F;12 — 至今）</h3><ul>
+<li>行业类别：互联网&#x2F;电子商务</li>
+<li>职位月薪：15000-25000元&#x2F;月</li>
 </ul>
 <h4 id="工作描述"><a href="#工作描述" class="headerlink" title="工作描述"></a>工作描述</h4><h5 id="负责公司前后台核心业务开发"><a href="#负责公司前后台核心业务开发" class="headerlink" title="负责公司前后台核心业务开发"></a>负责公司前后台核心业务开发</h5><ul>
 <li>商品模块（主商品、刊登商品等)</li>
@@ -238,9 +286,9 @@
 <li>需求调研及任务跟进</li>
 <li>git分支管理等</li>
 </ul>
-<h5 id="跟踪业内发展趋势，对前端相关技术进行学习，研究"><a href="#跟踪业内发展趋势，对前端相关技术进行学习，研究" class="headerlink" title="跟踪业内发展趋势，对前端相关技术进行学习，研究"></a>跟踪业内发展趋势，对前端相关技术进行学习，研究</h5><h5 id="完善文件及模块组织，性能优化，构建和部署自动化等"><a href="#完善文件及模块组织，性能优化，构建和部署自动化等" class="headerlink" title="完善文件及模块组织，性能优化，构建和部署自动化等"></a>完善文件及模块组织，性能优化，构建和部署自动化等</h5><h3 id="百度-神州飞腾-WEB前端开发-（2014-12-—-2016-05）"><a href="#百度-神州飞腾-WEB前端开发-（2014-12-—-2016-05）" class="headerlink" title="百度(神州飞腾) | WEB前端开发 （2014/12 — 2016/05）"></a>百度(神州飞腾) | WEB前端开发 （2014/12 — 2016/05）</h3><ul>
-<li>行业类别：互联网/电子商务</li>
-<li>职位月薪：15000-25000元/月</li>
+<h5 id="跟踪业内发展趋势，对前端相关技术进行学习，研究"><a href="#跟踪业内发展趋势，对前端相关技术进行学习，研究" class="headerlink" title="跟踪业内发展趋势，对前端相关技术进行学习，研究"></a>跟踪业内发展趋势，对前端相关技术进行学习，研究</h5><h5 id="完善文件及模块组织，性能优化，构建和部署自动化等"><a href="#完善文件及模块组织，性能优化，构建和部署自动化等" class="headerlink" title="完善文件及模块组织，性能优化，构建和部署自动化等"></a>完善文件及模块组织，性能优化，构建和部署自动化等</h5><h3 id="百度-神州飞腾-WEB前端开发-（2014-x2F-12-—-2016-x2F-05）"><a href="#百度-神州飞腾-WEB前端开发-（2014-x2F-12-—-2016-x2F-05）" class="headerlink" title="百度(神州飞腾) | WEB前端开发 （2014&#x2F;12 — 2016&#x2F;05）"></a>百度(神州飞腾) | WEB前端开发 （2014&#x2F;12 — 2016&#x2F;05）</h3><ul>
+<li>行业类别：互联网&#x2F;电子商务</li>
+<li>职位月薪：15000-25000元&#x2F;月</li>
 </ul>
 <h4 id="工作描述-1"><a href="#工作描述-1" class="headerlink" title="工作描述"></a>工作描述</h4><h5 id="负责CRM内部运营系统的交互效果及动态数据交互，主要负责模块如下"><a href="#负责CRM内部运营系统的交互效果及动态数据交互，主要负责模块如下" class="headerlink" title="负责CRM内部运营系统的交互效果及动态数据交互，主要负责模块如下"></a>负责CRM内部运营系统的交互效果及动态数据交互，主要负责模块如下</h5><ul>
 <li>任务模块</li>
@@ -250,18 +298,18 @@
 <li>纵横分析模块</li>
 <li>沟通平台模块</li>
 </ul>
-<h5 id="完善文件及模块组织，性能优化，构建和部署自动化等-1"><a href="#完善文件及模块组织，性能优化，构建和部署自动化等-1" class="headerlink" title="完善文件及模块组织，性能优化，构建和部署自动化等"></a>完善文件及模块组织，性能优化，构建和部署自动化等</h5><h5 id="跟踪业内发展趋势，对前端相关新技术进行学习，研究"><a href="#跟踪业内发展趋势，对前端相关新技术进行学习，研究" class="headerlink" title="跟踪业内发展趋势，对前端相关新技术进行学习，研究"></a>跟踪业内发展趋势，对前端相关新技术进行学习，研究</h5><h3 id="中科软科技股份有限公司-WEB前端开发-（2008-12-–-2014-12）"><a href="#中科软科技股份有限公司-WEB前端开发-（2008-12-–-2014-12）" class="headerlink" title="中科软科技股份有限公司 | WEB前端开发 （2008/12 – 2014/12）"></a>中科软科技股份有限公司 | WEB前端开发 （2008/12 – 2014/12）</h3><ul>
+<h5 id="完善文件及模块组织，性能优化，构建和部署自动化等-1"><a href="#完善文件及模块组织，性能优化，构建和部署自动化等-1" class="headerlink" title="完善文件及模块组织，性能优化，构建和部署自动化等"></a>完善文件及模块组织，性能优化，构建和部署自动化等</h5><h5 id="跟踪业内发展趋势，对前端相关新技术进行学习，研究"><a href="#跟踪业内发展趋势，对前端相关新技术进行学习，研究" class="headerlink" title="跟踪业内发展趋势，对前端相关新技术进行学习，研究"></a>跟踪业内发展趋势，对前端相关新技术进行学习，研究</h5><h3 id="中科软科技股份有限公司-WEB前端开发-（2008-x2F-12-–-2014-x2F-12）"><a href="#中科软科技股份有限公司-WEB前端开发-（2008-x2F-12-–-2014-x2F-12）" class="headerlink" title="中科软科技股份有限公司 | WEB前端开发 （2008&#x2F;12 – 2014&#x2F;12）"></a>中科软科技股份有限公司 | WEB前端开发 （2008&#x2F;12 – 2014&#x2F;12）</h3><ul>
 <li>行业类别：计算机软件</li>
-<li>职位月薪：8001-10000元/月</li>
+<li>职位月薪：8001-10000元&#x2F;月</li>
 </ul>
 <h4 id="工作描述-2"><a href="#工作描述-2" class="headerlink" title="工作描述"></a>工作描述</h4><ul>
 <li>各项目界面制作及相应改版页面制作。</li>
 <li>各项目界面的javascript效果制作。</li>
 <li>与后台程序配合动态页面制作。</li>
 </ul>
-<h3 id="大旗网，凌云互动科技有限公司—www-daqi-com-WEB前端开发-（2007-07-–-2008-12）"><a href="#大旗网，凌云互动科技有限公司—www-daqi-com-WEB前端开发-（2007-07-–-2008-12）" class="headerlink" title="大旗网，凌云互动科技有限公司—www.daqi.com | WEB前端开发 （2007/07 – 2008/12）"></a>大旗网，凌云互动科技有限公司—<a href="http://www.daqi.com" target="_blank" rel="noopener">www.daqi.com</a> | WEB前端开发 （2007/07 – 2008/12）</h3><ul>
-<li>行业类别：互联网/电子商务</li>
-<li>职位月薪：4001-6000元/月</li>
+<h3 id="大旗网，凌云互动科技有限公司—www-daqi-com-WEB前端开发-（2007-x2F-07-–-2008-x2F-12）"><a href="#大旗网，凌云互动科技有限公司—www-daqi-com-WEB前端开发-（2007-x2F-07-–-2008-x2F-12）" class="headerlink" title="大旗网，凌云互动科技有限公司—www.daqi.com | WEB前端开发 （2007&#x2F;07 – 2008&#x2F;12）"></a>大旗网，凌云互动科技有限公司—<a target="_blank" rel="noopener" href="http://www.daqi.com/">www.daqi.com</a> | WEB前端开发 （2007&#x2F;07 – 2008&#x2F;12）</h3><ul>
+<li>行业类别：互联网&#x2F;电子商务</li>
+<li>职位月薪：4001-6000元&#x2F;月</li>
 </ul>
 <h4 id="工作描述-3"><a href="#工作描述-3" class="headerlink" title="工作描述"></a>工作描述</h4><ul>
 <li>频道改版页面制作。</li>
@@ -272,9 +320,9 @@
 <li>javascript技术支持。</li>
 <li>flash技术支持。</li>
 </ul>
-<h3 id="社区中国网-www-chinasq-com-cn-网页制作-（2005-05-–-2007-07）"><a href="#社区中国网-www-chinasq-com-cn-网页制作-（2005-05-–-2007-07）" class="headerlink" title="社区中国网 - www.chinasq.com.cn| 网页制作 （2005/05 – 2007/07）"></a>社区中国网 - <a href="http://www.chinasq.com.cn|" target="_blank" rel="noopener">www.chinasq.com.cn|</a> 网页制作 （2005/05 – 2007/07）</h3><ul>
-<li>行业类别：互联网/电子商务</li>
-<li>职位月薪：2001-4000元/月</li>
+<h3 id="社区中国网-www-chinasq-com-cn-网页制作-（2005-x2F-05-–-2007-x2F-07）"><a href="#社区中国网-www-chinasq-com-cn-网页制作-（2005-x2F-05-–-2007-x2F-07）" class="headerlink" title="社区中国网 - www.chinasq.com.cn| 网页制作 （2005&#x2F;05 – 2007&#x2F;07）"></a>社区中国网 - <a target="_blank" rel="noopener" href="http://www.chinasq.com.cn|/">www.chinasq.com.cn|</a> 网页制作 （2005&#x2F;05 – 2007&#x2F;07）</h3><ul>
+<li>行业类别：互联网&#x2F;电子商务</li>
+<li>职位月薪：2001-4000元&#x2F;月</li>
 </ul>
 <h4 id="工作描述-4"><a href="#工作描述-4" class="headerlink" title="工作描述"></a>工作描述</h4><ul>
 <li>页面切图。</li>
@@ -288,23 +336,23 @@
 <h4 id="项目简介-1"><a href="#项目简介-1" class="headerlink" title="项目简介"></a>项目简介</h4><p>主要是关于党校介绍，课程介绍，服务介绍类网站。</p>
 <h3 id="简单博客（node）-express"><a href="#简单博客（node）-express" class="headerlink" title="简单博客（node）- express"></a>简单博客（node）- express</h3><h4 id="责任描述-2"><a href="#责任描述-2" class="headerlink" title="责任描述"></a>责任描述</h4><p>Node搭建blog框架及相关数据库，redis等。（学习项目经验）</p>
 <h4 id="项目简介-2"><a href="#项目简介-2" class="headerlink" title="项目简介"></a>项目简介</h4><p>只是一个blog的简单demo。<br>其中应用了express，mysql等，自己写了redis的中间件。</p>
-<p>自学node的相关内容可查：(<a href="https://github.com/happychong)[https://github.com/happychong]" target="_blank" rel="noopener">https://github.com/happychong)[https://github.com/happychong]</a></p>
+<p>自学node的相关内容可查：(<a target="_blank" rel="noopener" href="https://github.com/happychong)[https://github.com/happychong]">https://github.com/happychong)[https://github.com/happychong]</a></p>
 <h2 id="教育经历"><a href="#教育经历" class="headerlink" title="教育经历"></a>教育经历</h2><h3 id="北京对外经济贸易大学-本科"><a href="#北京对外经济贸易大学-本科" class="headerlink" title="北京对外经济贸易大学 - 本科"></a>北京对外经济贸易大学 - 本科</h3><ul>
 <li>专业：计算机网络技术</li>
-<li>时间：2008/03– 2010/03</li>
+<li>时间：2008&#x2F;03– 2010&#x2F;03</li>
 </ul>
 <h3 id="北京政法职业学院-专科"><a href="#北京政法职业学院-专科" class="headerlink" title="北京政法职业学院 - 专科"></a>北京政法职业学院 - 专科</h3><ul>
 <li>专业：计算机网络技术</li>
-<li>时间：2003/09– 2005/08</li>
+<li>时间：2003&#x2F;09– 2005&#x2F;08</li>
 </ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2016/05/19/宋晓丹的个人简历/" data-id="cl1dl9zb50005ccnuv0hz2vlv" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2022/03/29/2016-05-19-%E5%AE%8B%E6%99%93%E4%B8%B9%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%AE%80%E5%8E%86/" data-id="cl1fzqfv60003vgnu64mv1xix" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/happyChong/">happyChong</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/happyChong/" rel="tag">happyChong</a></li></ul>
 
     </footer>
   </div>
@@ -313,14 +361,14 @@
 
 
   
-    <article id="default-windows下，ATOM常用编辑器快捷键" class="article article-type-default" itemscope itemprop="blogPost">
+    <article id="default-2016-05-11-windows下，ATOM常用编辑器快捷键" class="article article-type-default" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2016/05/11/windows下，ATOM常用编辑器快捷键/" class="article-date">
-  <time datetime="2016-05-10T16:00:00.000Z" itemprop="datePublished">2016-05-11</time>
+    <a href="/2022/03/29/2016-05-11-windows%E4%B8%8B%EF%BC%8CATOM%E5%B8%B8%E7%94%A8%E7%BC%96%E8%BE%91%E5%99%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/" class="article-date">
+  <time datetime="2022-03-29T02:49:29.869Z" itemprop="datePublished">2022-03-29</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/周边/">周边</a>
+    <a class="article-category-link" href="/categories/%E5%91%A8%E8%BE%B9/">周边</a>
   </div>
 
   </div>
@@ -331,7 +379,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/11/windows下，ATOM常用编辑器快捷键/">ATOM常用快捷键</a>
+      <a class="article-title" href="/2022/03/29/2016-05-11-windows%E4%B8%8B%EF%BC%8CATOM%E5%B8%B8%E7%94%A8%E7%BC%96%E8%BE%91%E5%99%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/">ATOM常用快捷键</a>
     </h1>
   
 
@@ -339,15 +387,15 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="1-文件切换"><a href="#1-文件切换" class="headerlink" title="1.文件切换"></a>1.文件切换</h2><ul>
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1><h2 id="1-文件切换"><a href="#1-文件切换" class="headerlink" title="1.文件切换"></a>1.文件切换</h2><ul>
 <li>ctrl + shift + o ：  打开目录</li>
 <li>ctrl + \ ： 显示或隐藏目录树</li>
 <li>ctrl + b ： 在打开的文件之间切换</li>
 <li>ctrl + t or ctrl + p ： 查找文件</li>
 </ul>
 <h2 id="2-导航"><a href="#2-导航" class="headerlink" title="2.导航"></a>2.导航</h2><ul>
-<li>alt + b / alt + 左箭头 ： 移动到单词开始</li>
-<li>alt + f / alt + 右箭头 ： 移动到单词末尾</li>
+<li>alt + b &#x2F; alt + 左箭头 ： 移动到单词开始</li>
+<li>alt + f &#x2F; alt + 右箭头 ： 移动到单词末尾</li>
 <li>ctrl + g ：移动到指定行</li>
 </ul>
 <h2 id="3-目录树操作"><a href="#3-目录树操作" class="headerlink" title="3.目录树操作"></a>3.目录树操作</h2><ul>
@@ -386,16 +434,16 @@
 <li>ctrl + space ：待确定</li>
 </ul>
 <blockquote>
-<p>此文摘抄自 <a href="http://www.imooc.com/article/1370" target="_blank" rel="noopener">http://www.imooc.com/article/1370</a></p>
+<p>此文摘抄自 <a target="_blank" rel="noopener" href="http://www.imooc.com/article/1370">http://www.imooc.com/article/1370</a></p>
 </blockquote>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2016/05/11/windows下，ATOM常用编辑器快捷键/" data-id="cl1dl9zb10004ccnuean3jlic" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2022/03/29/2016-05-11-windows%E4%B8%8B%EF%BC%8CATOM%E5%B8%B8%E7%94%A8%E7%BC%96%E8%BE%91%E5%99%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/" data-id="cl1fzqfv50002vgnu7zdx0y2t" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/" rel="tag">git</a></li></ul>
 
     </footer>
   </div>
@@ -404,14 +452,14 @@
 
 
   
-    <article id="default-Git命令" class="article article-type-default" itemscope itemprop="blogPost">
+    <article id="default-2016-05-05-Git命令" class="article article-type-default" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2016/05/05/Git命令/" class="article-date">
-  <time datetime="2016-05-04T16:00:00.000Z" itemprop="datePublished">2016-05-05</time>
+    <a href="/2022/03/29/2016-05-05-Git%E5%91%BD%E4%BB%A4/" class="article-date">
+  <time datetime="2022-03-29T02:49:29.868Z" itemprop="datePublished">2022-03-29</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/周边/">周边</a>
+    <a class="article-category-link" href="/categories/%E5%91%A8%E8%BE%B9/">周边</a>
   </div>
 
   </div>
@@ -422,7 +470,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/05/Git命令/">Git常用命令</a>
+      <a class="article-title" href="/2022/03/29/2016-05-05-Git%E5%91%BD%E4%BB%A4/">Git常用命令</a>
     </h1>
   
 
@@ -430,52 +478,102 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="1-安装"><a href="#1-安装" class="headerlink" title="1.安装"></a>1.安装</h2><p>在使用Git前我们需要先安装 Git。Git 目前支持 Linux/Unix、Solaris、Mac和 Windows 平台上运行。 Git 各平台安装包下载地址为：<a href="http://git-scm.com/downloads" target="_blank" rel="noopener">http://git-scm.com/downloads</a></p>
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1><h2 id="1-安装"><a href="#1-安装" class="headerlink" title="1.安装"></a>1.安装</h2><p>在使用Git前我们需要先安装 Git。Git 目前支持 Linux&#x2F;Unix、Solaris、Mac和 Windows 平台上运行。 Git 各平台安装包下载地址为：<a target="_blank" rel="noopener" href="http://git-scm.com/downloads">http://git-scm.com/downloads</a></p>
 <p>当然，也有相应的图形化工具可供下载使用，比如sourcetree.</p>
 <h2 id="2-基本配置"><a href="#2-基本配置" class="headerlink" title="2.基本配置"></a>2.基本配置</h2><p>Git 提供了一个叫做 git config 的工具，专门用来配置或读取相应的工作环境变量。 这些环境变量，决定了 Git 在各个环节的具体工作方式和行为。这些变量可以存放在以下三个不同的地方：</p>
 <ul>
-<li>/etc/gitconfig 文件：系统中对所有用户都普遍适用的配置。若使用 git config 时用 –system 选项，读写的就是这个文件。</li>
-<li>~/.gitconfig 文件：用户目录下的配置文件只适用于该用户。若使用 git config 时用 –global 选项，读写的就是这个文件。</li>
-<li>当前项目的 Git 目录中的配置文件（也就是工作目录中的 .git/config 文件）：这里的配置仅仅针对当前项目有效。每一个级别的配置都会覆盖上层的相同配置，所以 .git/config 里的配置会覆盖 /etc/gitconfig 中的同名变量。</li>
+<li>&#x2F;etc&#x2F;gitconfig 文件：系统中对所有用户都普遍适用的配置。若使用 git config 时用 –system 选项，读写的就是这个文件。</li>
+<li>~&#x2F;.gitconfig 文件：用户目录下的配置文件只适用于该用户。若使用 git config 时用 –global 选项，读写的就是这个文件。</li>
+<li>当前项目的 Git 目录中的配置文件（也就是工作目录中的 .git&#x2F;config 文件）：这里的配置仅仅针对当前项目有效。每一个级别的配置都会覆盖上层的相同配置，所以 .git&#x2F;config 里的配置会覆盖 &#x2F;etc&#x2F;gitconfig 中的同名变量。</li>
 </ul>
 <h3 id="配置个人的用户名称和电子邮件地址："><a href="#配置个人的用户名称和电子邮件地址：" class="headerlink" title="配置个人的用户名称和电子邮件地址："></a>配置个人的用户名称和电子邮件地址：</h3><pre><code>$ git config --global user.name &quot;GuoYongfeng&quot;
-$ git config --global user.email &quot;296512521@qq.com&quot;</code></pre><h3 id="查看已有的配置信息"><a href="#查看已有的配置信息" class="headerlink" title="查看已有的配置信息"></a>查看已有的配置信息</h3><pre><code>$ git config --list</code></pre><h2 id="3-基本操作"><a href="#3-基本操作" class="headerlink" title="3.基本操作"></a>3.基本操作</h2><h3 id="git-init"><a href="#git-init" class="headerlink" title="git init"></a>git init</h3><pre><code>// 新建(初始化)一个仓库
+$ git config --global user.email &quot;296512521@qq.com&quot;
+</code></pre>
+<h3 id="查看已有的配置信息"><a href="#查看已有的配置信息" class="headerlink" title="查看已有的配置信息"></a>查看已有的配置信息</h3><pre><code>$ git config --list
+</code></pre>
+<h2 id="3-基本操作"><a href="#3-基本操作" class="headerlink" title="3.基本操作"></a>3.基本操作</h2><h3 id="git-init"><a href="#git-init" class="headerlink" title="git init"></a>git init</h3><pre><code>// 新建(初始化)一个仓库
 $ mkdir demo &amp;&amp; cd demo
-$ git init</code></pre><h3 id="git-clone"><a href="#git-clone" class="headerlink" title="git clone"></a>git clone</h3><pre><code>如果已经有了仓库，就可以直接clone到本地
-$ git clone git@github.com:GuoYongfeng/webpack-dev-boilerplate.git</code></pre><h3 id="git-add"><a href="#git-add" class="headerlink" title="git add"></a>git add</h3><pre><code>// git add 命令可将该文件添加到缓存，如我们添加以下两个文件：
+$ git init
+</code></pre>
+<h3 id="git-clone"><a href="#git-clone" class="headerlink" title="git clone"></a>git clone</h3><pre><code>如果已经有了仓库，就可以直接clone到本地
+$ git clone git@github.com:GuoYongfeng/webpack-dev-boilerplate.git
+</code></pre>
+<h3 id="git-add"><a href="#git-add" class="headerlink" title="git add"></a>git add</h3><pre><code>// git add 命令可将该文件添加到缓存，如我们添加以下两个文件：
 $ touch README.md
-$ git add README.md</code></pre><p>还可以</p>
+$ git add README.md
+</code></pre>
+<p>还可以</p>
 <pre><code>$ git add -A
 $ git add *
-$ git add .</code></pre><h3 id="git-status"><a href="#git-status" class="headerlink" title="git status"></a>git status</h3><p>git status 可以查看当前版本库各个文件的状态</p>
-<pre><code>$ git status</code></pre><h3 id="git-commit"><a href="#git-commit" class="headerlink" title="git commit"></a>git commit</h3><p>使用 git add 命令将想要快照的内容写入缓存区， 而执行 git commit 将缓存区内容添加到仓库中。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m <span class="string">'第一次版本提交'</span></span><br></pre></td></tr></table></figure>
+$ git add .
+</code></pre>
+<h3 id="git-status"><a href="#git-status" class="headerlink" title="git status"></a>git status</h3><p>git status 可以查看当前版本库各个文件的状态</p>
+<pre><code>$ git status
+</code></pre>
+<h3 id="git-commit"><a href="#git-commit" class="headerlink" title="git commit"></a>git commit</h3><p>使用 git add 命令将想要快照的内容写入缓存区， 而执行 git commit 将缓存区内容添加到仓库中。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m <span class="string">&#x27;第一次版本提交&#x27;</span></span><br></pre></td></tr></table></figure>
 
 <p>Git撤销本地commit</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git reset HEAD~</span><br><span class="line"><span class="comment"># HEAD 代表：上一次提交</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="git-remote-add-origin—推动改动"><a href="#git-remote-add-origin—推动改动" class="headerlink" title="git remote add origin—推动改动"></a>git remote add origin—推动改动</h3><p>如果你还没有克隆现有仓库，并欲将你的仓库连接到某个远程服务器，你可以使用如下命令添加：</p>
 <pre><code># 为这个仓库添加一个远程地址
-$ git remote add origin 你的github上的仓库地址（比如： git@github.com:GuoYongfeng/webpack-dev-boilerplate.git）</code></pre><p>如此你就能够将你的改动推送到所添加的服务器上去了。<br>执行如下命令以将这些改动提交到远端仓库：</p>
+$ git remote add origin 你的github上的仓库地址（比如： git@github.com:GuoYongfeng/webpack-dev-boilerplate.git）
+</code></pre>
+<p>如此你就能够将你的改动推送到所添加的服务器上去了。<br>执行如下命令以将这些改动提交到远端仓库：</p>
 <pre><code># 将本地版本库的资源推送到远程服务器
-$ git push origin -u master</code></pre><p>可以把 master 换成你想要推送的任何分支。</p>
+$ git push origin -u master
+</code></pre>
+<p>可以把 master 换成你想要推送的任何分支。</p>
 <h3 id="push到服务器"><a href="#push到服务器" class="headerlink" title="push到服务器"></a>push到服务器</h3><p>把代码从本地push到服务器上，这意味着我们首先要有个服务器或是托管我们代码的第三方服务，公司有gitlab也可以直接push到那。</p>
 <pre><code># 将本地版本库的资源推送到远程服务器
-$ git push origin -u master</code></pre><p>可以把 master 换成你想要推送的任何分支。</p>
+$ git push origin -u master
+</code></pre>
+<p>可以把 master 换成你想要推送的任何分支。</p>
 <h3 id="git-checkout-—-撤销修改"><a href="#git-checkout-—-撤销修改" class="headerlink" title="git checkout — 撤销修改"></a>git checkout — 撤销修改</h3><p>假如你做错事（自然，这是不可能的），你可以使用如下命令替换掉本地改动：</p>
-<pre><code>$ git checkout -- README.md</code></pre><h3 id="git-reset"><a href="#git-reset" class="headerlink" title="git reset"></a>git reset</h3><p>git reset HEAD 命令用于取消已缓存的内容。</p>
-<pre><code>$ git reset HEAD -- hello.php</code></pre><p>如果粗暴一点</p>
-<pre><code>$ git reset --hard 版本号</code></pre><h3 id="git-rm"><a href="#git-rm" class="headerlink" title="git rm"></a>git rm</h3><pre><code>$ git rm README.md</code></pre><h3 id="git-rm-–cached-—-清除缓存"><a href="#git-rm-–cached-—-清除缓存" class="headerlink" title="git rm –cached — 清除缓存"></a>git rm –cached — 清除缓存</h3><pre><code>$ git rm -r --cached ignore_file</code></pre><h3 id="git-pull-—-拉取github上的资源-并自动合并（auto-merge"><a href="#git-pull-—-拉取github上的资源-并自动合并（auto-merge" class="headerlink" title="git pull — 拉取github上的资源,并自动合并（auto merge)"></a>git pull — 拉取github上的资源,并自动合并（auto merge)</h3><p>把origin仓库下的master分支下的内容拉取到本地</p>
-<pre><code>git pull origin master</code></pre><h3 id="git-fetch-—-待续"><a href="#git-fetch-—-待续" class="headerlink" title="git fetch — 待续"></a>git fetch — 待续</h3><pre><code>git fetch origin master</code></pre><h3 id="git-rebase-—-待续"><a href="#git-rebase-—-待续" class="headerlink" title="git rebase — 待续"></a>git rebase — 待续</h3><pre><code>git rebase origin/master</code></pre><h3 id="git-remote-v-—-查看本地文件夹与远程仓库的关联情况"><a href="#git-remote-v-—-查看本地文件夹与远程仓库的关联情况" class="headerlink" title="git remote -v — 查看本地文件夹与远程仓库的关联情况"></a>git remote -v — 查看本地文件夹与远程仓库的关联情况</h3><pre><code>git remote -v</code></pre><h3 id="git-remote-rm-origin-—-取消本地文件夹与远程仓库的关联"><a href="#git-remote-rm-origin-—-取消本地文件夹与远程仓库的关联" class="headerlink" title="git remote rm origin — 取消本地文件夹与远程仓库的关联"></a>git remote rm origin — 取消本地文件夹与远程仓库的关联</h3><p>与git remote add origin功能相反的作用</p>
-<pre><code>git remote rm origin</code></pre><h3 id="git-log-—-查看我们执行commit操作，在本地git文件夹生成的版本号"><a href="#git-log-—-查看我们执行commit操作，在本地git文件夹生成的版本号" class="headerlink" title="git log — 查看我们执行commit操作，在本地git文件夹生成的版本号"></a>git log — 查看我们执行commit操作，在本地git文件夹生成的版本号</h3><h3 id="git-show-—-查看某版本做了哪些操作"><a href="#git-show-—-查看某版本做了哪些操作" class="headerlink" title="git show — 查看某版本做了哪些操作"></a>git show — 查看某版本做了哪些操作</h3><pre><code>git show &lt;版本号&gt;</code></pre><h3 id="git-branch-—-查看分支情况"><a href="#git-branch-—-查看分支情况" class="headerlink" title="git branch — 查看分支情况"></a>git branch — 查看分支情况</h3><pre><code>// * 代表当前所在分支
-git branch</code></pre><h2 id="4-配置alias别名"><a href="#4-配置alias别名" class="headerlink" title="4.配置alias别名"></a>4.配置alias别名</h2><p>配置别名的好处是方便简写命令</p>
+<pre><code>$ git checkout -- README.md
+</code></pre>
+<h3 id="git-reset"><a href="#git-reset" class="headerlink" title="git reset"></a>git reset</h3><p>git reset HEAD 命令用于取消已缓存的内容。</p>
+<pre><code>$ git reset HEAD -- hello.php
+</code></pre>
+<p>如果粗暴一点</p>
+<pre><code>$ git reset --hard 版本号
+</code></pre>
+<h3 id="git-rm"><a href="#git-rm" class="headerlink" title="git rm"></a>git rm</h3><pre><code>$ git rm README.md
+</code></pre>
+<h3 id="git-rm-–cached-—-清除缓存"><a href="#git-rm-–cached-—-清除缓存" class="headerlink" title="git rm –cached — 清除缓存"></a>git rm –cached — 清除缓存</h3><pre><code>$ git rm -r --cached ignore_file
+</code></pre>
+<h3 id="git-pull-—-拉取github上的资源-并自动合并（auto-merge"><a href="#git-pull-—-拉取github上的资源-并自动合并（auto-merge" class="headerlink" title="git pull — 拉取github上的资源,并自动合并（auto merge)"></a>git pull — 拉取github上的资源,并自动合并（auto merge)</h3><p>把origin仓库下的master分支下的内容拉取到本地</p>
+<pre><code>git pull origin master
+</code></pre>
+<h3 id="git-fetch-—-待续"><a href="#git-fetch-—-待续" class="headerlink" title="git fetch — 待续"></a>git fetch — 待续</h3><pre><code>git fetch origin master
+</code></pre>
+<h3 id="git-rebase-—-待续"><a href="#git-rebase-—-待续" class="headerlink" title="git rebase — 待续"></a>git rebase — 待续</h3><pre><code>git rebase origin/master
+</code></pre>
+<h3 id="git-remote-v-—-查看本地文件夹与远程仓库的关联情况"><a href="#git-remote-v-—-查看本地文件夹与远程仓库的关联情况" class="headerlink" title="git remote -v — 查看本地文件夹与远程仓库的关联情况"></a>git remote -v — 查看本地文件夹与远程仓库的关联情况</h3><pre><code>git remote -v
+</code></pre>
+<h3 id="git-remote-rm-origin-—-取消本地文件夹与远程仓库的关联"><a href="#git-remote-rm-origin-—-取消本地文件夹与远程仓库的关联" class="headerlink" title="git remote rm origin — 取消本地文件夹与远程仓库的关联"></a>git remote rm origin — 取消本地文件夹与远程仓库的关联</h3><p>与git remote add origin功能相反的作用</p>
+<pre><code>git remote rm origin
+</code></pre>
+<h3 id="git-log-—-查看我们执行commit操作，在本地git文件夹生成的版本号"><a href="#git-log-—-查看我们执行commit操作，在本地git文件夹生成的版本号" class="headerlink" title="git log — 查看我们执行commit操作，在本地git文件夹生成的版本号"></a>git log — 查看我们执行commit操作，在本地git文件夹生成的版本号</h3><h3 id="git-show-—-查看某版本做了哪些操作"><a href="#git-show-—-查看某版本做了哪些操作" class="headerlink" title="git show — 查看某版本做了哪些操作"></a>git show — 查看某版本做了哪些操作</h3><pre><code>git show &lt;版本号&gt;
+</code></pre>
+<h3 id="git-branch-—-查看分支情况"><a href="#git-branch-—-查看分支情况" class="headerlink" title="git branch — 查看分支情况"></a>git branch — 查看分支情况</h3><pre><code>// * 代表当前所在分支
+git branch
+</code></pre>
+<h2 id="4-配置alias别名"><a href="#4-配置alias别名" class="headerlink" title="4.配置alias别名"></a>4.配置alias别名</h2><p>配置别名的好处是方便简写命令</p>
 <pre><code>$ git config --global alias.st status
 $ git config --global alias.ci commit
 $ git config --global alias.co checkout
 $ git config --global alias.br branch
-$ git config --global alias.lg &quot;log --color --graph --pretty=format:&apos;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset&apos; --abbrev-commit&quot;</code></pre><h2 id="5-设置public-key"><a href="#5-设置public-key" class="headerlink" title="5.设置public key"></a>5.设置public key</h2><p>首先需要在本地生成key，并且把key配置在github上</p>
-<pre><code>$ ssh-keygen -t rsa -C &quot;guoyff@yonyou.com&quot;</code></pre><p>复制ublic key</p>
-<pre><code>$ cat ~/ssh/id_rsa.pub</code></pre><p>当然，你也可以直接使用nodepad++等编辑器打开这个文件，复制出来。 （如果你是windows用户，这个文件一般会在这里：C:\Users\Administrator.ssh）</p>
+$ git config --global alias.lg &quot;log --color --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset&#39; --abbrev-commit&quot;
+</code></pre>
+<h2 id="5-设置public-key"><a href="#5-设置public-key" class="headerlink" title="5.设置public key"></a>5.设置public key</h2><p>首先需要在本地生成key，并且把key配置在github上</p>
+<pre><code>$ ssh-keygen -t rsa -C &quot;guoyff@yonyou.com&quot;
+</code></pre>
+<p>复制ublic key</p>
+<pre><code>$ cat ~/ssh/id_rsa.pub
+</code></pre>
+<p>当然，你也可以直接使用nodepad++等编辑器打开这个文件，复制出来。 （如果你是windows用户，这个文件一般会在这里：C:\Users\Administrator.ssh）</p>
 <p>将获得的public key添加在github账户上：</p>
 <blockquote>
 <p>右上角点击头像-&gt; 点击settings-&gt; 点击SSH KEYS-&gt; 点击ADD SSH KEYS-&gt; 将获取的public key粘贴于此</p>
@@ -485,32 +583,62 @@ $ git config --global alias.lg &quot;log --color --graph --pretty=format:&apos;%
 <blockquote>
 <p>分支的命名 <br><br>master 主干 <br><br>develop 开发分支 <br><br>        – feature 开发分支<br>        – bug 修改bug的分支<br>release 部署分支 <br></p>
 </blockquote>
-<h3 id="分支的基本操作"><a href="#分支的基本操作" class="headerlink" title="分支的基本操作"></a>分支的基本操作</h3><h4 id="git-branch-—-创建一个分支"><a href="#git-branch-—-创建一个分支" class="headerlink" title="git branch — 创建一个分支"></a>git branch — 创建一个分支</h4><pre><code>$ git branch mybranch</code></pre><h4 id="git-checkout-—-切换到这个分支"><a href="#git-checkout-—-切换到这个分支" class="headerlink" title="git checkout — 切换到这个分支"></a>git checkout — 切换到这个分支</h4><pre><code>$ git checkout mybranch</code></pre><h4 id="或者可以更快一点，创建一个分支并且切换过去"><a href="#或者可以更快一点，创建一个分支并且切换过去" class="headerlink" title="或者可以更快一点，创建一个分支并且切换过去"></a>或者可以更快一点，创建一个分支并且切换过去</h4><pre><code>$ git checkout -b mybranch</code></pre><h4 id="删除分支"><a href="#删除分支" class="headerlink" title="删除分支"></a>删除分支</h4><pre><code>$ git branch -d mybranch</code></pre><p>如果你和其他小伙伴基于这个分支协作，那么你需要把这个分支push到远端仓库，不然的话，这个分支是存在于你的本地的，其他的小伙伴就看不到了。</p>
-<pre><code>$ git push origin mybranch</code></pre><h3 id="分支的更新与合并"><a href="#分支的更新与合并" class="headerlink" title="分支的更新与合并"></a>分支的更新与合并</h3><h4 id="更新你的本地仓库至最新改动"><a href="#更新你的本地仓库至最新改动" class="headerlink" title="更新你的本地仓库至最新改动"></a>更新你的本地仓库至最新改动</h4><pre><code>git pull origin master</code></pre><p>这样就将本地的master分支和远程同步了<br>（新的分支，新的版本）</p>
+<h3 id="分支的基本操作"><a href="#分支的基本操作" class="headerlink" title="分支的基本操作"></a>分支的基本操作</h3><h4 id="git-branch-—-创建一个分支"><a href="#git-branch-—-创建一个分支" class="headerlink" title="git branch — 创建一个分支"></a>git branch — 创建一个分支</h4><pre><code>$ git branch mybranch
+</code></pre>
+<h4 id="git-checkout-—-切换到这个分支"><a href="#git-checkout-—-切换到这个分支" class="headerlink" title="git checkout — 切换到这个分支"></a>git checkout — 切换到这个分支</h4><pre><code>$ git checkout mybranch
+</code></pre>
+<h4 id="或者可以更快一点，创建一个分支并且切换过去"><a href="#或者可以更快一点，创建一个分支并且切换过去" class="headerlink" title="或者可以更快一点，创建一个分支并且切换过去"></a>或者可以更快一点，创建一个分支并且切换过去</h4><pre><code>$ git checkout -b mybranch
+</code></pre>
+<h4 id="删除分支"><a href="#删除分支" class="headerlink" title="删除分支"></a>删除分支</h4><pre><code>$ git branch -d mybranch
+</code></pre>
+<p>如果你和其他小伙伴基于这个分支协作，那么你需要把这个分支push到远端仓库，不然的话，这个分支是存在于你的本地的，其他的小伙伴就看不到了。</p>
+<pre><code>$ git push origin mybranch
+</code></pre>
+<h3 id="分支的更新与合并"><a href="#分支的更新与合并" class="headerlink" title="分支的更新与合并"></a>分支的更新与合并</h3><h4 id="更新你的本地仓库至最新改动"><a href="#更新你的本地仓库至最新改动" class="headerlink" title="更新你的本地仓库至最新改动"></a>更新你的本地仓库至最新改动</h4><pre><code>git pull origin master
+</code></pre>
+<p>这样就将本地的master分支和远程同步了<br>（新的分支，新的版本）</p>
 <pre><code>$ git fetch origin
-$ git rebase origin/master</code></pre><h4 id="git-merge-—-合并分支"><a href="#git-merge-—-合并分支" class="headerlink" title="git merge — 合并分支"></a>git merge — 合并分支</h4><p>以在你的工作目录中 获取（fetch） 并 合并（merge） 远端的改动。 要合并其他分支到你的当前分支（例如 master），执行：</p>
-<pre><code>$ git merge &lt;branch&gt;</code></pre><h3 id="解决冲突"><a href="#解决冲突" class="headerlink" title="解决冲突"></a>解决冲突</h3><p>无论是分支的更新还是合并，git 都会尝试去自动合并改动。不幸的是，自动合并并非次次都能成功，并可能导致 冲突（conflicts）。 这时候就需要你修改这些文件来人肉合并这些 冲突（conflicts） 了。改完之后，你需要执行如下命令以将它们标记为合并成功：</p>
-<pre><code>$ git add &lt;filename&gt;</code></pre><p>在合并改动之前，也可以使用如下命令查看：</p>
-<pre><code>$ git diff &lt;source_branch&gt; &lt;target_branch&gt;</code></pre><p>处理冲突之后就可以commit了</p>
-<pre><code>$ git commit -m &quot;fix conflict&quot;</code></pre><h2 id="7-打tag标签"><a href="#7-打tag标签" class="headerlink" title="7.打tag标签"></a>7.打tag标签</h2><p>在软件发布时创建标签，是被推荐的。</p>
+$ git rebase origin/master
+</code></pre>
+<h4 id="git-merge-—-合并分支"><a href="#git-merge-—-合并分支" class="headerlink" title="git merge — 合并分支"></a>git merge — 合并分支</h4><p>以在你的工作目录中 获取（fetch） 并 合并（merge） 远端的改动。 要合并其他分支到你的当前分支（例如 master），执行：</p>
+<pre><code>$ git merge &lt;branch&gt;
+</code></pre>
+<h3 id="解决冲突"><a href="#解决冲突" class="headerlink" title="解决冲突"></a>解决冲突</h3><p>无论是分支的更新还是合并，git 都会尝试去自动合并改动。不幸的是，自动合并并非次次都能成功，并可能导致 冲突（conflicts）。 这时候就需要你修改这些文件来人肉合并这些 冲突（conflicts） 了。改完之后，你需要执行如下命令以将它们标记为合并成功：</p>
+<pre><code>$ git add &lt;filename&gt;
+</code></pre>
+<p>在合并改动之前，也可以使用如下命令查看：</p>
+<pre><code>$ git diff &lt;source_branch&gt; &lt;target_branch&gt;
+</code></pre>
+<p>处理冲突之后就可以commit了</p>
+<pre><code>$ git commit -m &quot;fix conflict&quot;
+</code></pre>
+<h2 id="7-打tag标签"><a href="#7-打tag标签" class="headerlink" title="7.打tag标签"></a>7.打tag标签</h2><p>在软件发布时创建标签，是被推荐的。</p>
 <p>使用如下命令获取版本号：</p>
-<pre><code>$ git log</code></pre><p>可以执行如下命令以创建一个叫做 1.0.0 的标签：</p>
-<pre><code>$ git tag 1.0.0 1b2e1d63ff</code></pre><p>1b2e1d63ff 是你想要标记的提交 ID 的前 10 位字符。</p>
+<pre><code>$ git log
+</code></pre>
+<p>可以执行如下命令以创建一个叫做 1.0.0 的标签：</p>
+<pre><code>$ git tag 1.0.0 1b2e1d63ff
+</code></pre>
+<p>1b2e1d63ff 是你想要标记的提交 ID 的前 10 位字符。</p>
 <h2 id="8-撤销修改和版本回退"><a href="#8-撤销修改和版本回退" class="headerlink" title="8.撤销修改和版本回退"></a>8.撤销修改和版本回退</h2><p>假如你做错事（自然，这是不可能的），你可以使用如下命令替换掉本地改动：</p>
-<pre><code>$ git checkout -- &lt;filename&gt;</code></pre><p>此命令会使用 HEAD 中的最新内容替换掉你的工作目录中的文件。已添加到缓存区的改动，以及新文件，都不受影响。</p>
+<pre><code>$ git checkout -- &lt;filename&gt;
+</code></pre>
+<p>此命令会使用 HEAD 中的最新内容替换掉你的工作目录中的文件。已添加到缓存区的改动，以及新文件，都不受影响。</p>
 <p>假如你想要丢弃你所有的本地改动与提交，可以到服务器上获取最新的版本并将你本地主分支指向到它：</p>
 <pre><code># 获取的版本号可以使用git log拿到
-$ git reset --hard 希望回退的版本号</code></pre><blockquote>
-<p>此文摘抄自 <a href="http://guoyongfeng.github.io/idoc/html/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/Git%E5%92%8CGithub%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97.html" target="_blank" rel="noopener">http://guoyongfeng.github.io/</a></p>
+$ git reset --hard 希望回退的版本号
+</code></pre>
+<blockquote>
+<p>此文摘抄自 <a target="_blank" rel="noopener" href="http://guoyongfeng.github.io/idoc/html/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/Git%E5%92%8CGithub%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97.html">http://guoyongfeng.github.io/</a></p>
 </blockquote>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2016/05/05/Git命令/" data-id="cl1dl9za60000ccnuwxkwqs3y" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2022/03/29/2016-05-05-Git%E5%91%BD%E4%BB%A4/" data-id="cl1fzqfur0000vgnu0dsd0gqh" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/" rel="tag">git</a></li></ul>
 
     </footer>
   </div>
@@ -519,14 +647,14 @@ $ git reset --hard 希望回退的版本号</code></pre><blockquote>
 
 
   
-    <article id="default-基本shell命令" class="article article-type-default" itemscope itemprop="blogPost">
+    <article id="default-2016-05-05-基本shell命令" class="article article-type-default" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2016/05/05/基本shell命令/" class="article-date">
-  <time datetime="2016-05-04T16:00:00.000Z" itemprop="datePublished">2016-05-05</time>
+    <a href="/2022/03/29/2016-05-05-%E5%9F%BA%E6%9C%ACshell%E5%91%BD%E4%BB%A4/" class="article-date">
+  <time datetime="2022-03-29T02:49:29.868Z" itemprop="datePublished">2022-03-29</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/周边/">周边</a>
+    <a class="article-category-link" href="/categories/%E5%91%A8%E8%BE%B9/">周边</a>
   </div>
 
   </div>
@@ -537,7 +665,7 @@ $ git reset --hard 希望回退的版本号</code></pre><blockquote>
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/05/基本shell命令/">基本SHELL命令使用</a>
+      <a class="article-title" href="/2022/03/29/2016-05-05-%E5%9F%BA%E6%9C%ACshell%E5%91%BD%E4%BB%A4/">基本SHELL命令使用</a>
     </h1>
   
 
@@ -545,7 +673,7 @@ $ git reset --hard 希望回退的版本号</code></pre><blockquote>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id><a href="#" class="headerlink" title></a></h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><h3 id="Shell-是什么"><a href="#Shell-是什么" class="headerlink" title="Shell 是什么"></a>Shell 是什么</h3><p>关于 shell, 广义的解释是 —— shell 是介于用户与系统之间，帮助用户与系统进行沟通的工具。除了文字模式的 shell 外，GNOME 这类图形界面也属于 shell 的范畴。不过我们通常提到 shell 时都是指狭义的 shell，即文字模式的 shell。</p>
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><h3 id="Shell-是什么"><a href="#Shell-是什么" class="headerlink" title="Shell 是什么"></a>Shell 是什么</h3><p>关于 shell, 广义的解释是 —— shell 是介于用户与系统之间，帮助用户与系统进行沟通的工具。除了文字模式的 shell 外，GNOME 这类图形界面也属于 shell 的范畴。不过我们通常提到 shell 时都是指狭义的 shell，即文字模式的 shell。</p>
 <h3 id="为什么要学习-shell"><a href="#为什么要学习-shell" class="headerlink" title="为什么要学习 shell"></a>为什么要学习 shell</h3><ul>
 <li>尽管图形用户界面很强大，但它毕竟也只是一个程序套件，shell 的功能和能执行的任务则比图形界面要 <code>强得多</code></li>
 <li>shell 是文字模式，因此远程登录和传输的速度比图形界面 <code>更快</code></li>
@@ -556,7 +684,7 @@ $ git reset --hard 希望回退的版本号</code></pre><blockquote>
 <li><code>Windows用户</code> 需要下载相应的客户端才可以运行，比如Git bash、SecureCRT等，系统自带的CMD就算了，那也就能使用dir等几个简单的。</li>
 <li>有 Mac 的同学之间在 Bash 下就可以运行。</li>
 </ul>
-<h2 id="1-cd-目录切换"><a href="#1-cd-目录切换" class="headerlink" title="1.cd 目录切换"></a>1.cd 目录切换</h2><p>注意目录分隔符为“/”，与dos相反</p>
+<h2 id="1-cd-目录切换"><a href="#1-cd-目录切换" class="headerlink" title="1.cd 目录切换"></a>1.cd 目录切换</h2><p>注意目录分隔符为“&#x2F;”，与dos相反</p>
 <h3 id="格式：cd-dirname"><a href="#格式：cd-dirname" class="headerlink" title="格式：cd dirname"></a>格式：cd dirname</h3><pre><code># 比如我们要进入到g盘
 $ cd /g
 
@@ -570,12 +698,18 @@ $ cd ../../
 $ cd ~
 
 # 比如我们要进入到d盘的website目录
-$ cd /d/website</code></pre><blockquote>
+$ cd /d/website
+</code></pre>
+<blockquote>
 <p>快捷方式：打出we后按一下tab键，会自动补全目录，有相同we开头的多个目录的话，按2下tab键，会列出所有符合的目录</p>
 </blockquote>
 <h2 id="2-mkdir-新建文件夹"><a href="#2-mkdir-新建文件夹" class="headerlink" title="2.mkdir 新建文件夹"></a>2.mkdir 新建文件夹</h2><pre><code>$ mkdir dirname
-$ mkdir website</code></pre><h2 id="3-touch-创建文件"><a href="#3-touch-创建文件" class="headerlink" title="3.touch 创建文件"></a>3.touch 创建文件</h2><pre><code>$ touch .gitignore
-$ touch a.js b.html c.css</code></pre><h2 id="4-ls-显示文件"><a href="#4-ls-显示文件" class="headerlink" title="4.ls 显示文件"></a>4.ls 显示文件</h2><p>命令格式：ls [option] file</p>
+$ mkdir website
+</code></pre>
+<h2 id="3-touch-创建文件"><a href="#3-touch-创建文件" class="headerlink" title="3.touch 创建文件"></a>3.touch 创建文件</h2><pre><code>$ touch .gitignore
+$ touch a.js b.html c.css
+</code></pre>
+<h2 id="4-ls-显示文件"><a href="#4-ls-显示文件" class="headerlink" title="4.ls 显示文件"></a>4.ls 显示文件</h2><p>命令格式：ls [option] file</p>
 <pre><code># 显示详细列表
 $ ls -l
 
@@ -595,11 +729,17 @@ $ 显示文件（后跟*）和目录（后跟/）
 $ ls -F
 
 # 与l选项合用，显示目录名而非其内容
-$ ls -d</code></pre><blockquote>
-<p>ll查看的文件详细列表详解 <br><br>ex1. <code>-rw-r--r--</code> 1 Administrator 197121   147 五月  5 15:09 _config.yml <br><br>ex2. <code>drwxr-xr-x</code> 1 Administrator 197121     0 五月  5 12:11 images/ <br><br>-rw-r–r–  &amp; drwxr-xr-x  标明当前文件是什么状态 <br><br>第一个字符： - or d ===&gt; - 标明是一个文件，d 表示是文件夹 <br><br>第二个字符： r ===&gt; read, 可读 <br><br>第三个字符： w ===&gt; write, 可写 <br><br>第四个字符： - or x ===&gt; x = exec, 可执行， - 不可执行 <br><br>2-4位是rwx的话，权限是111</p>
+$ ls -d
+</code></pre>
+<blockquote>
+<p>ll查看的文件详细列表详解 <br><br>ex1. <code>-rw-r--r--</code> 1 Administrator 197121   147 五月  5 15:09 _config.yml <br><br>ex2. <code>drwxr-xr-x</code> 1 Administrator 197121     0 五月  5 12:11 images&#x2F; <br><br>-rw-r–r–  &amp; drwxr-xr-x  标明当前文件是什么状态 <br><br>第一个字符： - or d &#x3D;&#x3D;&#x3D;&gt; - 标明是一个文件，d 表示是文件夹 <br><br>第二个字符： r &#x3D;&#x3D;&#x3D;&gt; read, 可读 <br><br>第三个字符： w &#x3D;&#x3D;&#x3D;&gt; write, 可写 <br><br>第四个字符： - or x &#x3D;&#x3D;&#x3D;&gt; x &#x3D; exec, 可执行， - 不可执行 <br><br>2-4位是rwx的话，权限是111</p>
 </blockquote>
-<h2 id="5-pwd-显示当前路径"><a href="#5-pwd-显示当前路径" class="headerlink" title="5.pwd 显示当前路径"></a>5.pwd 显示当前路径</h2><pre><code>$ pwd</code></pre><h2 id="6-cat-显示文件内容"><a href="#6-cat-显示文件内容" class="headerlink" title="6.cat 显示文件内容"></a>6.cat 显示文件内容</h2><pre><code># 格式：cat filename
-$ cat a.js</code></pre><h2 id="7-rm-删除文件或目录"><a href="#7-rm-删除文件或目录" class="headerlink" title="7.rm 删除文件或目录"></a>7.rm 删除文件或目录</h2><p>命令格式： <code>rm [-r] filename (filename 可为档名，或档名缩写符号.)</code></p>
+<h2 id="5-pwd-显示当前路径"><a href="#5-pwd-显示当前路径" class="headerlink" title="5.pwd 显示当前路径"></a>5.pwd 显示当前路径</h2><pre><code>$ pwd
+</code></pre>
+<h2 id="6-cat-显示文件内容"><a href="#6-cat-显示文件内容" class="headerlink" title="6.cat 显示文件内容"></a>6.cat 显示文件内容</h2><pre><code># 格式：cat filename
+$ cat a.js
+</code></pre>
+<h2 id="7-rm-删除文件或目录"><a href="#7-rm-删除文件或目录" class="headerlink" title="7.rm 删除文件或目录"></a>7.rm 删除文件或目录</h2><p>命令格式： <code>rm [-r] filename (filename 可为档名，或档名缩写符号.)</code></p>
 <pre><code># 删除档名为 file1 之文档.
 $ rm file1
 
@@ -616,7 +756,9 @@ $ rm *.js
 $ rm -r dir1
 
 # 删除目录 dir1下所有js文件
-$ rm -rf dir1/*.js</code></pre><h2 id="8-cp-文档的复制"><a href="#8-cp-文档的复制" class="headerlink" title="8.cp 文档的复制"></a>8.cp 文档的复制</h2><p>命令格式: <code>cp [-r] source destination</code></p>
+$ rm -rf dir1/*.js
+</code></pre>
+<h2 id="8-cp-文档的复制"><a href="#8-cp-文档的复制" class="headerlink" title="8.cp 文档的复制"></a>8.cp 文档的复制</h2><p>命令格式: <code>cp [-r] source destination</code></p>
 <pre><code># 将文档 file1 复制成 file2
 $ cp file1 file2
 
@@ -635,7 +777,9 @@ $ cp -r dir1
 # 复制dir1整个目录下的文件到dir2
 $ cp -R dir1 dir2
 
-// -R复制文件夹的时候才需要，复制多个文件的话，以空格的方式，也可以用正则</code></pre><h2 id="9-mv-移动文件"><a href="#9-mv-移动文件" class="headerlink" title="9.mv 移动文件"></a>9.mv 移动文件</h2><p>命令格式： <code>mv source destination</code></p>
+// -R复制文件夹的时候才需要，复制多个文件的话，以空格的方式，也可以用正则
+</code></pre>
+<h2 id="9-mv-移动文件"><a href="#9-mv-移动文件" class="headerlink" title="9.mv 移动文件"></a>9.mv 移动文件</h2><p>命令格式： <code>mv source destination</code></p>
 <pre><code># 将文档 file1，更改档名为 file2.
 $ mv file1 file2
 
@@ -643,9 +787,15 @@ $ mv file1 file2
 $ mv file1 dir1
 
 # 若目录 dir2 存在，则将目录 dir1及其所有档案和子目录移到目录 dir2 下，新目录名称为 dir1.若目录dir2 不存在，则将dir1，及其所有文档和子目录，更改为目录 dir2.
-$ mv dir1 dir2</code></pre><h2 id="10-history-—-查看刚刚输入的所有命令"><a href="#10-history-—-查看刚刚输入的所有命令" class="headerlink" title="10.history  —  查看刚刚输入的所有命令"></a>10.history  —  查看刚刚输入的所有命令</h2><pre><code>$ history</code></pre><h2 id="11-grep-搜索"><a href="#11-grep-搜索" class="headerlink" title="11.grep 搜索"></a>11.grep 搜索</h2><pre><code>$ grep string filename
+$ mv dir1 dir2
+</code></pre>
+<h2 id="10-history-—-查看刚刚输入的所有命令"><a href="#10-history-—-查看刚刚输入的所有命令" class="headerlink" title="10.history  —  查看刚刚输入的所有命令"></a>10.history  —  查看刚刚输入的所有命令</h2><pre><code>$ history
+</code></pre>
+<h2 id="11-grep-搜索"><a href="#11-grep-搜索" class="headerlink" title="11.grep 搜索"></a>11.grep 搜索</h2><pre><code>$ grep string filename
 # 在a.js文件中查找===字符串，并且显示行号
-$ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="#12-vim-编辑器" class="headerlink" title="12.vim 编辑器"></a>12.vim 编辑器</h2><h3 id="命令状态："><a href="#命令状态：" class="headerlink" title="命令状态："></a>命令状态：</h3><ul>
+$ grep -rn &#39;====&#39; a.js
+</code></pre>
+<h2 id="12-vim-编辑器"><a href="#12-vim-编辑器" class="headerlink" title="12.vim 编辑器"></a>12.vim 编辑器</h2><h3 id="命令状态："><a href="#命令状态：" class="headerlink" title="命令状态："></a>命令状态：</h3><ul>
 <li>j,k,h,l:上下左右</li>
 <li>0： 行首</li>
 <li>$: 行尾</li>
@@ -662,7 +812,7 @@ $ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="
 <li>ctrl+b:前翻页</li>
 <li>G : 文件尾</li>
 <li>数字G: 数字所指定行</li>
-<li>/string 查找字符串</li>
+<li>&#x2F;string 查找字符串</li>
 <li>N 反向继续查找</li>
 <li>% 查找对应括号</li>
 <li>u 取消上次操作</li>
@@ -671,9 +821,9 @@ $ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="
 <li>：1,5 copy 7 块拷贝</li>
 <li>：1，5 del 块删除</li>
 <li>：1，5 move 7 块移动</li>
-<li>：1，$s/string1/string2/g 全文件查找string1并替换为string2</li>
-<li>：wq! 存盘退出 w = write</li>
-<li>：q! 不存盘直接强制退出 q = quit</li>
+<li>：1，$s&#x2F;string1&#x2F;string2&#x2F;g 全文件查找string1并替换为string2</li>
+<li>：wq! 存盘退出 w &#x3D; write</li>
+<li>：q! 不存盘直接强制退出 q &#x3D; quit</li>
 </ul>
 <h2 id="小技巧"><a href="#小技巧" class="headerlink" title="小技巧"></a>小技巧</h2><h3 id="设置options"><a href="#设置options" class="headerlink" title="设置options"></a>设置options</h3><p>鼠标右键点击git bash 菜单栏，选择options可以进行设置</p>
 <h4 id="设置-鼠标右键粘贴"><a href="#设置-鼠标右键粘贴" class="headerlink" title="设置 鼠标右键粘贴"></a>设置 鼠标右键粘贴</h4><p>mouse &gt; Right click action &gt; Paste &gt; ok</p>
@@ -682,10 +832,10 @@ $ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://happychong.github.io/2016/05/05/基本shell命令/" data-id="cl1dl9zak0001ccnuetwveqxu" class="article-share-link">Share</a>
+      <a data-url="http://happychong.github.io/2022/03/29/2016-05-05-%E5%9F%BA%E6%9C%ACshell%E5%91%BD%E4%BB%A4/" data-id="cl1fzqfv30001vgnu7hojc8kv" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/" rel="tag">shell</a></li></ul>
 
     </footer>
   </div>
@@ -698,7 +848,7 @@ $ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/3/">&laquo; 上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
+    <a class="extend prev" rel="prev" href="/page/3/">&amp;laquo; 上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
   </nav>
 
 </section>
@@ -712,147 +862,151 @@ $ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="
       <ul>
         
           <li>
+            <a href="/2022/03/31/2022-03-31-github%20password%20authentication%20was%20removed%20on%20August%2013,%202021.%20Please%20use%20a%20personal%20access%20token%20instead/">2022-03-31-password authentication was removed on August 13, 2021. Please use a personal access token instead.</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2021-08-05-%E9%9D%A2%E8%AF%95%E9%A2%98%E6%80%BB%E7%BB%93%EF%BC%88%E9%9D%9EVue%EF%BC%89/">2021-08-05-面试题总结（非Vue）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/29/2021-08-05-typescript/">typescript</a>
+          </li>
+        
+          <li>
             <a href="/2022/03/29/2018-1-11-HEXO-hello-world/">Hello World</a>
           </li>
         
           <li>
-            <a href="/2022/03/29/2020-3-20-webpack原理/">webpack 原理与实现</a>
+            <a href="/2022/03/29/2021-03-22-git%20bash%20arrow%20%E4%B8%8D%E8%83%BD%E9%80%89%E6%8B%A9%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88(windows)/">git bash arrow 不能选择解决方案(windows)</a>
           </li>
         
           <li>
-            <a href="/2022/03/29/2020-3-25-webpack-loader原理/">webpack - loader 原理与实现</a>
+            <a href="/2022/03/29/2020-3-20-webpack%E5%8E%9F%E7%90%86/">webpack 原理与实现</a>
           </li>
         
           <li>
-            <a href="/2021/08/05/typescript/">typescript</a>
+            <a href="/2022/03/29/2020-3-25-webpack-loader%E5%8E%9F%E7%90%86/">webpack - loader 原理与实现</a>
           </li>
         
           <li>
-            <a href="/2021/08/05/面试题总结（非Vue）/">2021-08-05-面试题总结（非Vue）</a>
+            <a href="/2022/03/29/2020-07-22-Vue%E9%9D%A2%E8%AF%95%E9%A2%98/">Vue 面试题</a>
           </li>
         
           <li>
-            <a href="/2021/03/22/git bash arrow 不能选择解决方案(windows)/">git bash arrow 不能选择解决方案(windows)</a>
+            <a href="/2022/03/29/2020-05-11-mangoDB/">mongoDB</a>
           </li>
         
           <li>
-            <a href="/2020/07/22/Vue基础/">Vue 基础知识</a>
+            <a href="/2022/03/29/2020-07-22-Vue%E5%9F%BA%E7%A1%80/">Vue 基础知识</a>
           </li>
         
           <li>
-            <a href="/2020/07/22/Vue面试题/">Vue 面试题</a>
+            <a href="/2022/03/29/2020-04-23-ast/">ast（语法树）</a>
           </li>
         
           <li>
-            <a href="/2020/05/11/mangoDB/">mongoDB</a>
+            <a href="/2022/03/29/2020-04-27-dart/">Dart 入门</a>
           </li>
         
           <li>
-            <a href="/2020/04/27/dart/">Dart 入门</a>
+            <a href="/2022/03/29/2020-04-14-node%E8%BF%9B%E7%A8%8B%EF%BC%88process%EF%BC%89/">Node 的 进程 (process)</a>
           </li>
         
           <li>
-            <a href="/2020/04/23/ast/">ast（语法树）</a>
+            <a href="/2022/03/29/2020-04-21-node%E8%BF%9B%E7%A8%8B%EF%BC%88pm2%EF%BC%89/">Node 的 进程(pm2)</a>
           </li>
         
           <li>
-            <a href="/2020/04/21/node进程（pm2）/">Node 的 进程(pm2)</a>
+            <a href="/2022/03/29/2020-03-30-webpack%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E6%B5%81%E7%A8%8B/">webpack - 源码编译流程</a>
           </li>
         
           <li>
-            <a href="/2020/04/14/node进程（process）/">Node 的 进程 (process)</a>
+            <a href="/2022/03/29/2019-12-20-webpack%E4%BC%98%E5%8C%96/">webpack 4.0 + 笔记(优化)</a>
           </li>
         
           <li>
-            <a href="/2020/03/30/webpack源码编译流程/">webpack - 源码编译流程</a>
+            <a href="/2022/03/29/2019-11-19-HTTP%E5%9F%BA%E7%A1%80/">HTTP基础扫盲</a>
           </li>
         
           <li>
-            <a href="/2019/12/20/webpack优化/">webpack 4.0 + 笔记(优化)</a>
+            <a href="/2022/03/29/2019-12-16-webpack%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE/">webpack 4.0+ 笔记(基础配置)</a>
           </li>
         
           <li>
-            <a href="/2019/12/16/webpack基础配置/">webpack 4.0+ 笔记(基础配置)</a>
+            <a href="/2022/03/29/2019-11-01-JS%E4%B8%AD%EF%BC%8C0.1+0.2%EF%BC%9E0.3%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F/">0.1+0.2 &gt; 0.3 Why???</a>
           </li>
         
           <li>
-            <a href="/2019/11/19/HTTP基础/">HTTP基础扫盲</a>
+            <a href="/2022/03/29/2019-11-01-Node%E4%B8%AD%E6%96%87%E4%BB%B6%E7%9A%84%E8%AF%BB%E5%86%99%E6%A8%A1%E5%9D%97---FS/">Node -文件读写模块--- fs</a>
           </li>
         
           <li>
-            <a href="/2019/11/07/node深度删除目录及目录里的内容-fs删除扩展/">Node - 深度（完全）删除目录及目录里的内容 - 扩展</a>
+            <a href="/2022/03/29/2019-11-07-node%E6%B7%B1%E5%BA%A6%E5%88%A0%E9%99%A4%E7%9B%AE%E5%BD%95%E5%8F%8A%E7%9B%AE%E5%BD%95%E9%87%8C%E7%9A%84%E5%86%85%E5%AE%B9-fs%E5%88%A0%E9%99%A4%E6%89%A9%E5%B1%95/">Node - 深度（完全）删除目录及目录里的内容 - 扩展</a>
           </li>
         
           <li>
-            <a href="/2019/11/01/JS中，0.1+0.2＞0.3为什么？/">0.1+0.2 &gt; 0.3 Why???</a>
+            <a href="/2022/03/29/2019-10-24-npm%E5%91%BD%E4%BB%A4%E4%B8%8E%E9%85%8D%E7%BD%AE%E8%A7%A3%E6%9E%90/">npm 命令与配置解析</a>
           </li>
         
           <li>
-            <a href="/2019/11/01/Node中文件的读写模块---FS/">Node -文件读写模块--- fs</a>
+            <a href="/2022/03/29/2019-10-30-Node---buffer/">Node --- buffer</a>
           </li>
         
           <li>
-            <a href="/2019/10/30/Node---buffer/">Node --- buffer</a>
+            <a href="/2022/03/29/2019-10-14-node%E6%A8%A1%E5%9D%97%E5%8A%A0%E8%BD%BD%E5%8E%9F%E7%90%86/">Node模块加载原理</a>
           </li>
         
           <li>
-            <a href="/2019/10/24/npm命令与配置解析/">npm 命令与配置解析</a>
+            <a href="/2022/03/29/2019-10-14-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%9C%8D%E5%8A%A1/">单线程与多线程的基本概念</a>
           </li>
         
           <li>
-            <a href="/2019/10/16/Node中的事件循环（event loop）/">Node中的事件轮询（event loop）</a>
+            <a href="/2022/03/29/2019-10-16-Node%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%EF%BC%88event%20loop%EF%BC%89/">Node中的事件轮询（event loop）</a>
           </li>
         
           <li>
-            <a href="/2019/10/14/node核心模块-简述/">Node核心模块 - 简述</a>
+            <a href="/2022/03/29/2019-10-14-node%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97-%E7%AE%80%E8%BF%B0/">Node核心模块 - 简述</a>
           </li>
         
           <li>
-            <a href="/2019/10/14/node模块加载原理/">Node模块加载原理</a>
+            <a href="/2022/03/29/2019-10-12-node%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E6%89%AB%E7%9B%B2/">Node基本概念扫盲</a>
           </li>
         
           <li>
-            <a href="/2019/10/14/多线程与单线程服务/">单线程与多线程的基本概念</a>
+            <a href="/2022/03/29/2019-10-12-%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%ADjs%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%EF%BC%88event%20loop%EF%BC%89/">浏览器中javascript的事件循环（event loop）</a>
           </li>
         
           <li>
-            <a href="/2019/10/12/node基本概念扫盲/">Node基本概念扫盲</a>
+            <a href="/2022/03/29/2019-09-05-es6+---%E7%B1%BB%E7%9A%84%E4%BF%AE%E9%A5%B0/">es6+---类的修饰</a>
           </li>
         
           <li>
-            <a href="/2019/10/12/浏览器中js的事件循环（event loop）/">浏览器中javascript的事件循环（event loop）</a>
+            <a href="/2022/03/29/2019-10-05-vue%20nextTick%E5%8E%9F%E7%90%86/">vue nextTick原理</a>
           </li>
         
           <li>
-            <a href="/2019/10/05/vue nextTick原理/">vue nextTick原理</a>
+            <a href="/2022/03/29/2018-08-08-vue%20%E5%BC%BA%E5%88%B6%E6%9B%B4%E6%96%B0%E8%AF%95%E5%9B%BE%E7%9A%84%E6%96%B9%E6%B3%95/">vue 强制更新试图 的方法</a>
           </li>
         
           <li>
-            <a href="/2019/09/05/es6+---类的修饰/">es6+---类的修饰</a>
+            <a href="/2022/03/29/2019-09-03-es+---class%E7%94%A8%E6%B3%95%E7%AC%94%E8%AE%B0%20/">es6、7-类的定义</a>
           </li>
         
           <li>
-            <a href="/2019/09/03/es+---class用法笔记 /">es6、7-类的定义</a>
+            <a href="/2022/03/29/2016-05-19-%E5%AE%8B%E6%99%93%E4%B8%B9%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%AE%80%E5%8E%86/">宋晓丹的个人简历</a>
           </li>
         
           <li>
-            <a href="/2018/08/08/vue 强制更新试图的方法/">vue 强制更新试图 的方法</a>
+            <a href="/2022/03/29/2016-05-11-windows%E4%B8%8B%EF%BC%8CATOM%E5%B8%B8%E7%94%A8%E7%BC%96%E8%BE%91%E5%99%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/">ATOM常用快捷键</a>
           </li>
         
           <li>
-            <a href="/2016/05/19/宋晓丹的个人简历/">宋晓丹的个人简历</a>
+            <a href="/2022/03/29/2016-05-05-Git%E5%91%BD%E4%BB%A4/">Git常用命令</a>
           </li>
         
           <li>
-            <a href="/2016/05/11/windows下，ATOM常用编辑器快捷键/">ATOM常用快捷键</a>
-          </li>
-        
-          <li>
-            <a href="/2016/05/05/Git命令/">Git常用命令</a>
-          </li>
-        
-          <li>
-            <a href="/2016/05/05/基本shell命令/">基本SHELL命令使用</a>
+            <a href="/2022/03/29/2016-05-05-%E5%9F%BA%E6%9C%ACshell%E5%91%BD%E4%BB%A4/">基本SHELL命令使用</a>
           </li>
         
       </ul>
@@ -864,7 +1018,7 @@ $ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Dart/">Dart</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node/">Node</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Vue/">Vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/es6/">es6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongoDB/">mongoDB</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/个人/">个人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/周边/">周边</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Dart/">Dart</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node/">Node</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Vue/">Vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/es6/">es6</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongoDB/">mongoDB</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%B8%AA%E4%BA%BA/">个人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%91%A8%E8%BE%B9/">周边</a></li></ul>
     </div>
   </div>
 
@@ -874,7 +1028,7 @@ $ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/EventLoop/">EventLoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node/">Node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/">Vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ast/">ast</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/buffer/">buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/core/">core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/event-loop/">event loop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fs/">fs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/happyChong/">happyChong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loader/">loader</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/module/">module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongoDB/">mongoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextTick/">nextTick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/path/">path</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pm2/">pm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/process/">process</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typescript/">typescript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/util/">util</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vm/">vm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单线程/">单线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试题/">面试题</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/" rel="tag">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/EventLoop/" rel="tag">EventLoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node/" rel="tag">Node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/" rel="tag">Vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ast/" rel="tag">ast</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/buffer/" rel="tag">buffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/" rel="tag">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/core/" rel="tag">core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/event-loop/" rel="tag">event loop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/" rel="tag">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fs/" rel="tag">fs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/happyChong/" rel="tag">happyChong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loader/" rel="tag">loader</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/module/" rel="tag">module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongoDB/" rel="tag">mongoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextTick/" rel="tag">nextTick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/" rel="tag">npm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/path/" rel="tag">path</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pm2/" rel="tag">pm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/process/" rel="tag">process</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/" rel="tag">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typescript/" rel="tag">typescript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/util/" rel="tag">util</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vm/" rel="tag">vm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/" rel="tag">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E7%BA%BF%E7%A8%8B/" rel="tag">单线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="tag">面试题</a></li></ul>
     </div>
   </div>
 
@@ -884,7 +1038,7 @@ $ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventLoop/" style="font-size: 13.33px;">EventLoop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/ast/" style="font-size: 10px;">ast</a> <a href="/tags/buffer/" style="font-size: 10px;">buffer</a> <a href="/tags/class/" style="font-size: 13.33px;">class</a> <a href="/tags/core/" style="font-size: 10px;">core</a> <a href="/tags/event-loop/" style="font-size: 13.33px;">event loop</a> <a href="/tags/events/" style="font-size: 10px;">events</a> <a href="/tags/fs/" style="font-size: 16.67px;">fs</a> <a href="/tags/git/" style="font-size: 16.67px;">git</a> <a href="/tags/happyChong/" style="font-size: 10px;">happyChong</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/loader/" style="font-size: 10px;">loader</a> <a href="/tags/module/" style="font-size: 10px;">module</a> <a href="/tags/mongoDB/" style="font-size: 10px;">mongoDB</a> <a href="/tags/nextTick/" style="font-size: 10px;">nextTick</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/path/" style="font-size: 10px;">path</a> <a href="/tags/pm2/" style="font-size: 10px;">pm2</a> <a href="/tags/process/" style="font-size: 10px;">process</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/util/" style="font-size: 10px;">util</a> <a href="/tags/vm/" style="font-size: 10px;">vm</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 20px;">webpack</a> <a href="/tags/单线程/" style="font-size: 10px;">单线程</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a> <a href="/tags/面试题/" style="font-size: 13.33px;">面试题</a>
+      <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventLoop/" style="font-size: 12.5px;">EventLoop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Node/" style="font-size: 10px;">Node</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/ast/" style="font-size: 10px;">ast</a> <a href="/tags/buffer/" style="font-size: 10px;">buffer</a> <a href="/tags/class/" style="font-size: 12.5px;">class</a> <a href="/tags/core/" style="font-size: 10px;">core</a> <a href="/tags/event-loop/" style="font-size: 12.5px;">event loop</a> <a href="/tags/events/" style="font-size: 10px;">events</a> <a href="/tags/fs/" style="font-size: 15px;">fs</a> <a href="/tags/git/" style="font-size: 17.5px;">git</a> <a href="/tags/happyChong/" style="font-size: 10px;">happyChong</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/loader/" style="font-size: 10px;">loader</a> <a href="/tags/module/" style="font-size: 10px;">module</a> <a href="/tags/mongoDB/" style="font-size: 10px;">mongoDB</a> <a href="/tags/nextTick/" style="font-size: 10px;">nextTick</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/path/" style="font-size: 10px;">path</a> <a href="/tags/pm2/" style="font-size: 10px;">pm2</a> <a href="/tags/process/" style="font-size: 10px;">process</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/util/" style="font-size: 10px;">util</a> <a href="/tags/vm/" style="font-size: 10px;">vm</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 20px;">webpack</a> <a href="/tags/%E5%8D%95%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">单线程</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">多线程</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E9%A2%98/" style="font-size: 12.5px;">面试题</a>
     </div>
   </div>
 
@@ -893,7 +1047,7 @@ $ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li></ul>
     </div>
   </div>
 
@@ -924,11 +1078,17 @@ $ grep -rn &apos;====&apos; a.js</code></pre><h2 id="12-vim-编辑器"><a href="
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
 
 
 <script src="/js/script.js"></script>
+
 
 
 
