@@ -5,16 +5,19 @@
   
 
   
-  <title>Tag: EventLoop | 快乐虫の地带</title>
+  <title>Vuex 原理 | 快乐虫の地带</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="我的笔记">
-<meta property="og:type" content="website">
-<meta property="og:title" content="快乐虫の地带">
-<meta property="og:url" content="http://happychong.github.io/tags/EventLoop/index.html">
+  <meta name="description" content="Vuex">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vuex 原理">
+<meta property="og:url" content="http://happychong.github.io/2022/04/08/2022-04-08-vuex%E5%8E%9F%E7%90%86/index.html">
 <meta property="og:site_name" content="快乐虫の地带">
-<meta property="og:description" content="我的笔记">
+<meta property="og:description" content="Vuex">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-08T10:43:53.205Z">
+<meta property="article:modified_time" content="2022-04-09T15:01:09.463Z">
 <meta property="article:author" content="happyChong">
+<meta property="article:tag" content="Vue">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="快乐虫の地带" type="application/atom+xml">
@@ -64,59 +67,73 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2022" class="archive-year">2022</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-default">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/03/29/2019-10-16-Node%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%EF%BC%88event%20loop%EF%BC%89/" class="archive-article-date">
-  <time datetime="2022-03-29T02:49:29.876Z" itemprop="datePublished">3月 29</time>
+        <section id="main"><article id="default-2022-04-08-vuex原理" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/04/08/2022-04-08-vuex%E5%8E%9F%E7%90%86/" class="article-date">
+  <time datetime="2022-04-08T10:43:53.205Z" itemprop="datePublished">2022-04-08</time>
 </a>
-      
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Vue/">Vue</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/03/29/2019-10-16-Node%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%EF%BC%88event%20loop%EF%BC%89/">Node中的事件轮询（event loop）</a>
+    <h1 class="article-title" itemprop="name">
+      Vuex 原理
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-default">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/03/29/2019-10-12-%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%ADjs%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%EF%BC%88event%20loop%EF%BC%89/" class="archive-article-date">
-  <time datetime="2022-03-29T02:49:29.874Z" itemprop="datePublished">3月 29</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/03/29/2019-10-12-%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%ADjs%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%EF%BC%88event%20loop%EF%BC%89/">浏览器中javascript的事件循环（event loop）</a>
-    </h1>
-  
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1><h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1 概述"></a>1 概述</h2><p>Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。</p>
+<h2 id="基础应用"><a href="#基础应用" class="headerlink" title="基础应用"></a>基础应用</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// store.js 定义store</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Vue</span> <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Vuex</span> <span class="keyword">from</span> <span class="string">&#x27;vuex&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="title class_">Vue</span>.<span class="title function_">use</span>(<span class="title class_">Vuex</span>) <span class="comment">// 调用vuex的install方法初始化</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> store = <span class="keyword">new</span> <span class="title class_">Vuex</span>.<span class="title class_">Store</span>(&#123;</span><br><span class="line">  <span class="attr">state</span>: &#123;</span><br><span class="line">    <span class="attr">count</span>: <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">mutations</span>: &#123;</span><br><span class="line">    increment (state) &#123;</span><br><span class="line">      state.<span class="property">count</span>++</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">actions</span>: &#123;&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
-    </header>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span><br><span class="line">    <span class="attr">el</span>: <span class="string">&#x27;#app&#x27;</span>,</span><br><span class="line">    <span class="attr">store</span>: store, <span class="comment">// 导入store</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 业务代码中应用</span></span><br><span class="line"><span class="variable language_">this</span>.<span class="property">$store</span>.<span class="title function_">commit</span>(<span class="string">&#x27;increment&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="原理简述"><a href="#原理简述" class="headerlink" title="原理简述"></a>原理简述</h2><h3 id="1：导出-install-方法"><a href="#1：导出-install-方法" class="headerlink" title="1：导出 install 方法"></a>1：导出 install 方法</h3><p>install中 mixin 混合 beforeCreate 钩子函数，vue从外到内执行beforeCreate时，给vue实例增加$store属性</p>
+<h3 id="2：导出Store-类（class）"><a href="#2：导出Store-类（class）" class="headerlink" title="2：导出Store 类（class）"></a>2：导出Store 类（class）</h3><ul>
+<li>1：根据参数的state初始化响应式state</li>
+<li>2：处理modules，生成树结构</li>
+<li>3：处理深层getters，mutations，actions,state，—根据modules树结构，反向把上面三项内容都挂载到根的相应属性上，其中mutations和actions是数组</li>
+<li>4：处理plugins，插件中可以订阅方法，commit时候执行订阅的方法</li>
+<li>5：定义commit、dispatch方法。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://github.com/happychong/2019-zhufeng/tree/master/17.my-vuex/src">源码地址</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://happychong.github.io/2022/04/08/2022-04-08-vuex%E5%8E%9F%E7%90%86/" data-id="cl1skwqdy00000snub9060nic" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vue/" rel="tag">Vue</a></li></ul>
+
+    </footer>
   </div>
-</article>
+  
+    
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2022/03/31/2022-03-31-github%20password%20authentication%20was%20removed%20on%20August%2013,%202021.%20Please%20use%20a%20personal%20access%20token%20instead/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">2022-03-31-password authentication was removed on August 13, 2021. Please use a personal access token instead.</div>
+    </a>
   
+</nav>
 
+  
+</article>
 
 </section>
         
